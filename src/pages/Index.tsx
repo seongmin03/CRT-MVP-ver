@@ -47,7 +47,7 @@ const Index = () => {
         </div>
 
         {/* Checklist sections */}
-        <div ref={checklistRef} className="space-y-4">
+        <div ref={checklistRef} id="checklist-root" className="space-y-4 bg-background rounded-xl">
           {checklistData.sections.map((section, index) => (
             <div 
               key={section.section_id}
