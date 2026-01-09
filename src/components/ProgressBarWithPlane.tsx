@@ -39,12 +39,17 @@ const ProgressBarWithPlane = ({ progress }: ProgressBarWithPlaneProps) => {
             background: "linear-gradient(90deg, #ADD8E6 0%, #007BFF 100%)",
           }}
         >
-          {/* Airplane icon at the end of progress bar */}
+          {/* Airplane icon at the end of progress bar - white fill with black outline */}
           <div
-            className="absolute -right-3 top-1/2 -translate-y-1/2 transition-all duration-500"
-            style={{ filter: "drop-shadow(0 2px 4px rgba(0, 123, 255, 0.3))" }}
+            className="absolute -right-4 top-1/2 -translate-y-1/2 transition-all duration-500"
+            style={{ filter: "drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2))" }}
           >
-            <Plane className="w-6 h-6 text-[#007BFF] rotate-0" fill="#007BFF" />
+            <Plane 
+              className="w-7 h-7" 
+              fill="white" 
+              stroke="black" 
+              strokeWidth={1.5}
+            />
           </div>
         </div>
       </div>
