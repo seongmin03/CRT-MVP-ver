@@ -117,7 +117,7 @@ const ActionButtons = ({ checklistRef }: ActionButtonsProps) => {
   };
 
   const buttons = [
-    { icon: Download, label: "PDF 다운로드", onClick: downloadAsPDF, primary: true },
+    { icon: Download, label: "PDF 다운로드", onClick: downloadAsPDF },
     { icon: Image, label: "이미지 저장", onClick: downloadAsImage },
     { icon: Link, label: "링크 복사", onClick: copyLink },
   ];
@@ -130,13 +130,8 @@ const ActionButtons = ({ checklistRef }: ActionButtonsProps) => {
             <button
               key={button.label}
               onClick={button.onClick}
-              className={`
-                flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl transition-all duration-200
-                ${button.primary 
-                  ? 'bg-primary text-primary-foreground hover:opacity-90' 
-                  : 'bg-secondary text-secondary-foreground hover:bg-muted'
-                }
-              `}
+              className="flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5"
+              style={{ backgroundColor: "#34495E", color: "#ffffff" }}
             >
               <button.icon className="w-5 h-5" />
               <span className="text-xs font-medium">{button.label}</span>

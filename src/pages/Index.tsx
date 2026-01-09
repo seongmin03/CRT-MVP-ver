@@ -1,5 +1,7 @@
 import { useState, useRef } from "react";
 import Header from "@/components/Header";
+import ProgressBarWithPlane from "@/components/ProgressBarWithPlane";
+import EssentialItems from "@/components/EssentialItems";
 import ChecklistSection from "@/components/ChecklistSection";
 import ActionButtons from "@/components/ActionButtons";
 import { checklistData } from "@/data/checklistData";
@@ -29,22 +31,20 @@ const Index = () => {
       <div className="max-w-2xl mx-auto px-4">
         <Header />
 
-        {/* Overall progress */}
+        {/* Overall progress with airplane animation */}
         <div className="card-toss mb-6 animate-fade-in">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-medium text-foreground">전체 준비 현황</span>
-            <span className="text-sm font-bold text-accent">{overallProgress}%</span>
+            <span className="text-sm font-bold" style={{ color: "#007BFF" }}>{overallProgress}%</span>
           </div>
-          <div className="h-2.5 bg-muted rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-gradient-to-r from-accent to-primary rounded-full transition-all duration-500 ease-out"
-              style={{ width: `${overallProgress}%` }}
-            />
-          </div>
-          <p className="text-xs text-muted-foreground mt-2">
+          <ProgressBarWithPlane progress={overallProgress} />
+          <p className="text-xs text-muted-foreground">
             {completedItems}/{totalItems} 항목 완료
           </p>
         </div>
+
+        {/* Essential items section */}
+        <EssentialItems />
 
         {/* Checklist sections */}
         <div ref={checklistRef} id="checklist-root" className="space-y-4 bg-background rounded-xl">
