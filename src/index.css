@@ -110,7 +110,11 @@
     @apply transition-all duration-300;
   }
 
-  .item-text.checked {
-    @apply text-muted-foreground line-through;
+  .item-text.checked,
+  .item-text-checked {
+    @apply text-muted-foreground;
+    text-decoration: line-through;
+    text-decoration-thickness: 2px;
+    text-underline-offset: -0.2em;
   }
 }

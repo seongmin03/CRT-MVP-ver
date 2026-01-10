@@ -5,23 +5,24 @@ interface ProgressBarWithPlaneProps {
 }
 
 const progressMessages: { threshold: number; message: string }[] = [
-  { threshold: 6, message: "문을 나서기 전, 여권은 다시 한번 확인하기!" },
-  { threshold: 13, message: "탑승구 위치는 확인하셨나요?" },
-  { threshold: 20, message: "곧 있으면 이륙할거에요~ 안전벨트 꼭 하기!" },
-  { threshold: 35, message: "하늘을 나는 기분, 정말 좋죠?" },
-  { threshold: 50, message: "구름 위를 산책하는 중... 거의 다 왔어요!" },
-  { threshold: 70, message: "착륙 준비 중! 체크리스트가 곧 완성됩니다." },
-  { threshold: 90, message: "도착 완료! 이제 여행을 떠나볼까요?" },
-  { threshold: 100, message: "준비 끝! 즐거운 여행 되세요! ✈️" },
+  { threshold: 10, message: "여권 한번 더 확인하기!" },
+  { threshold: 25, message: "필요한 짐은 다 챙기셨나요?" },
+  { threshold: 40, message: "마이리얼트립이 진정한 여행을 도와줄게요" },
+  { threshold: 55, message: "곧 이륙할거에요! 안전벨트 잊지 마세요~" },
+  { threshold: 70, message: "Travel Everyday, Myrealtrip!" },
+  { threshold: 85, message: "어느새 도착했어요!" },
+  { threshold: 95, message: "공항을 나서는 순간, 새로운 세상으로" },
+  { threshold: 100, message: "이제 준비 끝! ✈️" },
 ];
 
 const getProgressMessage = (progress: number): string => {
-  for (const { threshold, message } of progressMessages) {
-    if (progress <= threshold) {
-      return message;
+  // 역순으로 확인하여 가장 가까운 threshold 찾기
+  for (let i = progressMessages.length - 1; i >= 0; i--) {
+    if (progress >= progressMessages[i].threshold) {
+      return progressMessages[i].message;
     }
   }
-  return progressMessages[progressMessages.length - 1].message;
+  return progressMessages[0].message;
 };
 
 const ProgressBarWithPlane = ({ progress }: ProgressBarWithPlaneProps) => {
@@ -54,8 +55,8 @@ const ProgressBarWithPlane = ({ progress }: ProgressBarWithPlaneProps) => {
         </div>
       </div>
 
-      {/* Progress message */}
-      <p className="text-xs text-muted-foreground mt-2 text-center animate-fade-in">
+      {/* Progress message - 비행기 근처에 표시 */}
+      <p className="text-xs text-muted-foreground mt-1 text-center animate-fade-in">
         {message}
       </p>
     </div>

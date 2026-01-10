@@ -31,7 +31,7 @@ const ChecklistItem = ({ item, isChecked, onToggle }: ChecklistItemProps) => {
         <h4 
           className={`
             font-medium text-base transition-all duration-300
-            ${isChecked ? 'text-muted-foreground line-through' : 'text-foreground'}
+            ${isChecked ? 'text-muted-foreground item-text-checked' : 'text-foreground'}
           `}
         >
           {item.title}
