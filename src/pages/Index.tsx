@@ -98,7 +98,13 @@ const Index = () => {
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="국가 선택" />
               </SelectTrigger>
-              <SelectContent position="popper" side="bottom" sideOffset={4}>
+              <SelectContent 
+                position="popper" 
+                side="bottom" 
+                sideOffset={4}
+                avoidCollisions={false}
+                collisionPadding={0}
+              >
                 {sortedCountries.map((country) => (
                   <SelectItem key={country} value={country}>
                     {country}
