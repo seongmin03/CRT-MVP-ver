@@ -90,7 +90,7 @@ const Index = () => {
 
         {/* 여행 국가 선택 영역 */}
         <div className="mb-6 animate-fade-in">
-          <div className="flex items-center justify-between gap-4 p-4 bg-card rounded-xl border border-border">
+          <div className="flex items-center justify-between gap-4 p-4 bg-card rounded-xl border border-border min-h-[60px]">
             <span className="text-sm font-medium text-foreground whitespace-nowrap">
               여행 국가를 선택하고 맞춤 혜택을 받으세요!
             </span>
@@ -98,7 +98,7 @@ const Index = () => {
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="국가 선택" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent position="popper" side="bottom" sideOffset={4}>
                 {sortedCountries.map((country) => (
                   <SelectItem key={country} value={country}>
                     {country}
@@ -151,7 +151,7 @@ const Index = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block rounded-xl p-4 text-center transition-all duration-200 hover:opacity-90 hover:shadow-md"
-                style={{ backgroundColor: "#FEF9E7" }}
+                style={{ backgroundColor: "#FFDB58" }}
               >
                 <p className="text-sm font-medium text-foreground">
                   돈키호테 할인 쿠폰 증정!
