@@ -115,6 +115,65 @@ const Index = () => {
           </div>
         </div>
 
+        {/* 혜택 탭 2분할 - 국가 선택 시에만 표시 */}
+        {selectedCountry && (
+          <div className="mb-6 animate-fade-in">
+            <div className="grid grid-cols-2 gap-3">
+              {/* 왼쪽 절반: 안전한 여행! 여행자 보험 */}
+              <a
+                href="https://direct.samsungfire.com/ria/pc/product/factory/?state=Front&product=travel&state=Front"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block rounded-xl p-4 text-center transition-all duration-200 hover:opacity-90 hover:shadow-md"
+                style={{ backgroundColor: "#FEF9E7" }}
+              >
+                <p className="text-sm font-medium text-foreground">
+                  안전한 여행! 여행자 보험
+                </p>
+              </a>
+
+              {/* 오른쪽 절반: 국가별 가변 */}
+              {selectedCountry === "일본" ? (
+                <a
+                  href="https://www.myrealtrip.com/promotions/Japan_donki_coupon"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block rounded-xl p-4 text-center transition-all duration-200 hover:opacity-90 hover:shadow-md"
+                  style={{ backgroundColor: "#FFDB58" }}
+                >
+                  <p className="text-sm font-medium text-foreground">
+                    돈키호테 할인 쿠폰 증정!
+                  </p>
+                </a>
+              ) : selectedCountry === "베트남" || selectedCountry === "태국" ? (
+                <a
+                  href="mrt://web?url=https%3A%2F%2Fgrab.onelink.me%2F2695613898%3Fpid%3DDB--MyRealTrip%26c%3DKR_CM0002_CLUSTERALL-CLUSTERALL_PAX_GT_ALL_031225_ACQ-MAIA-APPC_ASR__RG23GTPAT1KRTRAVQ1_DB--MyRealTrip_int_1170x1560_StdBnr_ADTK_ManualPlacement_pop-up-251202%26is_retargeting%3Dtrue%26af_dp%3DNA%26af_force_deeplink%3Dtrue%26af_sub5%3Ddisplay%26af_ad%3DKR_CM0002_CLUSTERALL-CLUSTERALL_PAX_GT_ALL_031225_ACQ-MAIA-APPC_ASR__RG23GTPAT1KRTRAVQ1_DB--MyRealTrip_int_1170x1560_StdBnr_ADTK_ManualPlacement_pop-up-251202%26af_adset%3DKR_CM0002_CLUSTERALL-CLUSTERALL_PAX_GT_ALL_031225_ACQ-MAIA-APPC_ASR__RG23GTPAT1KRTRAVQ1_DB--MyRealTrip_int_1170x1560_StdBnr_ADTK_ManualPlacement_pop-up-251202%26af_siteID%3DDB--MyRealTrip"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block rounded-xl p-4 text-center transition-all duration-200 hover:opacity-90 hover:shadow-md"
+                  style={{ backgroundColor: "#D4EDDA" }}
+                >
+                  <p className="text-sm font-medium text-foreground">
+                    Grab 프로모션 확인하기
+                  </p>
+                </a>
+              ) : (
+                <a
+                  href="https://www.myrealtrip.com/promotions/benefit"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block rounded-xl p-4 text-center transition-all duration-200 hover:opacity-90 hover:shadow-md"
+                  style={{ backgroundColor: "#E9ECEF" }}
+                >
+                  <p className="text-sm font-medium text-foreground">
+                    트래블카드 혜택 보기
+                  </p>
+                </a>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Essential items section */}
         <EssentialItems />
 
@@ -132,63 +191,6 @@ const Index = () => {
               />
             </div>
           ))}
-        </div>
-
-        {/* 마이리얼트립 혜택 탭 2분할 */}
-        <div className="mt-8 mb-8 animate-fade-in">
-          <div className="grid grid-cols-2 gap-3">
-            {/* 왼쪽 절반: 마이리얼트립 혜택 */}
-            <a
-              href="https://www.myrealtrip.com/promotions/benefit"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block rounded-xl p-4 text-center transition-all duration-200 hover:opacity-90 hover:shadow-md"
-              style={{ backgroundColor: "#FEF9E7" }}
-            >
-              <p className="text-sm font-medium text-foreground">
-                마이리얼트립 혜택
-              </p>
-            </a>
-
-            {/* 오른쪽 절반: 국가별 가변 */}
-            {selectedCountry === "일본" ? (
-              <a
-                href="https://www.myrealtrip.com/promotions/Japan_donki_coupon"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block rounded-xl p-4 text-center transition-all duration-200 hover:opacity-90 hover:shadow-md"
-                style={{ backgroundColor: "#FFDB58" }}
-              >
-                <p className="text-sm font-medium text-foreground">
-                  돈키호테 할인 쿠폰 증정!
-                </p>
-              </a>
-            ) : selectedCountry === "베트남" || selectedCountry === "태국" ? (
-              <a
-                href="mrt://web?url=https%3A%2F%2Fgrab.onelink.me%2F2695613898%3Fpid%3DDB--MyRealTrip%26c%3DKR_CM0002_CLUSTERALL-CLUSTERALL_PAX_GT_ALL_031225_ACQ-MAIA-APPC_ASR__RG23GTPAT1KRTRAVQ1_DB--MyRealTrip_int_1170x1560_StdBnr_ADTK_ManualPlacement_pop-up-251202%26is_retargeting%3Dtrue%26af_dp%3DNA%26af_force_deeplink%3Dtrue%26af_sub5%3Ddisplay%26af_ad%3DKR_CM0002_CLUSTERALL-CLUSTERALL_PAX_GT_ALL_031225_ACQ-MAIA-APPC_ASR__RG23GTPAT1KRTRAVQ1_DB--MyRealTrip_int_1170x1560_StdBnr_ADTK_ManualPlacement_pop-up-251202%26af_adset%3DKR_CM0002_CLUSTERALL-CLUSTERALL_PAX_GT_ALL_031225_ACQ-MAIA-APPC_ASR__RG23GTPAT1KRTRAVQ1_DB--MyRealTrip_int_1170x1560_StdBnr_ADTK_ManualPlacement_pop-up-251202%26af_siteID%3DDB--MyRealTrip"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block rounded-xl p-4 text-center transition-all duration-200 hover:opacity-90 hover:shadow-md"
-                style={{ backgroundColor: "#D4EDDA" }}
-              >
-                <p className="text-sm font-medium text-foreground">
-                  Grab 프로모션 확인하기
-                </p>
-              </a>
-            ) : (
-              <a
-                href="https://direct.samsungfire.com/vd/overture_index.jsp?OTK=F2511AF0512"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block rounded-xl p-4 text-center transition-all duration-200 hover:opacity-90 hover:shadow-md"
-                style={{ backgroundColor: "#E9ECEF" }}
-              >
-                <p className="text-sm font-medium text-foreground">
-                  여행자 보험 확인하기
-                </p>
-              </a>
-            )}
-          </div>
         </div>
       </div>
 
