@@ -30,12 +30,12 @@ const ChecklistSection = ({ section, checkedItems, onToggle }: ChecklistSectionP
         <div className="flex items-center gap-2">
           <span className="text-xl">{sectionIcons[section.section_id] || "📋"}</span>
           <h3 className="section-title mb-0">{section.section_title}</h3>
-          {section.section_id === "electronics" && (
+          {(section.section_id === "electronics" || section.section_id === "health" || section.section_id === "packing") && (
             <button
               onClick={handleCoupangLink}
               className="text-xs text-muted-foreground hover:text-foreground transition-colors ml-2"
             >
-              쿠팡에서 여행 필수품 찾기
+              이미지를 눌러 여행 필수템 보기
             </button>
           )}
         </div>

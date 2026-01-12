@@ -8,10 +8,18 @@ interface ChecklistItemProps {
 }
 
 const ChecklistItem = ({ item, isChecked, onToggle }: ChecklistItemProps) => {
+  const handleItemClick = (e: React.MouseEvent) => {
+    // 이미지나 링크 클릭 시에는 체크박스 토글이 아닌 링크로 이동
+    if ((e.target as HTMLElement).closest('a, img')) {
+      return;
+    }
+    onToggle(item.item_id);
+  };
+
   return (
     <div 
       className="flex items-start gap-4 p-4 rounded-xl cursor-pointer transition-all duration-200 hover:bg-muted/50 group"
-      onClick={() => onToggle(item.item_id)}
+      onClick={handleItemClick}
     >
       <div 
         className={`
@@ -45,6 +53,23 @@ const ChecklistItem = ({ item, isChecked, onToggle }: ChecklistItemProps) => {
           {item.description}
         </p>
       </div>
+
+      {/* 이미지 및 링크 */}
+      {item.image_url && item.link_url && (
+        <a
+          href={item.link_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          className="flex-shrink-0 w-10 h-10 rounded-lg overflow-hidden transition-all duration-200 hover:brightness-110 hover:shadow-md"
+        >
+          <img
+            src={item.image_url}
+            alt={item.title}
+            className="w-full h-full object-cover"
+          />
+        </a>
+      )}
     </div>
   );
 };
