@@ -236,7 +236,7 @@ const ActionButtons = ({ checklistRef }: ActionButtonsProps) => {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border p-3 shadow-lg">
+    <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border p-3 shadow-lg z-50">
       <div className="max-w-2xl mx-auto">
         {/* 4개 버튼 한 줄 배치 */}
         <div className="grid grid-cols-4 gap-2">
@@ -244,7 +244,7 @@ const ActionButtons = ({ checklistRef }: ActionButtonsProps) => {
             <button
               key={button.label}
               onClick={button.onClick}
-              className="flex flex-col items-center gap-1 py-2 px-1 rounded-lg transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5 whitespace-nowrap"
+              className="flex flex-col items-center gap-1 py-2 px-1 rounded-lg transition-all duration-300 hover:opacity-90 hover:-translate-y-0.5 active:translate-y-0 whitespace-nowrap"
               style={{ backgroundColor: "#1e293b", color: "#ffffff" }}
             >
               <button.icon className="w-4 h-4 flex-shrink-0" />

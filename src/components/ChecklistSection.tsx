@@ -26,28 +26,28 @@ const ChecklistSection = ({ section, checkedItems, onToggle }: ChecklistSectionP
 
   return (
     <div className="card-toss animate-fade-in">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 mb-4">
+        <div className="flex items-center gap-2 flex-wrap">
           <span className="text-xl">{sectionIcons[section.section_id] || "📋"}</span>
           <h3 className="section-title mb-0">{section.section_title}</h3>
           {(section.section_id === "electronics" || section.section_id === "health" || section.section_id === "packing") && (
             <button
               onClick={handleCoupangLink}
-              className="text-xs text-muted-foreground hover:text-foreground transition-colors ml-2"
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors ml-2 whitespace-nowrap"
             >
               이미지를 눌러 여행 필수템 보기
             </button>
           )}
         </div>
-        <span className="text-sm font-medium text-accent">
+        <span className="text-sm font-semibold text-accent">
           {completedCount}/{totalCount}
         </span>
       </div>
 
       {/* Progress bar */}
-      <div className="h-1.5 bg-muted rounded-full mb-4 overflow-hidden">
+      <div className="h-2 bg-muted rounded-full mb-4 overflow-hidden">
         <div 
-          className="h-full bg-accent rounded-full transition-all duration-500 ease-out"
+          className="h-full bg-accent rounded-full transition-all duration-500 ease-out shadow-sm"
           style={{ width: `${progress}%` }}
         />
       </div>

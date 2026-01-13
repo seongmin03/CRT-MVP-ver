@@ -18,14 +18,14 @@ const ChecklistItem = ({ item, isChecked, onToggle }: ChecklistItemProps) => {
 
   return (
     <div 
-      className="flex items-start gap-4 p-4 rounded-xl cursor-pointer transition-all duration-200 hover:bg-muted/50 group"
+      className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl cursor-pointer transition-all duration-200 hover:bg-muted/50 group"
       onClick={handleItemClick}
     >
       <div 
         className={`
-          flex-shrink-0 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-200
+          flex-shrink-0 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-200 mt-0.5
           ${isChecked 
-            ? 'bg-accent border-accent animate-check-bounce' 
+            ? 'bg-accent border-accent animate-check-bounce shadow-sm' 
             : 'border-muted-foreground/30 group-hover:border-accent/50'
           }
         `}
@@ -34,30 +34,11 @@ const ChecklistItem = ({ item, isChecked, onToggle }: ChecklistItemProps) => {
           <Check className="w-4 h-4 text-accent-foreground" strokeWidth={3} />
         )}
       </div>
-
-      {/* 이미지 및 링크 - 텍스트 왼쪽에 배치 */}
-      {item.image_url && item.link_url && (
-        <a
-          href={item.link_url}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={(e) => e.stopPropagation()}
-          className="flex-shrink-0 transition-all duration-200 hover:brightness-110 hover:shadow-md"
-          style={{ width: "40px", height: "40px" }}
-        >
-          <img
-            src={item.image_url}
-            alt={item.title}
-            className="w-full h-full object-cover rounded-lg"
-            style={{ width: "40px", height: "40px" }}
-          />
-        </a>
-      )}
       
       <div className="flex-1 min-w-0">
         <h4 
           className={`
-            font-medium text-base transition-all duration-300
+            font-semibold text-sm sm:text-base transition-all duration-300
             ${isChecked ? 'text-muted-foreground item-text-checked' : 'text-foreground'}
           `}
         >
@@ -65,13 +46,32 @@ const ChecklistItem = ({ item, isChecked, onToggle }: ChecklistItemProps) => {
         </h4>
         <p 
           className={`
-            mt-1 text-sm leading-relaxed transition-all duration-300
+            mt-1 text-xs sm:text-sm leading-relaxed transition-all duration-300
             ${isChecked ? 'text-muted-foreground/60' : 'text-muted-foreground'}
           `}
         >
           {item.description}
         </p>
       </div>
+
+      {/* 이미지 및 링크 - 텍스트 우측에 배치 */}
+      {item.image_url && item.link_url && (
+        <a
+          href={item.link_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          className="flex-shrink-0 transition-all duration-300 hover:brightness-110 hover:shadow-lg hover:scale-110 active:scale-95"
+          style={{ width: "40px", height: "40px" }}
+        >
+          <img
+            src={item.image_url}
+            alt={item.title}
+            className="w-full h-full object-cover rounded-lg shadow-md"
+            style={{ width: "40px", height: "40px" }}
+          />
+        </a>
+      )}
     </div>
   );
 };

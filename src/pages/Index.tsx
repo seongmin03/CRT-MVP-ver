@@ -73,29 +73,29 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background pb-28">
-      <div className="max-w-2xl mx-auto px-4">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6">
         <Header />
 
         {/* Overall progress with airplane animation */}
         <div className="card-toss mb-6 animate-fade-in">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-foreground">전체 준비 현황</span>
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-sm font-semibold text-foreground">전체 준비 현황</span>
             <span className="text-sm font-bold" style={{ color: "#007BFF" }}>{overallProgress}%</span>
           </div>
           <ProgressBarWithPlane progress={overallProgress} />
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-muted-foreground mt-2">
             {completedItems}/{totalItems} 항목 완료
           </p>
         </div>
 
         {/* 여행 국가 선택 영역 */}
         <div className="mb-6 animate-fade-in">
-          <div className="flex items-center justify-between gap-4 p-4 bg-card rounded-xl border border-border min-h-[60px]">
-            <span className="text-sm font-medium text-foreground whitespace-nowrap">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 p-4 bg-card rounded-xl border border-border shadow-sm">
+            <span className="text-sm font-semibold text-foreground">
               여행 국가를 선택하고 맞춤 혜택을 받으세요!
             </span>
             <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-full sm:w-[180px]">
                 <SelectValue placeholder="국가 선택" />
               </SelectTrigger>
               <SelectContent 
@@ -123,10 +123,13 @@ const Index = () => {
               href="https://direct.samsungfire.com/ria/pc/product/factory/?state=Front&product=travel&state=Front"
               target="_blank"
               rel="noopener noreferrer"
-              className="block rounded-xl p-4 text-center transition-all duration-200 hover:opacity-90 hover:shadow-md"
-              style={{ backgroundColor: "#FEF9E7" }}
+              className="block rounded-xl p-4 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
+              style={{ 
+                backgroundColor: "#FEF9E7",
+                border: "1px solid rgba(0, 0, 0, 0.05)"
+              }}
             >
-              <p className="text-sm font-medium text-foreground">
+              <p className="text-sm font-semibold text-foreground">
                 안전한 여행! 여행자 보험
               </p>
             </a>
@@ -137,10 +140,13 @@ const Index = () => {
                 href="https://www.myrealtrip.com/promotions/Japan_donki_coupon"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block rounded-xl p-4 text-center transition-all duration-200 hover:opacity-90 hover:shadow-md"
-                style={{ backgroundColor: "#FFDB58" }}
+                className="block rounded-xl p-4 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
+                style={{ 
+                  backgroundColor: "#FFDB58",
+                  border: "1px solid rgba(0, 0, 0, 0.05)"
+                }}
               >
-                <p className="text-sm font-medium text-foreground">
+                <p className="text-sm font-semibold text-foreground">
                   돈키호테 할인 쿠폰 증정!
                 </p>
               </a>
@@ -149,10 +155,13 @@ const Index = () => {
                 href="mrt://web?url=https%3A%2F%2Fgrab.onelink.me%2F2695613898%3Fpid%3DDB--MyRealTrip%26c%3DKR_CM0002_CLUSTERALL-CLUSTERALL_PAX_GT_ALL_031225_ACQ-MAIA-APPC_ASR__RG23GTPAT1KRTRAVQ1_DB--MyRealTrip_int_1170x1560_StdBnr_ADTK_ManualPlacement_pop-up-251202%26is_retargeting%3Dtrue%26af_dp%3DNA%26af_force_deeplink%3Dtrue%26af_sub5%3Ddisplay%26af_ad%3DKR_CM0002_CLUSTERALL-CLUSTERALL_PAX_GT_ALL_031225_ACQ-MAIA-APPC_ASR__RG23GTPAT1KRTRAVQ1_DB--MyRealTrip_int_1170x1560_StdBnr_ADTK_ManualPlacement_pop-up-251202%26af_adset%3DKR_CM0002_CLUSTERALL-CLUSTERALL_PAX_GT_ALL_031225_ACQ-MAIA-APPC_ASR__RG23GTPAT1KRTRAVQ1_DB--MyRealTrip_int_1170x1560_StdBnr_ADTK_ManualPlacement_pop-up-251202%26af_siteID%3DDB--MyRealTrip"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block rounded-xl p-4 text-center transition-all duration-200 hover:opacity-90 hover:shadow-md"
-                style={{ backgroundColor: "#D4EDDA" }}
+                className="block rounded-xl p-4 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
+                style={{ 
+                  backgroundColor: "#D4EDDA",
+                  border: "1px solid rgba(0, 0, 0, 0.05)"
+                }}
               >
-                <p className="text-sm font-medium text-foreground">
+                <p className="text-sm font-semibold text-foreground">
                   Grab 프로모션 확인하기
                 </p>
               </a>
@@ -161,10 +170,13 @@ const Index = () => {
                 href="https://www.myrealtrip.com/promotions/benefit"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block rounded-xl p-4 text-center transition-all duration-200 hover:opacity-90 hover:shadow-md"
-                style={{ backgroundColor: "#E3F2FD" }}
+                className="block rounded-xl p-4 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
+                style={{ 
+                  backgroundColor: "#E3F2FD",
+                  border: "1px solid rgba(0, 0, 0, 0.05)"
+                }}
               >
-                <p className="text-sm font-medium text-foreground">
+                <p className="text-sm font-semibold text-foreground">
                   트래블카드 혜택 보기
                 </p>
               </a>
