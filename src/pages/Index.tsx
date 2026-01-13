@@ -5,7 +5,7 @@ import EssentialItems from "@/components/EssentialItems";
 import ChecklistSection from "@/components/ChecklistSection";
 import ActionButtons from "@/components/ActionButtons";
 import { checklistData } from "@/data/checklistData";
-import { travelTips } from "@/data/travletips";
+import { travelTips } from "@/data/travleTips";
 import { Lightbulb } from "lucide-react";
 import { Check } from "lucide-react";
 import {
