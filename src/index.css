@@ -120,6 +120,11 @@
     text-decoration-thickness: 2px;
     text-underline-offset: -0.2em;
   }
+
+  /* 리얼 트립 섹션 내 링크 스타일 */
+  .travel-tip-content a {
+    @apply underline text-blue-600 hover:text-blue-800 transition-colors;
+  }
 }
 
 @layer utilities {

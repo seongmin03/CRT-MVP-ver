@@ -148,9 +148,10 @@ const Index = () => {
                       <h4 className="font-semibold text-sm text-foreground mb-1 leading-tight">
                         {tip.title}
                       </h4>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
-                        {tip.content}
-                      </p>
+                      <p 
+                        className="text-sm text-muted-foreground leading-relaxed travel-tip-content"
+                        dangerouslySetInnerHTML={{ __html: tip.content }}
+                      />
                     </div>
                   </div>
                 ))}
@@ -228,9 +229,6 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Essential items section */}
-        <EssentialItems />
-
         {/* 4. 중단: 일반 체크리스트 (essentials 제외) */}
         <div ref={checklistRef} id="checklist-root" className="space-y-4 bg-background rounded-xl">
           {otherSections.map((section, index) => (
@@ -257,6 +255,9 @@ const Index = () => {
             />
           </div>
         )}
+
+        {/* 6. 최하단: Essential items section */}
+        <EssentialItems />
       </div>
 
       <ActionButtons checklistRef={checklistRef} />

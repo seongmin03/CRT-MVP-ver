@@ -5,10 +5,10 @@ export interface TravelTip {
   
   export const travelTips: Record<string, TravelTip[]> = {
     "일본": [
-      { title: "현금은 필수", content: "일본은 현금 사용 비율이 매우 높아요! 일본 맞춤 동전지갑 챙기셨나요?" },
+      { title: "현금은 필수", content: "일본은 현금 사용 비율이 매우 높아요! <a href='https://www.coupang.com/np/search?component=&q=%EC%9D%BC%EB%B3%B8+%EB%8F%99%EC%A0%84%EC%A7%80%EA%B0%91&traceId=mkclzz85&channel=user' target='_blank' rel='noopener noreferrer' class='underline text-blue-600 hover:text-blue-800'>일본 동전지갑</a> 챙기셨나요?" },
       { title: "비짓재팬(VJW) 캡처", content: "비짓재팬은 일본의 전자 입국신고서에요! 미리 큐알코드 캡처하기" },
       { title: "복잡한 지하철 노선", content: "일본은 운영사가 다양한 노선이 섞여 있어요. 구매한 패스가 어느 노선까지 커버하는지 꼭 확인하세요." },
-      { title: "쇼핑과 수하물", content: "돈키호테 쇼핑 리스트 꽉 채우실 예정인가요? 수하물 무게 초과되지 않게 '휴대용 손저울' 챙기면 마음이 편해요" }
+      { title: "쇼핑과 수하물", content: "<a href='https://www.myrealtrip.com/promotions/Japan_donki_coupon' target='_blank' rel='noopener noreferrer' class='underline text-blue-600 hover:text-blue-800'>돈키호테 쇼핑</a> 리스트 꽉 채우실 예정인가요? 수하물 무게 초과되지 않게 '<a href='https://www.coupang.com/np/search?q=%EC%BA%90%EB%A6%AC%EC%96%B4%20%EB%AC%B4%EA%B2%8C%20%EC%B8%A1%EC%A0%95%EA%B8%B0&channel=auto&traceId=mkcm1qyv' target='_blank' rel='noopener noreferrer' class='underline text-blue-600 hover:text-blue-800'>휴대용 손저울</a>' 챙기면 마음이 편해요" }
     ],
     "베트남": [
       { title: "전자담배 반입 불법", content: "베트남은 전자담배 반입이 불법이에요! 공항에서 압수당하거나 벌금이 부과되기도 해요" },
