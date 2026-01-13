@@ -95,7 +95,7 @@ export const checklistData: ChecklistData = {
           description: "방문 국가의 전원 플러그 타입이 다를 수 있으니 호환 어댑터를 준비하세요.",
           cta_type: "none",
           cta_label: "",
-          image_url: "https://images.unsplash.com/photo-1625842268584-8f3296236761?w=200&h=200&fit=crop",
+          image_url: "/image/adapter.png",
           link_url: "https://www.coupang.com/np/search?component=&q=%EC%97%AC%ED%96%89%EC%9A%A9+%EB%A9%80%ED%8B%B0%EC%96%B4%EB%8C%91%ED%84%B0&traceId=mkb9wfp6&channel=auto"
         },
         {
@@ -104,7 +104,7 @@ export const checklistData: ChecklistData = {
           description: "항공사별 기내 반입 규정이 다를 수 있으니 사전 확인이 필요해요.",
           cta_type: "none",
           cta_label: "",
-          image_url: "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c7?w=200&h=200&fit=crop",
+          image_url: "/image/battery.png",
           link_url: "https://www.coupang.com/np/search?component=&q=%EC%97%AC%ED%96%89%EC%9A%A9+%EB%B3%B4%EC%A1%B0%EB%B0%B0%ED%84%B0%EB%A6%AC&traceId=mkba3q97&channel=user"
         },
         {
@@ -120,7 +120,7 @@ export const checklistData: ChecklistData = {
           description: "여행 일정과 사용 패턴에 맞는 통신 수단을 미리 선택해두면 편리해요.",
           cta_type: "none",
           cta_label: "",
-          image_url: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=200&h=200&fit=crop",
+          image_url: "/image/sim.png",
           link_url: "https://www.coupang.com/np/search?component=&q=%ED%95%B4%EC%99%B8+%EC%9C%A0%EC%8B%AC&traceId=mkba51py&channel=user"
         }
       ]
@@ -149,7 +149,7 @@ export const checklistData: ChecklistData = {
           description: "휴대용 티슈, 물티슈, 손 소독제 등은 이동 중 유용해요.",
           cta_type: "none",
           cta_label: "",
-          image_url: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=200&h=200&fit=crop",
+          image_url: "/image/towel.png",
           link_url: "https://www.coupang.com/np/search?q=%EC%97%AC%ED%96%89%EC%9A%A9%20%EC%9C%84%EC%83%9D%EC%9A%A9%ED%92%88&channel=auto&traceId=mkba6ufa"
         }
       ]
@@ -178,7 +178,7 @@ export const checklistData: ChecklistData = {
           description: "짐 정리와 이동 시 편의를 위해 활용해보세요.",
           cta_type: "none",
           cta_label: "",
-          image_url: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=200&h=200&fit=crop",
+          image_url: "/image/pouch.png",
           link_url: "https://www.coupang.com/np/search?q=%EC%97%AC%ED%96%89%20%EC%88%98%EB%82%A9%20%ED%8C%8C%EC%9A%B0%EC%B9%98&channel=auto&traceId=mkba7jmx"
         },
         {
@@ -187,7 +187,7 @@ export const checklistData: ChecklistData = {
           description: "갑작스러운 기상 변화에 대비해 하나쯤 준비하면 유용해요.",
           cta_type: "none",
           cta_label: "",
-          image_url: "https://images.unsplash.com/photo-1523362628745-0c100150b504?w=200&h=200&fit=crop",
+          image_url: "/image/umbrella.png",
           link_url: "https://www.coupang.com/np/search?component=&q=%EC%97%AC%ED%96%89%EC%9A%A9+%EC%9A%B0%EC%82%B0&traceId=mkba89xb&channel=user"
         }
       ]

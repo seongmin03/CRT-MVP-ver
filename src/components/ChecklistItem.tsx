@@ -34,6 +34,25 @@ const ChecklistItem = ({ item, isChecked, onToggle }: ChecklistItemProps) => {
           <Check className="w-4 h-4 text-accent-foreground" strokeWidth={3} />
         )}
       </div>
+
+      {/* 이미지 및 링크 - 텍스트 왼쪽에 배치 */}
+      {item.image_url && item.link_url && (
+        <a
+          href={item.link_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          className="flex-shrink-0 transition-all duration-200 hover:brightness-110 hover:shadow-md"
+          style={{ width: "40px", height: "40px" }}
+        >
+          <img
+            src={item.image_url}
+            alt={item.title}
+            className="w-full h-full object-cover rounded-lg"
+            style={{ width: "40px", height: "40px" }}
+          />
+        </a>
+      )}
       
       <div className="flex-1 min-w-0">
         <h4 
@@ -53,23 +72,6 @@ const ChecklistItem = ({ item, isChecked, onToggle }: ChecklistItemProps) => {
           {item.description}
         </p>
       </div>
-
-      {/* 이미지 및 링크 */}
-      {item.image_url && item.link_url && (
-        <a
-          href={item.link_url}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={(e) => e.stopPropagation()}
-          className="flex-shrink-0 w-10 h-10 rounded-lg overflow-hidden transition-all duration-200 hover:brightness-110 hover:shadow-md"
-        >
-          <img
-            src={item.image_url}
-            alt={item.title}
-            className="w-full h-full object-cover"
-          />
-        </a>
-      )}
     </div>
   );
 };
