@@ -5,6 +5,9 @@ import EssentialItems from "@/components/EssentialItems";
 import ChecklistSection from "@/components/ChecklistSection";
 import ActionButtons from "@/components/ActionButtons";
 import { checklistData } from "@/data/checklistData";
+import { travelTips } from "@/data/travletips";
+import { Lightbulb } from "lucide-react";
+import { Check } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -71,13 +74,23 @@ const Index = () => {
   const completedItems = checkedItems.size;
   const overallProgress = Math.round((completedItems / totalItems) * 100);
 
+  // 체크리스트 섹션 분리: essentials는 마지막에, 나머지는 먼저
+  const essentialsSection = checklistData.sections.find(s => s.section_id === "essentials");
+  const otherSections = checklistData.sections.filter(s => s.section_id !== "essentials");
+
+  // 선택된 국가의 여행 팁 가져오기 ("미국 / 괌" 같은 경우도 처리)
+  const travelTipsKey = selectedCountry === "미국" || selectedCountry === "괌" 
+    ? "미국 / 괌" 
+    : selectedCountry;
+  const currentTravelTips = selectedCountry && travelTipsKey ? travelTips[travelTipsKey] : null;
+
   return (
     <div className="min-h-screen bg-background pb-28">
-      <div className="max-w-2xl mx-auto px-4 sm:px-6">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 space-y-8">
         <Header />
 
         {/* Overall progress with airplane animation */}
-        <div className="card-toss mb-6 animate-fade-in">
+        <div className="card-toss animate-fade-in">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm font-semibold text-foreground">전체 준비 현황</span>
             <span className="text-sm font-bold" style={{ color: "#007BFF" }}>{overallProgress}%</span>
@@ -88,8 +101,8 @@ const Index = () => {
           </p>
         </div>
 
-        {/* 여행 국가 선택 영역 */}
-        <div className="mb-6 animate-fade-in">
+        {/* 1. 최상단: 여행 국가 선택 영역 */}
+        <div className="animate-fade-in">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 p-4 bg-card rounded-xl border border-border shadow-sm">
             <span className="text-sm font-semibold text-foreground">
               여행 국가를 선택하고 맞춤 혜택을 받으세요!
@@ -115,8 +128,39 @@ const Index = () => {
           </div>
         </div>
 
-        {/* 혜택 탭 2분할 - 항상 표시 */}
-        <div className="mb-6 animate-fade-in">
+        {/* 2. 신설: {selectedCountry} 리얼 트립 섹션 - 국가 선택 시에만 표시 */}
+        {selectedCountry && currentTravelTips && (
+          <div className="animate-fade-in">
+            <div className="bg-blue-50/50 rounded-2xl p-5 border border-blue-100/50 shadow-sm">
+              <div className="flex items-center gap-2 mb-4">
+                <Lightbulb className="w-5 h-5 text-blue-600" />
+                <h3 className="text-lg font-semibold text-foreground">
+                  {selectedCountry} 리얼 트립
+                </h3>
+              </div>
+              <div className="space-y-3">
+                {currentTravelTips.map((tip, index) => (
+                  <div key={index} className="flex items-start gap-3">
+                    <div className="flex-shrink-0 mt-0.5">
+                      <Check className="w-4 h-4 text-blue-600" strokeWidth={2.5} />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-sm text-foreground mb-1 leading-tight">
+                        {tip.title}
+                      </h4>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {tip.content}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 3. 중단: 혜택 탭 2분할 - 항상 표시 */}
+        <div className="animate-fade-in">
           <div className="grid grid-cols-2 gap-3">
             {/* 왼쪽 절반: 안전한 여행! 여행자 보험 - 항상 표시 */}
             <a
@@ -187,9 +231,9 @@ const Index = () => {
         {/* Essential items section */}
         <EssentialItems />
 
-        {/* Checklist sections */}
+        {/* 4. 중단: 일반 체크리스트 (essentials 제외) */}
         <div ref={checklistRef} id="checklist-root" className="space-y-4 bg-background rounded-xl">
-          {checklistData.sections.map((section, index) => (
+          {otherSections.map((section, index) => (
             <div 
               key={section.section_id}
               style={{ animationDelay: `${index * 100}ms` }}
@@ -202,6 +246,17 @@ const Index = () => {
             </div>
           ))}
         </div>
+
+        {/* 5. 최하단: 필수 서류 및 신분증 섹션 (essentials) */}
+        {essentialsSection && (
+          <div className="animate-fade-in">
+            <ChecklistSection
+              section={essentialsSection}
+              checkedItems={checkedItems}
+              onToggle={handleToggle}
+            />
+          </div>
+        )}
       </div>
 
       <ActionButtons checklistRef={checklistRef} />
