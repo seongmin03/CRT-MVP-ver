@@ -12,15 +12,15 @@ export interface TravelTip {
     ],
     "베트남": [
       { title: "전자담배 반입 불법", content: "베트남은 전자담배 반입이 불법이에요! 공항에서 압수당하거나 벌금이 부과되기도 해요" },
-      { title: "그랩(Grab) 미리 가입", content: "동남아 대표 택시 어플인 그랩(Grab), 한국에서 미리 번호 인증하고 카드까지 등록하세요" },
-      { title: "갑작스러운 비 대비", content: "베트남은 습도가 높고 갑자기 비가 내려요! 여분의 지퍼백은 젖은 물건을 분리하기 좋아요" },
+      { title: "그랩(Grab) 미리 가입", content: "동남아 대표 택시 어플인 <a href='mrt://web?url=https%3A%2F%2Fgrab.onelink.me%2F2695613898%3Fpid%3DDB--MyRealTrip%26c%3DKR_CM0002_CLUSTERALL-CLUSTERALL_PAX_GT_ALL_031225_ACQ-MAIA-APPC_ASR__RG23GTPAT1KRTRAVQ1_DB--MyRealTrip_int_1170x1560_StdBnr_ADTK_ManualPlacement_pop-up-251202%26is_retargeting%3Dtrue%26af_dp%3DNA%26af_force_deeplink%3Dtrue%26af_sub5%3Ddisplay%26af_ad%3DKR_CM0002_CLUSTERALL-CLUSTERALL_PAX_GT_ALL_031225_ACQ-MAIA-APPC_ASR__RG23GTPAT1KRTRAVQ1_DB--MyRealTrip_int_1170x1560_StdBnr_ADTK_ManualPlacement_pop-up-251202%26af_adset%3DKR_CM0002_CLUSTERALL-CLUSTERALL_PAX_GT_ALL_031225_ACQ-MAIA-APPC_ASR__RG23GTPAT1KRTRAVQ1_DB--MyRealTrip_int_1170x1560_StdBnr_ADTK_ManualPlacement_pop-up-251202%26af_siteID%3DDB--MyRealTrip' target='_blank' rel='noopener noreferrer' class='underline text-blue-600 hover:text-blue-800'>그랩(Grab)</a>, 한국에서 미리 번호 인증하고 카드까지 등록하세요" },
+      { title: "갑작스러운 비 대비", content: "베트남은 습도가 높고 갑자기 비가 내려요! <a href='https://www.coupang.com/np/search?component=&q=%EC%97%AC%ED%96%89%EC%9A%A9+%EC%A7%80%ED%8D%BC%EB%B0%B1&traceId=mkdmxoyn&channel=user' target='_blank' rel='noopener noreferrer' class='underline text-blue-600 hover:text-blue-800'>여분의 지퍼백</a>은 젖은 물건을 분리하기 좋아요" },
       { title: "입국심사 대비", content: "입국심사에서 체류계획을 질문받을 수 있어 예약내역을 바로 보여줄 수 있게 준비하세요!" }
     ],
     "태국": [
       { title: "전자담배 전면 금지", content: "태국은 전자담배가 전면 불법이에요! 절대 가져가지 마세요." },
       { title: "사원 복장 에티켓", content: "사원에 갈 때 복장규정이 있어요. 반바지, 민소매, 슬리퍼 등의 옷차림을 주의하세요." },
       { title: "강력한 실내 에어컨", content: "밖은 덥지만 건물 내부는 추워요! 냉방병에 대비하여 얇은 긴팔을 준비하세요." },
-      { title: "택시 미터기 확인", content: "미터기 대신 고정 요금을 달라고 고집한다면 다른 택시를 찾으세요!" }
+      { title: "택시 미터기 확인", content: "미터기 대신 고정 요금을 달라고 고집한다면 <a href='mrt://web?url=https%3A%2F%2Fgrab.onelink.me%2F2695613898%3Fpid%3DDB--MyRealTrip%26c%3DKR_CM0002_CLUSTERALL-CLUSTERALL_PAX_GT_ALL_031225_ACQ-MAIA-APPC_ASR__RG23GTPAT1KRTRAVQ1_DB--MyRealTrip_int_1170x1560_StdBnr_ADTK_ManualPlacement_pop-up-251202%26is_retargeting%3Dtrue%26af_dp%3DNA%26af_force_deeplink%3Dtrue%26af_sub5%3Ddisplay%26af_ad%3DKR_CM0002_CLUSTERALL-CLUSTERALL_PAX_GT_ALL_031225_ACQ-MAIA-APPC_ASR__RG23GTPAT1KRTRAVQ1_DB--MyRealTrip_int_1170x1560_StdBnr_ADTK_ManualPlacement_pop-up-251202%26af_adset%3DKR_CM0002_CLUSTERALL-CLUSTERALL_PAX_GT_ALL_031225_ACQ-MAIA-APPC_ASR__RG23GTPAT1KRTRAVQ1_DB--MyRealTrip_int_1170x1560_StdBnr_ADTK_ManualPlacement_pop-up-251202%26af_siteID%3DDB--MyRealTrip' target='_blank' rel='noopener noreferrer' class='underline text-blue-600 hover:text-blue-800'>다른 택시</a>를 찾으세요!" }
     ],
     "필리핀": [
       { title: "공항세(Terminal Fee)", content: "필리핀은 공항세를 받습니다. 일부 공항은 현장에서 현금으로 받는 경우가 있으니 미리 확인하세요!" },
