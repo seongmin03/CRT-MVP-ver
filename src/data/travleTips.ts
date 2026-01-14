@@ -6,7 +6,7 @@ export interface TravelTip {
   export const travelTips: Record<string, TravelTip[]> = {
     "일본": [
       { title: "현금은 필수", content: "일본은 현금 사용 비율이 매우 높아요! <a href='https://www.coupang.com/np/search?component=&q=%EC%9D%BC%EB%B3%B8+%EB%8F%99%EC%A0%84%EC%A7%80%EA%B0%91&traceId=mkclzz85&channel=user' target='_blank' rel='noopener noreferrer' class='underline text-blue-600 hover:text-blue-800'>일본 동전지갑</a> 챙기셨나요?" },
-      { title: "비짓재팬(VJW) 캡처", content: "비짓재팬은 일본의 전자 입국신고서에요! 미리 큐알코드 캡처하기" },
+      { title: "비짓재팬(VJW) 캡처", content: "비짓재팬은 일본의 전자 입국신고서에요! 미리 큐알코드 캡처하세요!" },
       { title: "복잡한 지하철 노선", content: "일본은 운영사가 다양한 노선이 섞여 있어요. 구매한 패스가 어느 노선까지 커버하는지 꼭 확인하세요." },
       { title: "쇼핑과 수하물", content: "<a href='https://www.myrealtrip.com/promotions/Japan_donki_coupon' target='_blank' rel='noopener noreferrer' class='underline text-blue-600 hover:text-blue-800'>돈키호테 쇼핑</a> 리스트 꽉 채우실 예정인가요? 수하물 무게 초과되지 않게 '<a href='https://www.coupang.com/np/search?q=%EC%BA%90%EB%A6%AC%EC%96%B4%20%EB%AC%B4%EA%B2%8C%20%EC%B8%A1%EC%A0%95%EA%B8%B0&channel=auto&traceId=mkcm1qyv' target='_blank' rel='noopener noreferrer' class='underline text-blue-600 hover:text-blue-800'>휴대용 손저울</a>' 챙기면 마음이 편해요" }
     ],
@@ -37,5 +37,30 @@ export interface TravelTip {
       { title: "팁(Tip) 직접 입력", content: "결제 후 팁을 직접 입력해야 하는 경우가 많아요. 당황하지 마세요!" },
       { title: "실물 면허증 지참", content: "렌터카 이용 시 실물 한국 면허증과 여권을 함께 요구할 수 있어요. 모든 서류를 챙기세요." },
       { title: "세금 별도 표기", content: "일반적으로 가격표에 세금이 포함되어 있지 않으니 결제 시 주의하세요!" }
+    ],
+    "홍콩": [
+      { title: "옥토퍼스 카드", content: "옥토퍼스 카드는 홍콩의 교통카드에요. 다양한 곳에서 사용할 수 있으니 꼭 발급하세요!" },
+      { title: "우기 대비", content: "우기에는 갑자기 비가 와요! 우산이나 우비를 미리 준비하세요 :)" },
+      { title: "합석 문화", content: "맛있는 음식이 정말 많은 홍콩, 그만큼 합석 문화도 존재하므로 당황하지 말고 현지인과 함께 음식을 즐기세요!" },
+      { title: "숙소 크기", content: "숙소 객실 크기가 작은 편이에요." }
+    ],
+    "인도네시아": [
+      { title: "여행자 보험", content: "인도네시아의 외국인 병원비는 비싼편이에요! 여행자 보험으로 미리 대비하세요." },
+      { title: "현금 준비", content: "여전히 현금 사용 비중이 높아요!" },
+      { title: "발리 밸리 주의", content: "발리 밸리(Bali Belly)라는 말이 있듯이 많은 여행자가 소화기 불량, 복통을 호소해요. 안전한 여행이 되도록 유의하세요!" }
+    ],
+    "유럽": [
+      { title: "소매치기 주의", content: "유럽은 소매치기가 빈번해요. 특히 관광지, 대중교통 처럼 사람이 많은 곳에서는 안보이는 가방에 소지품을 넣으세요!" },
+      { title: "유료 화장실", content: "유료 화장실이 있는 지역이 많아, 동전이나 소액 결제수단을 준비하면 좋아요." },
+      { title: "식당 자릿세", content: "자릿세가 부과되는 식당이 있습니다! 메뉴판을 잘 확인하세요." }
+    ],
+    "싱가포르": [
+      { title: "껌 반입 금지", content: "싱가포르는 껌 반입 금지에요!" },
+      { title: "음식물 섭취 금지", content: "대중교통에서 음식물 섭취하지 마세요. 벌금이 부과될 수 있어요!" },
+      { title: "SG Arrival Card", content: "싱가포르 입국카드 (SG Arrival Card)를 미리 작성하세요. 입국 3일전부터 작성하여 입국 절차를 빠르게 끝내세요!" }
+    ],
+    "호주": [
+      { title: "강력한 자외선", content: "호주의 태양은 차원이 달라요! 지수가 높은 자외선 차단제를 바르세요." },
+      { title: "엄격한 검역", content: "호주는 아름다운 생태계를 보호하기 위해 검역 절차가 매우 까다로워요. 식품을 반입하려면 반드시 신고해야 합니다!" }
     ]
   };

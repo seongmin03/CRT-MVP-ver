@@ -78,11 +78,15 @@ const Index = () => {
   const essentialsSection = checklistData.sections.find(s => s.section_id === "essentials");
   const otherSections = checklistData.sections.filter(s => s.section_id !== "essentials");
 
-  // 선택된 국가의 여행 팁 가져오기 ("미국 / 괌" 같은 경우도 처리)
+  // 선택된 국가의 여행 팁 가져오기 ("미국 / 괌", 유럽 국가들 처리)
+  const europeCountries = ["프랑스", "영국", "스페인", "이탈리아"];
   const travelTipsKey = selectedCountry === "미국" || selectedCountry === "괌" 
     ? "미국 / 괌" 
+    : europeCountries.includes(selectedCountry)
+    ? "유럽"
     : selectedCountry;
   const currentTravelTips = selectedCountry && travelTipsKey ? travelTips[travelTipsKey] : null;
+  const displayCountryName = europeCountries.includes(selectedCountry) ? "유럽" : selectedCountry;
 
   return (
     <div className="min-h-screen bg-background pb-28">
@@ -135,7 +139,7 @@ const Index = () => {
               <div className="flex items-center gap-2 mb-4">
                 <Lightbulb className="w-5 h-5 text-blue-600" />
                 <h3 className="text-lg font-semibold text-foreground">
-                  {selectedCountry} 리얼 트립
+                  {displayCountryName} 리얼 트립
                 </h3>
               </div>
               <div className="space-y-3">
