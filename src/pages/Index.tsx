@@ -6,56 +6,46 @@ import ChecklistSection from "@/components/ChecklistSection";
 import ActionButtons from "@/components/ActionButtons";
 import { checklistData } from "@/data/checklistData";
 import { travelTips } from "@/data/travleTips";
-import { Lightbulb } from "lucide-react";
-import { Check } from "lucide-react";
+import { Lightbulb, Check, ChevronDown, Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { cn } from "@/lib/utils";
 
-// 국가 리스트 정렬
-const topCountries = [
-  "일본", "베트남", "태국", "필리핀", "중국", "대만", 
-  "미국", "홍콩", "인도네시아", "괌", "프랑스", "싱가포르"
-];
-
-const allCountries = [
-  "알제리", "안도라", "아르헨티나", "아루바", "호주", "오스트리아", 
-  "아제르바이잔", "바하마", "방글라데시", "벨기에", "부탄", "볼리비아", 
-  "보스니아 헤르체고비나", "보츠와나", "브라질", "브루나이", "불가리아", 
-  "캄보디아", "캐나다", "칠레", "중국", "콜롬비아", "콩고민주공화국", 
-  "코스타리카", "크로아티아", "쿠바", "키프로스", "체코", "덴마크", 
-  "도미니카 공화국", "에콰도르", "이집트", "에스토니아", "에티오피아", 
-  "피지", "핀란드", "프랑스", "프렌치 폴리네시아", "조지아", "독일", 
-  "지브롤터", "그리스", "그레나다", "괌", "과테말라", "건지", "기니", 
-  "바티칸", "홍콩", "헝가리", "아이슬란드", "인도", "인도네시아", "이란", 
-  "이라크", "아일랜드", "이스라엘", "이탈리아", "일본", "요르단", 
-  "카자흐스탄", "케냐", "대한민국", "쿠웨이트", "키르기스스탄", "라오스", 
-  "라트비아", "레바논", "리투아니아", "룩셈부르크", "마카오", "마케도니아", 
-  "말레이시아", "몰디브", "몰타", "모리셔스", "멕시코", "몰도바", "모나코", 
-  "몽골", "몬테네그로", "모로코", "미얀마", "나미비아", "네팔", "네덜란드", 
-  "뉴질랜드", "나이지리아", "북마리아나 제도", "노르웨이", "오만", "파키스탄", 
-  "팔라우", "파나마", "페루", "필리핀", "폴란드", "포르투갈", "카타르", 
-  "루마니아", "러시아", "르완다", "사우디아라비아", "세르비아", "세이셸", 
-  "싱가포르", "슬로바키아", "슬로베니아", "남아프리카 공화국", "스페인", 
-  "스리랑카", "스웨덴", "스위스", "대만", "탄자니아", "태국", "튀니지", 
-  "터키", "우간다", "우크라이나", "아랍에미리트", "영국", "미국", 
-  "우즈베키스탄", "베트남", "잠비아", "짐바브웨"
-];
+// travelTips의 키를 기준으로 검색 가능한 국가 목록 생성
+// 유럽 국가들은 개별적으로도 표시되지만, 선택 시 "유럽"으로 처리됨
+const availableCountries = Object.keys(travelTips).flatMap(key => {
+  if (key === "유럽") {
+    // 유럽은 개별 국가들로 분리하여 표시
+    return ["프랑스", "영국", "스페인", "이탈리아"];
+  } else if (key === "미국 / 괌") {
+    // 미국 / 괌은 개별 국가로 분리
+    return ["미국", "괌"];
+  } else {
+    return [key];
+  }
+});
 
 // 중복 제거 및 정렬
-const otherCountries = allCountries
-  .filter(country => !topCountries.includes(country))
-  .sort((a, b) => a.localeCompare(b, 'ko'));
-
-const sortedCountries = [...topCountries, ...otherCountries];
+const sortedCountries = [...new Set(availableCountries)].sort((a, b) => 
+  a.localeCompare(b, 'ko')
+);
 
 const Index = () => {
   const [checkedItems, setCheckedItems] = useState<Set<string>>(new Set());
   const [selectedCountry, setSelectedCountry] = useState<string>("");
+  const [open, setOpen] = useState(false);
   const checklistRef = useRef<HTMLDivElement>(null);
 
   const handleToggle = (itemId: string) => {
@@ -111,24 +101,57 @@ const Index = () => {
             <span className="text-sm font-semibold text-foreground">
               여행 국가를 선택하고 맞춤 혜택을 받으세요!
             </span>
-            <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-              <SelectTrigger className="w-full sm:w-[180px]">
-                <SelectValue placeholder="국가 선택" />
-              </SelectTrigger>
-              <SelectContent 
-                position="popper" 
-                side="bottom" 
-                sideOffset={4}
-                avoidCollisions={false}
-                collisionPadding={0}
-              >
-                {sortedCountries.map((country) => (
-                  <SelectItem key={country} value={country}>
-                    {country}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={open}
+                  className="w-full sm:w-[200px] justify-between"
+                >
+                  {selectedCountry || "국가 선택"}
+                  <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[200px] p-0 shadow-lg" align="end">
+                <Command>
+                  <CommandInput 
+                    placeholder="국가 검색..." 
+                    className="h-9"
+                  />
+                  <CommandList className="max-h-60">
+                    <CommandEmpty>검색 결과가 없습니다.</CommandEmpty>
+                    <CommandGroup>
+                      {sortedCountries.map((country) => {
+                        const isSelected = selectedCountry === country;
+                        return (
+                          <CommandItem
+                            key={country}
+                            value={country}
+                            onSelect={() => {
+                              setSelectedCountry(country);
+                              setOpen(false);
+                            }}
+                            className={cn(
+                              "cursor-pointer",
+                              isSelected && "bg-accent text-accent-foreground"
+                            )}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                isSelected ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                            {country}
+                          </CommandItem>
+                        );
+                      })}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
 
