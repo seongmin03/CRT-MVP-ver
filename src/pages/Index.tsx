@@ -95,7 +95,7 @@ const Index = () => {
           </p>
         </div>
 
-        {/* 1. 최상단: 여행 국가 선택 영역 */}
+        {/* 1. 최상단: 여행 국가 선택 영역 (검색 가능한 드롭다운) */}
         <div className="animate-fade-in">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 p-4 bg-card rounded-xl border border-border shadow-sm">
             <span className="text-sm font-semibold text-foreground">
@@ -113,14 +113,17 @@ const Index = () => {
                   <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-[200px] p-0 shadow-lg" align="end">
-                <Command>
+              <PopoverContent 
+                className="w-[200px] p-0 bg-white border border-gray-100 shadow-2xl rounded-lg overflow-hidden" 
+                align="end"
+              >
+                <Command className="bg-white">
                   <CommandInput 
                     placeholder="국가 검색..." 
-                    className="h-9"
+                    className="h-11 bg-white border-b border-gray-100"
                   />
-                  <CommandList className="max-h-60">
-                    <CommandEmpty>검색 결과가 없습니다.</CommandEmpty>
+                  <CommandList className="max-h-80 overflow-y-auto bg-white">
+                    <CommandEmpty className="py-6 text-sm text-gray-500">찾으시는 국가가 없습니다</CommandEmpty>
                     <CommandGroup>
                       {sortedCountries.map((country) => {
                         const isSelected = selectedCountry === country;
@@ -133,7 +136,7 @@ const Index = () => {
                               setOpen(false);
                             }}
                             className={cn(
-                              "cursor-pointer",
+                              "cursor-pointer hover:bg-gray-50",
                               isSelected && "bg-accent text-accent-foreground"
                             )}
                           >
@@ -155,7 +158,7 @@ const Index = () => {
           </div>
         </div>
 
-        {/* 2. 신설: {selectedCountry} 리얼 트립 섹션 - 국가 선택 시에만 표시 */}
+        {/* 2. 선택된 국가의 리얼 트립 섹션 - 국가 선택 시에만 표시 */}
         {selectedCountry && currentTravelTips && (
           <div className="animate-fade-in">
             <div className="bg-blue-50/50 rounded-2xl p-5 border border-blue-100/50 shadow-sm">
@@ -255,6 +258,9 @@ const Index = () => {
             )}
           </div>
         </div>
+
+        {/* Essential items section */}
+        <EssentialItems />
 
         {/* 4. 중단: 일반 체크리스트 (essentials 제외) */}
         <div ref={checklistRef} id="checklist-root" className="space-y-4 bg-background rounded-xl">

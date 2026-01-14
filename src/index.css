@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* Check Real Trip Design System - Toss-inspired clean minimal UI */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap');
 
 @layer base {
   :root {
@@ -69,40 +69,37 @@
 
 @layer components {
   .card-toss {
-    @apply bg-card rounded-2xl p-5 transition-all duration-300;
+    @apply bg-card rounded-2xl p-5 transition-all duration-200;
     box-shadow: var(--shadow-card);
   }
 
   .card-toss:hover {
     box-shadow: var(--shadow-lg);
-    transform: translateY(-1px);
   }
 
   .btn-primary {
-    @apply bg-primary text-primary-foreground font-medium px-4 py-3 rounded-xl transition-all duration-300;
+    @apply bg-primary text-primary-foreground font-medium px-4 py-3 rounded-xl transition-all duration-200;
   }
 
   .btn-primary:hover {
     @apply opacity-90;
     transform: translateY(-1px);
-    box-shadow: var(--shadow-lg);
   }
 
   .btn-secondary {
-    @apply bg-secondary text-secondary-foreground font-medium px-4 py-3 rounded-xl transition-all duration-300;
+    @apply bg-secondary text-secondary-foreground font-medium px-4 py-3 rounded-xl transition-all duration-200;
   }
 
   .btn-secondary:hover {
     @apply bg-muted;
-    transform: translateY(-1px);
   }
 
   .section-title {
-    @apply text-primary font-semibold text-base sm:text-lg mb-3;
+    @apply text-primary font-semibold text-lg mb-3;
   }
 
   .checkbox-custom {
-    @apply w-6 h-6 rounded-lg border-2 border-muted-foreground/30 transition-all duration-300 flex items-center justify-center cursor-pointer;
+    @apply w-6 h-6 rounded-lg border-2 border-muted-foreground/30 transition-all duration-200 flex items-center justify-center cursor-pointer;
   }
 
   .checkbox-custom.checked {
@@ -113,26 +110,7 @@
     @apply transition-all duration-300;
   }
 
-  .item-text.checked,
-  .item-text-checked {
-    @apply text-muted-foreground;
-    text-decoration: line-through;
-    text-decoration-thickness: 2px;
-    text-underline-offset: -0.2em;
-  }
-
-  /* 리얼 트립 섹션 내 링크 스타일 */
-  .travel-tip-content a {
-    @apply underline text-blue-600 hover:text-blue-800 transition-colors;
-  }
-}
-
-@layer utilities {
-  .animate-fade-in {
-    animation: fade-in 0.5s ease-out forwards;
-  }
-  
-  .animate-check-bounce {
-    animation: check-bounce 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+  .item-text.checked {
+    @apply text-muted-foreground line-through;
   }
 }
