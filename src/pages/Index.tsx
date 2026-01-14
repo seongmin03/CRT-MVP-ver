@@ -285,11 +285,20 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Essential items section */}
-        <EssentialItems />
+        {/* 체크리스트 영역만 Export 대상 */}
+        <div ref={checklistRef} id="checklist-root" className="space-y-4 bg-background rounded-xl pb-24">
+          {/* 필수 서류 및 신분증 섹션 (essentials) - 먼저 표시 */}
+          {essentialsSection && (
+            <div className="animate-fade-in">
+              <ChecklistSection
+                section={essentialsSection}
+                checkedItems={checkedItems}
+                onToggle={handleToggle}
+              />
+            </div>
+          )}
 
-        {/* 4. 중단: 일반 체크리스트 (essentials 제외) */}
-        <div ref={checklistRef} id="checklist-root" className="space-y-4 bg-background rounded-xl">
+          {/* 일반 체크리스트 (essentials 제외) */}
           {otherSections.map((section, index) => (
             <div 
               key={section.section_id}
@@ -304,18 +313,7 @@ const Index = () => {
           ))}
         </div>
 
-        {/* 5. 최하단: 필수 서류 및 신분증 섹션 (essentials) */}
-        {essentialsSection && (
-          <div className="animate-fade-in">
-            <ChecklistSection
-              section={essentialsSection}
-              checkedItems={checkedItems}
-              onToggle={handleToggle}
-            />
-          </div>
-        )}
-
-        {/* 6. 최하단: Essential items section */}
+        {/* Essential items section */}
         <EssentialItems />
       </div>
 

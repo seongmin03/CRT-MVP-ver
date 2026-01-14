@@ -3,7 +3,7 @@ import * as React from "react";
 import type { ToastActionElement, ToastProps } from "@/components/ui/toast";
 
 const TOAST_LIMIT = 1;
-const TOAST_REMOVE_DELAY = 1000000;
+const TOAST_REMOVE_DELAY = 2000; // 2초 후 자동 dismiss
 
 type ToasterToast = ToastProps & {
   id: string;
@@ -52,18 +52,19 @@ interface State {
 
 const toastTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
 
-const addToRemoveQueue = (toastId: string) => {
+const addToRemoveQueue = (toastId: string, customDelay?: number) => {
   if (toastTimeouts.has(toastId)) {
-    return;
+    clearTimeout(toastTimeouts.get(toastId)!);
   }
 
+  const delay = customDelay ?? TOAST_REMOVE_DELAY;
   const timeout = setTimeout(() => {
     toastTimeouts.delete(toastId);
     dispatch({
       type: "REMOVE_TOAST",
       toastId: toastId,
     });
-  }, TOAST_REMOVE_DELAY);
+  }, delay);
 
   toastTimeouts.set(toastId, timeout);
 };
@@ -134,7 +135,7 @@ function dispatch(action: Action) {
 
 type Toast = Omit<ToasterToast, "id">;
 
-function toast({ ...props }: Toast) {
+function toast({ duration, ...props }: Toast) {
   const id = genId();
 
   const update = (props: ToasterToast) =>
@@ -155,6 +156,14 @@ function toast({ ...props }: Toast) {
       },
     },
   });
+
+  // duration이 지정된 경우 해당 시간 후 자동 dismiss
+  if (duration !== undefined && duration > 0) {
+    addToRemoveQueue(id, duration);
+  } else if (duration === undefined) {
+    // duration이 없으면 기본값 사용
+    addToRemoveQueue(id);
+  }
 
   return {
     id: id,

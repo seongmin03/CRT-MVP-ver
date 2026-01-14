@@ -113,4 +113,77 @@
   .item-text.checked {
     @apply text-muted-foreground line-through;
   }
+
+  /* Export 전용 스타일 - html2canvas 캡처 시 안정적인 렌더링 보장 */
+  .export-stable {
+    line-height: 1.5 !important;
+  }
+
+  /* 취소선: 텍스트 내용에만 적용되는 깔끔한 스타일 */
+  .text-strikethrough {
+    display: inline-block;
+    text-decoration: line-through;
+    text-decoration-color: #94a3b8;
+    text-decoration-thickness: 1.5px;
+    text-decoration-skip-ink: none;
+  }
+
+  /* Export 모드에서도 취소선이 정상적으로 표시되도록 보장 */
+  .is-exporting .text-strikethrough {
+    text-decoration: line-through !important;
+    text-decoration-color: #94a3b8 !important;
+    text-decoration-thickness: 1.5px !important;
+  }
+
+  /* Export 모드: 하얀 필터/대비 깨짐 방지 */
+  .is-exporting,
+  .is-exporting * {
+    filter: none !important;
+    opacity: 1 !important;
+    backdrop-filter: none !important;
+    mix-blend-mode: normal !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    transition: none !important;
+    animation: none !important;
+  }
+  
+  /* Export 모드: 진행률 바 transition 제거 */
+  .is-exporting [data-progress-width] {
+    transition: none !important;
+    width: attr(data-progress-width) !important;
+  }
+  
+  /* Export 모드: 체크박스 상태 강제 표시 */
+  .is-exporting [data-checked="true"] {
+    background-color: #0ea5e9 !important;
+    border-color: #0ea5e9 !important;
+  }
+  
+  .is-exporting [data-checked="true"] svg {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  .is-exporting [data-checked="false"] svg {
+    display: none !important;
+  }
+
+  /* Export 모드: 텍스트 대비 보장 */
+  .is-exporting h1,
+  .is-exporting h2,
+  .is-exporting h3,
+  .is-exporting h4,
+  .is-exporting p,
+  .is-exporting span {
+    color: inherit !important;
+  }
+
+  /* Export 모드: 구분선 명확화 */
+  .is-exporting [class*="border"] {
+    border-color: currentColor !important;
+    border-width: 1px !important;
+    border-style: solid !important;
+  }
 }

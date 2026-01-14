@@ -5,14 +5,14 @@ interface ProgressBarWithPlaneProps {
 }
 
 const progressMessages: { threshold: number; message: string }[] = [
-  { threshold: 6, message: "문을 나서기 전, 여권은 다시 한번 확인하기!" },
-  { threshold: 13, message: "탑승구 위치는 확인하셨나요?" },
-  { threshold: 20, message: "곧 있으면 이륙할거에요~ 안전벨트 꼭 하기!" },
-  { threshold: 35, message: "하늘을 나는 기분, 정말 좋죠?" },
-  { threshold: 50, message: "구름 위를 산책하는 중... 거의 다 왔어요!" },
-  { threshold: 70, message: "착륙 준비 중! 체크리스트가 곧 완성됩니다." },
-  { threshold: 90, message: "도착 완료! 이제 여행을 떠나볼까요?" },
-  { threshold: 100, message: "준비 끝! 즐거운 여행 되세요! ✈️" },
+  { threshold: 6, message: "여권 한번 더 확인하기!" },
+  { threshold: 13, message: "필요한 짐은 다 챙기셨나요?" },
+  { threshold: 20, message: "마이리얼트립이 진정한 여행을 도와줄게요" },
+  { threshold: 35, message: "Travel Everyday, Myrealtrip!" },
+  { threshold: 45, message: "공항을 나서는 순간, 새로운 세상으로" },
+  { threshold: 60, message: "착륙 준비 중! 체크리스트가 곧 완성됩니다." },
+  { threshold: 75, message: "도착 완료! 이제 여행을 떠나볼까요?" },
+  { threshold: 90, message: "준비 끝! 즐거운 여행 되세요! ✈️" },
 ];
 
 const getProgressMessage = (progress: number): string => {
@@ -38,6 +38,7 @@ const ProgressBarWithPlane = ({ progress }: ProgressBarWithPlaneProps) => {
             width: `${Math.max(progress, 3)}%`,
             background: "linear-gradient(90deg, #ADD8E6 0%, #007BFF 100%)",
           }}
+          data-progress-width={progress}
         >
           {/* Airplane icon at the end of progress bar - white fill with black outline */}
           <div
