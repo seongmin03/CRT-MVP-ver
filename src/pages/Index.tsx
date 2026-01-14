@@ -3,10 +3,10 @@ import Header from "@/components/Header";
 import ProgressBarWithPlane from "@/components/ProgressBarWithPlane";
 import EssentialItems from "@/components/EssentialItems";
 import ChecklistSection from "@/components/ChecklistSection";
-import ActionButtons from "@/components/ActionButtons";
 import { checklistData } from "@/data/checklistData";
 import { travelTips } from "@/data/travleTips";
-import { Lightbulb, Check, ChevronDown, Search } from "lucide-react";
+import { Lightbulb, Check, ChevronDown, Search, Link } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -93,10 +93,37 @@ const Index = () => {
   const currentTravelTips = selectedCountry && travelTipsKey ? travelTips[travelTipsKey] : null;
   const displayCountryName = europeCountries.includes(selectedCountry) ? "유럽" : selectedCountry;
 
+  const copyLink = async () => {
+    const url = "https://crt-mvp-ver.vercel.app/";
+    
+    try {
+      await navigator.clipboard.writeText(url);
+      toast({ title: "복사되었습니다", duration: 2000 });
+    } catch (error) {
+      // Fallback: show URL in prompt
+      toast({ 
+        title: "복사 권한이 없습니다", 
+        description: url,
+        duration: 5000 
+      });
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-background pb-28">
+    <div className="min-h-screen bg-background pb-8">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 space-y-8">
         <Header />
+
+        {/* 링크 복사 버튼 */}
+        <div className="flex justify-center animate-fade-in -mt-4">
+          <button
+            onClick={copyLink}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-all duration-200 text-sm text-gray-700 hover:text-gray-900 shadow-sm hover:shadow"
+          >
+            <Link className="w-4 h-4" />
+            <span>링크 복사</span>
+          </button>
+        </div>
 
         {/* Overall progress with airplane animation */}
         <div className="card-toss animate-fade-in">
@@ -129,8 +156,12 @@ const Index = () => {
                 </Button>
               </PopoverTrigger>
               <PopoverContent 
-                className="w-[200px] p-0 bg-white border border-gray-100 shadow-2xl rounded-lg overflow-hidden" 
+                className="w-[200px] p-0 bg-white border border-gray-100 shadow-2xl rounded-lg overflow-hidden z-50" 
                 align="end"
+                side="bottom"
+                sideOffset={4}
+                avoidCollisions={false}
+                collisionPadding={0}
               >
                 <Command className="bg-white">
                   <CommandInput 
@@ -194,23 +225,46 @@ const Index = () => {
                   </>
                 )}
               </div>
-              <div className="space-y-3">
-                {currentTravelTips.map((tip, index) => (
-                  <div key={index} className="flex items-start gap-3">
-                    <div className="flex-shrink-0 mt-0.5">
-                      <Check className="w-4 h-4 text-blue-600" strokeWidth={2.5} />
+              <div className="flex flex-row gap-4 items-start">
+                {/* 텍스트 영역 */}
+                <div className="flex-1 space-y-3">
+                  {currentTravelTips.map((tip, index) => (
+                    <div key={index} className="flex items-start gap-3">
+                      <div className="flex-shrink-0 mt-0.5">
+                        <Check className="w-4 h-4 text-blue-600" strokeWidth={2.5} />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-sm text-foreground mb-1 leading-tight">
+                          {tip.title}
+                        </h4>
+                        <p 
+                          className="text-sm text-muted-foreground leading-relaxed travel-tip-content"
+                          dangerouslySetInnerHTML={{ __html: tip.content }}
+                        />
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-sm text-foreground mb-1 leading-tight">
-                        {tip.title}
-                      </h4>
-                      <p 
-                        className="text-sm text-muted-foreground leading-relaxed travel-tip-content"
-                        dangerouslySetInnerHTML={{ __html: tip.content }}
+                  ))}
+                </div>
+                
+                {/* 이미지 영역 (일본인 경우에만 표시) */}
+                {selectedCountry === "일본" && (
+                  <div className="flex-shrink-0 flex flex-col items-center gap-2">
+                    <a
+                      href="/image/info/japan_donki.png"
+                      download="돈키호테_추천템.png"
+                      className="cursor-pointer transition-all duration-200 hover:opacity-90 hover:scale-105 active:scale-95"
+                    >
+                      <img
+                        src="/image/info/japan_donki.png"
+                        alt="돈키호테 추천템"
+                        className="w-32 h-auto max-w-xs rounded-lg shadow-sm"
                       />
-                    </div>
+                    </a>
+                    <p className="text-xs text-gray-500 text-center">
+                      이미지를 눌러 돈키호테 추천템 다운받기
+                    </p>
                   </div>
-                ))}
+                )}
               </div>
             </div>
           </div>
@@ -313,11 +367,9 @@ const Index = () => {
           ))}
         </div>
 
-        {/* Essential items section */}
+        {/* 이건 꼭 챙기셔야 해요 섹션 */}
         <EssentialItems />
       </div>
-
-      <ActionButtons checklistRef={checklistRef} />
     </div>
   );
 };

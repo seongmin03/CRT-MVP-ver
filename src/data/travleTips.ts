@@ -50,7 +50,7 @@ export interface TravelTip {
       { title: "발리 밸리 주의", content: "발리 밸리(Bali Belly)라는 말이 있듯이 많은 여행자가 소화기 불량, 복통을 호소해요. 안전한 여행이 되도록 유의하세요!" }
     ],
     "유럽": [
-      { title: "소매치기 주의", content: "유럽은 <a href='https://link.coupang.com/a/drYsXL' target='_blank' rel='noopener noreferrer' class='underline text-blue-600 hover:text-blue-800 font-semibold'>소매치기 주의</a>가 빈번해요. 특히 관광지, 대중교통 처럼 사람이 많은 곳에서는 안보이는 가방에 소지품을 넣으세요!" },
+      { title: "소매치기 주의", content: "유럽은 <a href='https://link.coupang.com/a/drYsXL' target='_blank' rel='noopener noreferrer' class='underline text-blue-600 hover:text-blue-800 font-semibold'>소매치기</a>가 빈번해요. 특히 관광지, 대중교통 처럼 사람이 많은 곳에서는 안보이는 가방에 소지품을 넣으세요!" },
       { title: "유료 화장실", content: "유료 화장실이 있는 지역이 많아, 동전이나 소액 결제수단을 준비하면 좋아요." },
       { title: "식당 자릿세", content: "자릿세가 부과되는 식당이 있습니다! 메뉴판을 잘 확인하세요." }
     ],

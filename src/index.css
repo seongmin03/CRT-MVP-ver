@@ -202,4 +202,16 @@
     border-width: 1px !important;
     border-style: solid !important;
   }
+
+  /* 국가 선택 드롭다운: 항상 아래로 열리도록 강제 */
+  [data-radix-popper-content-wrapper][data-side] {
+    top: 100% !important;
+    bottom: auto !important;
+    transform: none !important;
+  }
+
+  [data-radix-popper-content-wrapper][data-side="top"] {
+    top: 100% !important;
+    bottom: auto !important;
+  }
 }
