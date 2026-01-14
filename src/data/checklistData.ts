@@ -96,7 +96,7 @@ export const checklistData: ChecklistData = {
           cta_type: "none",
           cta_label: "",
           image_url: "/image/adapter.png",
-          link_url: "https://www.coupang.com/np/search?component=&q=%EC%97%AC%ED%96%89%EC%9A%A9+%EB%A9%80%ED%8B%B0%EC%96%B4%EB%8C%91%ED%84%B0&traceId=mkb9wfp6&channel=auto"
+          link_url: "https://link.coupang.com/a/drYGzJ"
         },
         {
           item_id: "powerbank",
@@ -105,7 +105,7 @@ export const checklistData: ChecklistData = {
           cta_type: "none",
           cta_label: "",
           image_url: "/image/battery.png",
-          link_url: "https://www.coupang.com/np/search?component=&q=%EC%97%AC%ED%96%89%EC%9A%A9+%EB%B3%B4%EC%A1%B0%EB%B0%B0%ED%84%B0%EB%A6%AC&traceId=mkba3q97&channel=user"
+          link_url: "https://link.coupang.com/a/drYIG0"
         },
         {
           item_id: "charging_cable",
@@ -121,7 +121,7 @@ export const checklistData: ChecklistData = {
           cta_type: "none",
           cta_label: "",
           image_url: "/image/sim.png",
-          link_url: "https://www.coupang.com/np/search?component=&q=%ED%95%B4%EC%99%B8+%EC%9C%A0%EC%8B%AC&traceId=mkba51py&channel=user"
+          link_url: "https://link.coupang.com/a/drYJWG"
         }
       ]
     },
@@ -150,7 +150,7 @@ export const checklistData: ChecklistData = {
           cta_type: "none",
           cta_label: "",
           image_url: "/image/towel.png",
-          link_url: "https://www.coupang.com/np/search?q=%EC%97%AC%ED%96%89%EC%9A%A9%20%EC%9C%84%EC%83%9D%EC%9A%A9%ED%92%88&channel=auto&traceId=mkba6ufa"
+          link_url: "https://link.coupang.com/a/drYLaK"
         }
       ]
     },
@@ -179,7 +179,7 @@ export const checklistData: ChecklistData = {
           cta_type: "none",
           cta_label: "",
           image_url: "/image/pouch.png",
-          link_url: "https://www.coupang.com/np/search?q=%EC%97%AC%ED%96%89%20%EC%88%98%EB%82%A9%20%ED%8C%8C%EC%9A%B0%EC%B9%98&channel=auto&traceId=mkba7jmx"
+          link_url: "https://link.coupang.com/a/drYLM5"
         },
         {
           item_id: "umbrella",
@@ -188,7 +188,7 @@ export const checklistData: ChecklistData = {
           cta_type: "none",
           cta_label: "",
           image_url: "/image/umbrella.png",
-          link_url: "https://www.coupang.com/np/search?component=&q=%EC%97%AC%ED%96%89%EC%9A%A9+%EC%9A%B0%EC%82%B0&traceId=mkba89xb&channel=user"
+          link_url: "https://link.coupang.com/a/drY6ST"
         }
       ]
     }
