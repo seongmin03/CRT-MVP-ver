@@ -73,7 +73,7 @@ const ActionButtons = ({ checklistRef }: ActionButtonsProps) => {
     const actualBgColor = computedBg.backgroundColor || 'hsl(210, 20%, 98%)';
     
     // Export 전 원본 DOM의 체크된 텍스트 스타일 상세 검증 로그
-    const originalCheckedTexts = element.querySelectorAll('.text-strikethrough');
+    const originalCheckedTexts = element.querySelectorAll('.strikethrough-line');
     const originalStyleMap = new Map<HTMLElement, CSSStyleDeclaration>();
     
     originalCheckedTexts.forEach((textEl) => {
@@ -103,10 +103,10 @@ const ActionButtons = ({ checklistRef }: ActionButtonsProps) => {
     try {
       // 원본 DOM은 전혀 건드리지 않고, clone에만 스타일 적용
       const canvas = await html2canvas(element, {
-        scale: 2,
         useCORS: true,
         allowTaint: true,
-        backgroundColor: actualBgColor, // 실제 화면 배경색 사용
+        backgroundColor: "#ffffff", // 배경이 투명하게 변하는 것 방지
+        scale: 2, // 고해상도 유지
         logging: false,
         foreignObjectRendering: false,
         removeContainer: false,
@@ -130,7 +130,7 @@ const ActionButtons = ({ checklistRef }: ActionButtonsProps) => {
             const htmlEl = clonedEl as HTMLElement;
             
             // 취소선이 있는 텍스트는 별도 처리하므로 건너뛰기
-            if (htmlEl.classList.contains('text-strikethrough')) {
+            if (htmlEl.classList.contains('strikethrough-line')) {
               return;
             }
             
@@ -145,7 +145,7 @@ const ActionButtons = ({ checklistRef }: ActionButtonsProps) => {
               originalEl = Array.from(allOriginals || []).find(orig => {
                 return orig.textContent === htmlEl.textContent && 
                        orig.tagName === htmlEl.tagName &&
-                       !orig.classList.contains('text-strikethrough');
+                       !orig.classList.contains('strikethrough-line');
               }) as HTMLElement || null;
             }
             
@@ -201,8 +201,8 @@ const ActionButtons = ({ checklistRef }: ActionButtonsProps) => {
             htmlEl.style.margin = computed.margin;
           });
           
-          // 체크된 항목의 취소선 처리 - 원본 DOM의 computed style을 정확히 보존
-          const checkedTexts = element.querySelectorAll('.text-strikethrough');
+          // 체크된 항목의 취소선 처리 - 가상 요소(::after)가 정상적으로 렌더링되도록 보장
+          const checkedTexts = element.querySelectorAll('.strikethrough-line');
           checkedTexts.forEach((textEl) => {
             const el = textEl as HTMLElement;
             
@@ -216,7 +216,8 @@ const ActionButtons = ({ checklistRef }: ActionButtonsProps) => {
               const originalComputed = originalStyleMap.get(originalText)!;
               
               // 원본 스타일 그대로 적용 (절대 변경하지 않음)
-              el.style.display = originalComputed.display;
+              el.style.position = 'relative';
+              el.style.display = 'inline-block';
               el.style.color = originalComputed.color;
               el.style.opacity = originalComputed.opacity;
               
@@ -245,33 +246,20 @@ const ActionButtons = ({ checklistRef }: ActionButtonsProps) => {
               
               el.style.letterSpacing = originalComputed.letterSpacing;
               
-              // 취소선 관련 속성 정확히 보존
-              el.style.textDecoration = originalComputed.textDecoration;
-              el.style.textDecorationLine = originalComputed.textDecorationLine || 'line-through';
-              el.style.textDecorationColor = originalComputed.textDecorationColor;
-              el.style.textDecorationThickness = originalComputed.textDecorationThickness;
-              el.style.textDecorationSkipInk = originalComputed.textDecorationSkipInk;
-              
-              // text-underline-offset이 있으면 보존 (취소선 위치 미세 조정)
-              if (originalComputed.textUnderlineOffset) {
-                el.style.textUnderlineOffset = originalComputed.textUnderlineOffset;
-              }
-              
-              // transform 제거 (취소선 위치에 영향)
-              el.style.transform = 'none';
+              // 가상 요소(::after)가 정상적으로 렌더링되도록 보장
+              // ::after는 자동으로 복제되므로 별도 처리는 필요 없지만, 스타일이 적용되도록 확인
               
               // transition/animation 제거
               el.style.transition = 'none';
               el.style.animation = 'none';
               
-              console.log('Clone에 적용된 취소선 스타일 (원본과 비교):', {
+              console.log('Clone에 적용된 취소선 스타일 (가상 요소 방식):', {
                 element: el.textContent?.substring(0, 30),
                 color: { original: originalComputed.color, clone: el.style.color },
                 opacity: { original: originalComputed.opacity, clone: el.style.opacity },
                 lineHeight: { original: originalComputed.lineHeight, clone: el.style.lineHeight },
                 fontSize: { original: originalComputed.fontSize, clone: el.style.fontSize },
-                textDecoration: { original: originalComputed.textDecoration, clone: el.style.textDecoration },
-                textDecorationColor: { original: originalComputed.textDecorationColor, clone: el.style.textDecorationColor },
+                hasAfterPseudo: el.querySelector('::after') !== null, // 참고용 (실제로는 체크 불가)
               });
             }
           });
@@ -280,7 +268,7 @@ const ActionButtons = ({ checklistRef }: ActionButtonsProps) => {
           const allTextSpans = element.querySelectorAll('h4 span, p span');
           allTextSpans.forEach((span) => {
             const el = span as HTMLElement;
-            if (!el.classList.contains('text-strikethrough')) {
+            if (!el.classList.contains('strikethrough-line')) {
               const computed = window.getComputedStyle(el);
               el.style.textDecoration = computed.textDecoration || 'none';
               el.style.opacity = computed.opacity || '1';

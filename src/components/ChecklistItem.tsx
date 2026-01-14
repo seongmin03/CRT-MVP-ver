@@ -49,13 +49,10 @@ const ChecklistItem = ({ item, isChecked, onToggle }: ChecklistItemProps) => {
           }}
         >
           <span 
-            className={isChecked ? 'text-strikethrough' : ''}
+            className={isChecked ? 'strikethrough-line' : ''}
             style={{
+              position: 'relative',
               display: 'inline-block',
-              textDecoration: isChecked ? 'line-through' : 'none',
-              textDecorationColor: isChecked ? '#94a3b8' : undefined,
-              textDecorationThickness: isChecked ? '1.5px' : undefined,
-              textDecorationSkipInk: 'none',
             }}
           >
             {item.title}
@@ -72,13 +69,10 @@ const ChecklistItem = ({ item, isChecked, onToggle }: ChecklistItemProps) => {
           }}
         >
           <span 
-            className={isChecked ? 'text-strikethrough' : ''}
+            className={isChecked ? 'strikethrough-line' : ''}
             style={{
+              position: 'relative',
               display: 'inline-block',
-              textDecoration: isChecked ? 'line-through' : 'none',
-              textDecorationColor: isChecked ? '#94a3b8' : undefined,
-              textDecorationThickness: isChecked ? '1px' : undefined,
-              textDecorationSkipInk: 'none',
             }}
           >
             {item.description}
