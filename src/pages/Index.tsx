@@ -711,6 +711,7 @@ const Index = () => {
                           onTouchStart={(e) => e.stopPropagation()}
                         />
                         <button
+                          type="button"
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
@@ -719,11 +720,19 @@ const Index = () => {
                           onPointerDown={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
+                            deleteCustomItem(item.id);
                           }}
-                          className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200 opacity-0 group-hover:opacity-100 custom-delete-button"
-                          aria-label="항목 삭제"
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                          }}
+                          onTouchStart={(e) => {
+                            e.stopPropagation();
+                          }}
+                          className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center bg-red-50 hover:bg-red-100 active:bg-red-200 transition-all duration-200 custom-delete-button"
+                          aria-label="항목 제거"
                         >
-                          <X className="w-4 h-4" />
+                          <X className="w-3 h-3 text-red-600" strokeWidth={2} />
                         </button>
                       </div>
                     );
