@@ -57,6 +57,12 @@ const otherCountries = [
 // 그룹 A + 그룹 B 결합 (그룹 A는 순서 유지, 그룹 B는 가나다순)
 const sortedCountries = [...topCountries, ...otherCountries];
 
+// 동남아시아 국가 리스트
+const southeastAsiaCountries = [
+  "베트남", "태국", "필리핀", "인도네시아", "싱가포르", 
+  "말레이시아", "라오스", "캄보디아", "미얀마", "브루나이"
+];
+
 const Index = () => {
   const [checkedItems, setCheckedItems] = useState<Set<string>>(new Set());
   const [selectedCountry, setSelectedCountry] = useState<string>("");
@@ -225,7 +231,7 @@ const Index = () => {
                   </>
                 )}
               </div>
-              <div className="flex flex-row gap-4 items-start">
+              <div className="flex flex-col sm:flex-row gap-4 items-start">
                 {/* 텍스트 영역 */}
                 <div className="flex-1 space-y-3">
                   {currentTravelTips.map((tip, index) => (
@@ -246,22 +252,41 @@ const Index = () => {
                   ))}
                 </div>
                 
-                {/* 이미지 영역 (일본인 경우에만 표시) */}
+                {/* 이미지 영역 (일본 또는 동남아시아 국가인 경우 표시) */}
                 {selectedCountry === "일본" && (
-                  <div className="flex-shrink-0 flex flex-col items-center gap-2">
+                  <div className="flex-shrink-0 flex flex-col items-center justify-start w-full sm:w-auto sm:max-w-[128px] mt-4 sm:mt-0">
                     <a
                       href="/image/info/japan_donki.png"
                       download="돈키호테_추천템.png"
-                      className="cursor-pointer transition-all duration-200 hover:opacity-90 hover:scale-105 active:scale-95"
+                      className="block cursor-pointer transition-all duration-300 hover:opacity-90 hover:scale-105 active:scale-95"
                     >
                       <img
                         src="/image/info/japan_donki.png"
                         alt="돈키호테 추천템"
-                        className="w-32 h-auto max-w-xs rounded-lg shadow-sm"
+                        className="w-32 h-auto rounded-lg shadow-sm object-cover"
                       />
                     </a>
-                    <p className="text-xs text-gray-500 text-center">
-                      이미지를 눌러 돈키호테 추천템 다운받기
+                    <p className="text-xs text-gray-500 text-center mt-2">
+                      이미지를 눌러 다운받기
+                    </p>
+                  </div>
+                )}
+                
+                {southeastAsiaCountries.includes(selectedCountry) && (
+                  <div className="flex-shrink-0 flex flex-col items-center justify-start w-full sm:w-auto sm:max-w-[128px] mt-4 sm:mt-0">
+                    <a
+                      href="/image/info/seAsia_water.png"
+                      download="동남아시아_물갈이가이드.png"
+                      className="block cursor-pointer transition-all duration-300 hover:opacity-90 hover:scale-105 active:scale-95"
+                    >
+                      <img
+                        src="/image/info/seAsia_water.png"
+                        alt="동남아시아 물갈이 가이드"
+                        className="w-32 h-auto rounded-lg shadow-sm object-cover"
+                      />
+                    </a>
+                    <p className="text-xs text-gray-500 text-center mt-2 whitespace-pre-line">
+                      이미지를 눌러 다운받기
                     </p>
                   </div>
                 )}
