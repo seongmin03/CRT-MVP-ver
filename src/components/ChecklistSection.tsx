@@ -33,7 +33,7 @@ const ChecklistSection = ({ section, checkedItems, onToggle }: ChecklistSectionP
         <div className="flex items-center gap-2">
           {sectionsWithGuide.includes(section.section_id) && (
             <span className="text-xs text-gray-400 font-light whitespace-nowrap">
-              상품 이미지 클릭하여 여행 필수템 찾기
+              상품 이미지 클릭하여<br />여행 필수템 찾기
             </span>
           )}
           <span className="text-sm font-medium text-accent">

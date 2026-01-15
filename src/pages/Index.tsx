@@ -528,7 +528,7 @@ const Index = () => {
                     <h3 className="section-title mb-0">나만의 리스트</h3>
                   </div>
                   <span className="text-xs text-gray-400 font-light">
-                    항목을 입력해야 새로운 항목을 추가할 수 있어요!
+                    항목을 입력해야<br />새로운 항목을 추가할 수 있어요!
                   </span>
                 </div>
                 <div className="space-y-1">
