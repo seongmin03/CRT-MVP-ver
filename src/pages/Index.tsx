@@ -5,7 +5,7 @@ import EssentialItems from "@/components/EssentialItems";
 import ChecklistSection from "@/components/ChecklistSection";
 import { checklistData } from "@/data/checklistData";
 import { travelTips } from "@/data/travleTips";
-import { Lightbulb, Check, ChevronDown, Search, Link } from "lucide-react";
+import { Lightbulb, Check, ChevronDown, Search, Link, X, Plus } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import {
@@ -65,6 +65,13 @@ const southeastAsiaCountries = [
 
 // localStorage 키
 const STORAGE_KEY = 'travel_checklist_status';
+const CUSTOM_ITEMS_KEY = 'travel_checklist_custom_items';
+
+// 커스텀 항목 타입 정의
+interface CustomItem {
+  id: string;
+  title: string;
+}
 
 // localStorage에서 체크 상태 불러오기
 const loadCheckedItemsFromStorage = (): Set<string> => {
@@ -92,19 +99,53 @@ const saveCheckedItemsToStorage = (checkedItems: Set<string>) => {
   }
 };
 
+// localStorage에서 커스텀 항목 불러오기
+const loadCustomItemsFromStorage = (): CustomItem[] => {
+  try {
+    const stored = localStorage.getItem(CUSTOM_ITEMS_KEY);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed)) {
+        return parsed;
+      }
+    }
+  } catch (error) {
+    console.error('Failed to load custom items from localStorage:', error);
+  }
+  return [];
+};
+
+// localStorage에 커스텀 항목 저장하기
+const saveCustomItemsToStorage = (customItems: CustomItem[]) => {
+  try {
+    localStorage.setItem(CUSTOM_ITEMS_KEY, JSON.stringify(customItems));
+  } catch (error) {
+    console.error('Failed to save custom items to localStorage:', error);
+  }
+};
+
 const Index = () => {
   // 초기 상태를 localStorage에서 불러오기
   const [checkedItems, setCheckedItems] = useState<Set<string>>(() => 
     loadCheckedItemsFromStorage()
   );
+  const [customItems, setCustomItems] = useState<CustomItem[]>(() => 
+    loadCustomItemsFromStorage()
+  );
   const [selectedCountry, setSelectedCountry] = useState<string>("");
   const [open, setOpen] = useState(false);
   const checklistRef = useRef<HTMLDivElement>(null);
+  const customInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
 
   // 체크 상태가 변경될 때마다 localStorage에 저장
   useEffect(() => {
     saveCheckedItemsToStorage(checkedItems);
   }, [checkedItems]);
+
+  // 커스텀 항목이 변경될 때마다 localStorage에 저장
+  useEffect(() => {
+    saveCustomItemsToStorage(customItems);
+  }, [customItems]);
 
   const handleToggle = (itemId: string) => {
     setCheckedItems((prev) => {
@@ -125,7 +166,49 @@ const Index = () => {
     toast({ title: "체크리스트가 초기화되었습니다", duration: 2000 });
   };
 
-  const totalItems = checklistData.sections.reduce((acc, section) => acc + section.items.length, 0);
+  // 커스텀 항목 추가
+  const addCustomItem = () => {
+    const newId = `custom_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const newItem: CustomItem = {
+      id: newId,
+      title: '',
+    };
+    setCustomItems([...customItems, newItem]);
+    // 새 항목에 자동 포커스
+    setTimeout(() => {
+      const input = customInputRefs.current[newId];
+      if (input) {
+        input.focus();
+      }
+    }, 0);
+  };
+
+  // 커스텀 항목 수정
+  const updateCustomItem = (id: string, title: string) => {
+    setCustomItems(customItems.map(item => 
+      item.id === id ? { ...item, title } : item
+    ));
+  };
+
+  // 커스텀 항목 삭제
+  const deleteCustomItem = (id: string) => {
+    setCustomItems(customItems.filter(item => item.id !== id));
+    // 체크 상태에서도 제거
+    setCheckedItems(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(id);
+      return newSet;
+    });
+  };
+
+  // 커스텀 항목 포커스 아웃 처리 (빈 항목 자동 삭제)
+  const handleCustomItemBlur = (id: string, title: string) => {
+    if (!title.trim()) {
+      deleteCustomItem(id);
+    }
+  };
+
+  const totalItems = checklistData.sections.reduce((acc, section) => acc + section.items.length, 0) + customItems.length;
   const completedItems = checkedItems.size;
   const overallProgress = Math.round((completedItems / totalItems) * 100);
 
@@ -434,6 +517,89 @@ const Index = () => {
               />
             </div>
           ))}
+
+          {/* 커스텀 항목 섹션 */}
+          {customItems.length > 0 && (
+            <div className="animate-fade-in mt-6">
+              <div className="card-toss">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl">✨</span>
+                    <h3 className="section-title mb-0">나만의 리스트</h3>
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  {customItems.map((item) => {
+                    const isChecked = checkedItems.has(item.id);
+                    return (
+                      <div 
+                        key={item.id}
+                        className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl transition-all duration-200 hover:bg-muted/50 group"
+                      >
+                        <div 
+                          className={`
+                            flex-shrink-0 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-200 mt-0.5 cursor-pointer
+                            ${isChecked 
+                              ? 'bg-accent border-accent animate-check-bounce shadow-sm' 
+                              : 'border-muted-foreground/30 group-hover:border-accent/50'
+                            }
+                          `}
+                          onClick={() => handleToggle(item.id)}
+                        >
+                          {isChecked && (
+                            <Check className="w-4 h-4 text-accent-foreground" strokeWidth={3} />
+                          )}
+                        </div>
+                        <input
+                          ref={(el) => (customInputRefs.current[item.id] = el)}
+                          type="text"
+                          value={item.title}
+                          onChange={(e) => updateCustomItem(item.id, e.target.value)}
+                          onBlur={(e) => handleCustomItemBlur(item.id, e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.currentTarget.blur();
+                            }
+                          }}
+                          maxLength={30}
+                          placeholder="항목을 입력하세요"
+                          className={`
+                            flex-1 bg-transparent border-none outline-none text-sm sm:text-base font-semibold
+                            ${isChecked ? 'text-muted-foreground line-through' : 'text-foreground'}
+                            focus:ring-2 focus:ring-accent/50 focus:rounded-md focus:px-2 focus:py-1
+                            transition-all duration-300
+                          `}
+                          style={{ 
+                            opacity: isChecked ? 0.6 : 1,
+                            textDecoration: isChecked ? 'line-through' : 'none'
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                        <button
+                          onClick={() => deleteCustomItem(item.id)}
+                          className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200 opacity-0 group-hover:opacity-100"
+                          aria-label="항목 삭제"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 추가하기 버튼 */}
+          <div className="animate-fade-in mt-4">
+            <button
+              onClick={addCustomItem}
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 border-dashed border-muted-foreground/30 hover:border-accent/50 hover:bg-accent/5 transition-all duration-200 text-sm font-medium text-muted-foreground hover:text-accent"
+            >
+              <Plus className="w-4 h-4" />
+              <span>추가하기</span>
+            </button>
+          </div>
         </div>
 
         {/* 이건 꼭 챙기셔야 해요 섹션 */}
