@@ -135,6 +135,7 @@ const Index = () => {
   const [selectedCountry, setSelectedCountry] = useState<string>("");
   const [open, setOpen] = useState(false);
   const checklistRef = useRef<HTMLDivElement>(null);
+  const commandInputRef = useRef<HTMLInputElement>(null);
   const customInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
 
   // 체크 상태가 변경될 때마다 localStorage에 저장
@@ -146,6 +147,19 @@ const Index = () => {
   useEffect(() => {
     saveCustomItemsToStorage(customItems);
   }, [customItems]);
+
+  // Popover가 열릴 때 검색창 자동 포커스 방지
+  useEffect(() => {
+    if (open && commandInputRef.current) {
+      // 드롭다운이 열릴 때 포커스를 명시적으로 제거 (약간의 지연을 두어 확실하게 방지)
+      const timer = setTimeout(() => {
+        if (commandInputRef.current && document.activeElement === commandInputRef.current) {
+          commandInputRef.current.blur();
+        }
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+  }, [open]);
 
   const handleToggle = (itemId: string) => {
     setCheckedItems((prev) => {
@@ -298,8 +312,11 @@ const Index = () => {
               >
                 <Command className="bg-white">
                   <CommandInput 
+                    ref={commandInputRef}
                     placeholder="국가 검색..." 
                     className="h-11 bg-white border-b border-gray-100"
+                    autoFocus={false}
+                    tabIndex={0}
                   />
                   <CommandList className="max-h-80 overflow-y-auto bg-white">
                     <CommandEmpty className="py-6 text-sm text-gray-500">찾으시는 국가가 없습니다</CommandEmpty>
@@ -528,7 +545,7 @@ const Index = () => {
                     <h3 className="section-title mb-0">나만의 리스트</h3>
                   </div>
                   <span className="text-xs text-gray-400 font-light">
-                    항목을 입력해야<br />새로운 항목을 추가할 수 있어요!
+                    기존의 항목을 입력해야<br />새로운 항목을 추가할 수 있어요!
                   </span>
                 </div>
                 <div className="space-y-1">
@@ -537,17 +554,24 @@ const Index = () => {
                     return (
                       <div 
                         key={item.id}
-                        className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl transition-all duration-200 hover:bg-muted/50 group"
+                        className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl transition-all duration-200 group custom-item-container"
                       >
                         <div 
                           className={`
-                            flex-shrink-0 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-200 mt-0.5 cursor-pointer
+                            flex-shrink-0 w-7 h-7 rounded-lg border-2 flex items-center justify-center transition-all duration-200 mt-0.5 cursor-pointer touch-manipulation
                             ${isChecked 
                               ? 'bg-accent border-accent animate-check-bounce shadow-sm' 
-                              : 'border-muted-foreground/30 group-hover:border-accent/50'
+                              : 'border-muted-foreground/30'
                             }
                           `}
-                          onClick={() => handleToggle(item.id)}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleToggle(item.id);
+                          }}
+                          role="checkbox"
+                          aria-checked={isChecked}
+                          tabIndex={-1}
                         >
                           {isChecked && (
                             <Check className="w-4 h-4 text-accent-foreground" strokeWidth={3} />
@@ -579,6 +603,8 @@ const Index = () => {
                             display: isChecked ? 'inline-block' : 'block'
                           }}
                           onClick={(e) => e.stopPropagation()}
+                          onMouseDown={(e) => e.stopPropagation()}
+                          onTouchStart={(e) => e.stopPropagation()}
                         />
                         <button
                           onClick={() => deleteCustomItem(item.id)}

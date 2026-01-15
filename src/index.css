@@ -216,4 +216,25 @@
     top: 100% !important;
     bottom: auto !important;
   }
+
+  /* 모바일 터치 최적화 */
+  .touch-manipulation {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* 모바일에서 hover 효과 제거 */
+  @media (hover: none) {
+    .group:hover {
+      background-color: transparent !important;
+    }
+  }
+
+  /* 실제 마우스 환경에서만 hover 효과 적용 */
+  @media (hover: hover) {
+    .group:hover,
+    .custom-item-container:hover {
+      background-color: hsl(var(--muted) / 0.5);
+    }
+  }
 }

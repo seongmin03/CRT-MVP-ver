@@ -5,14 +5,14 @@ interface ProgressBarWithPlaneProps {
 }
 
 const progressMessages: { threshold: number; message: string }[] = [
-  { threshold: 6, message: "여권 한번 더 확인하기!" },
-  { threshold: 13, message: "필요한 짐은 다 챙기셨나요?" },
-  { threshold: 20, message: "마이리얼트립이 진정한 여행을 도와줄게요" },
-  { threshold: 35, message: "Travel Everyday, Myrealtrip!" },
-  { threshold: 45, message: "공항을 나서는 순간, 새로운 세상으로" },
-  { threshold: 60, message: "착륙 준비 중! 체크리스트가 곧 완성됩니다." },
-  { threshold: 75, message: "도착 완료! 이제 여행을 떠나볼까요?" },
-  { threshold: 90, message: "준비 끝! 즐거운 여행 되세요! ✈️" },
+  { threshold: 15, message: "여권 한번 더 확인하기!" },
+  { threshold: 30, message: "필요한 짐은 다 챙기셨나요?" },
+  { threshold: 45, message: "마이리얼트립이 진정한 여행을 도와줄게요" },
+  { threshold: 50, message: "Travel Everyday, Myrealtrip!" },
+  { threshold: 65, message: "공항을 나서는 순간, 새로운 세상으로" },
+  { threshold: 80, message: "착륙 준비 중! 체크리스트가 곧 완성됩니다." },
+  { threshold: 90, message: "도착 완료! 이제 여행을 떠나볼까요?" },
+  { threshold: 100, message: "준비 끝! 즐거운 여행 되세요! ✈️" },
 ];
 
 const getProgressMessage = (progress: number): string => {
