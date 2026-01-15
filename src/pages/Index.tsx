@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Header from "@/components/Header";
 import ProgressBarWithPlane from "@/components/ProgressBarWithPlane";
 import EssentialItems from "@/components/EssentialItems";
@@ -63,11 +63,48 @@ const southeastAsiaCountries = [
   "말레이시아", "라오스", "캄보디아", "미얀마", "브루나이"
 ];
 
+// localStorage 키
+const STORAGE_KEY = 'travel_checklist_status';
+
+// localStorage에서 체크 상태 불러오기
+const loadCheckedItemsFromStorage = (): Set<string> => {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed)) {
+        return new Set(parsed);
+      }
+    }
+  } catch (error) {
+    console.error('Failed to load checklist status from localStorage:', error);
+  }
+  return new Set<string>();
+};
+
+// localStorage에 체크 상태 저장하기
+const saveCheckedItemsToStorage = (checkedItems: Set<string>) => {
+  try {
+    const array = Array.from(checkedItems);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(array));
+  } catch (error) {
+    console.error('Failed to save checklist status to localStorage:', error);
+  }
+};
+
 const Index = () => {
-  const [checkedItems, setCheckedItems] = useState<Set<string>>(new Set());
+  // 초기 상태를 localStorage에서 불러오기
+  const [checkedItems, setCheckedItems] = useState<Set<string>>(() => 
+    loadCheckedItemsFromStorage()
+  );
   const [selectedCountry, setSelectedCountry] = useState<string>("");
   const [open, setOpen] = useState(false);
   const checklistRef = useRef<HTMLDivElement>(null);
+
+  // 체크 상태가 변경될 때마다 localStorage에 저장
+  useEffect(() => {
+    saveCheckedItemsToStorage(checkedItems);
+  }, [checkedItems]);
 
   const handleToggle = (itemId: string) => {
     setCheckedItems((prev) => {
@@ -79,6 +116,13 @@ const Index = () => {
       }
       return newSet;
     });
+  };
+
+  // 체크리스트 초기화 함수
+  const resetChecklist = () => {
+    setCheckedItems(new Set<string>());
+    localStorage.removeItem(STORAGE_KEY);
+    toast({ title: "체크리스트가 초기화되었습니다", duration: 2000 });
   };
 
   const totalItems = checklistData.sections.reduce((acc, section) => acc + section.items.length, 0);
