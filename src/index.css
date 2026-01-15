@@ -223,18 +223,35 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  /* 커스텀 체크박스 라벨 터치 최적화 */
+  .custom-checkbox-label {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    padding: 2px;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
   /* 모바일에서 hover 효과 제거 */
   @media (hover: none) {
-    .group:hover {
+    .group:hover,
+    .custom-item-container:hover {
+      background-color: transparent !important;
+    }
+    .custom-delete-button:hover {
       background-color: transparent !important;
     }
   }
 
   /* 실제 마우스 환경에서만 hover 효과 적용 */
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     .group:hover,
     .custom-item-container:hover {
       background-color: hsl(var(--muted) / 0.5);
+    }
+    .custom-delete-button:hover {
+      background-color: hsl(var(--destructive) / 0.1);
+      color: hsl(var(--destructive));
     }
   }
 }

@@ -134,6 +134,7 @@ const Index = () => {
   );
   const [selectedCountry, setSelectedCountry] = useState<string>("");
   const [open, setOpen] = useState(false);
+  const [isSearchActive, setIsSearchActive] = useState(false);
   const checklistRef = useRef<HTMLDivElement>(null);
   const commandInputRef = useRef<HTMLInputElement>(null);
   const customInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
@@ -148,18 +149,51 @@ const Index = () => {
     saveCustomItemsToStorage(customItems);
   }, [customItems]);
 
-  // Popover가 열릴 때 검색창 자동 포커스 방지
+  // Popover가 열릴 때 검색창 자동 포커스 방지 및 검색 활성화 상태 리셋
   useEffect(() => {
-    if (open && commandInputRef.current) {
-      // 드롭다운이 열릴 때 포커스를 명시적으로 제거 (약간의 지연을 두어 확실하게 방지)
-      const timer = setTimeout(() => {
-        if (commandInputRef.current && document.activeElement === commandInputRef.current) {
-          commandInputRef.current.blur();
+    if (open) {
+      // 드롭다운이 열릴 때 검색 활성화 상태 리셋
+      setIsSearchActive(false);
+      
+      // 데스크탑에서만 자동 포커스 허용 (모바일에서는 비활성화)
+      const isDesktop = window.matchMedia('(pointer: fine)').matches;
+      
+      if (commandInputRef.current) {
+        // 모바일에서는 포커스를 명시적으로 제거
+        if (!isDesktop) {
+          const timer = setTimeout(() => {
+            if (commandInputRef.current && document.activeElement === commandInputRef.current) {
+              commandInputRef.current.blur();
+            }
+          }, 0);
+          return () => clearTimeout(timer);
+        } else {
+          // 데스크탑에서는 자동 포커스 허용
+          const timer = setTimeout(() => {
+            if (commandInputRef.current && !isSearchActive) {
+              commandInputRef.current.focus();
+              setIsSearchActive(true);
+            }
+          }, 100);
+          return () => clearTimeout(timer);
         }
-      }, 0);
-      return () => clearTimeout(timer);
+      }
+    } else {
+      // 드롭다운이 닫힐 때 검색 활성화 상태 리셋
+      setIsSearchActive(false);
     }
-  }, [open]);
+  }, [open, isSearchActive]);
+
+  // 검색 영역 클릭 핸들러
+  const handleSearchAreaClick = () => {
+    if (!isSearchActive && commandInputRef.current) {
+      setIsSearchActive(true);
+      // 사용자 제스처 내부에서만 포커스 (모바일 키보드 정책 준수)
+      setTimeout(() => {
+        commandInputRef.current?.focus();
+      }, 0);
+    }
+  };
 
   const handleToggle = (itemId: string) => {
     setCheckedItems((prev) => {
@@ -311,13 +345,47 @@ const Index = () => {
                 collisionPadding={0}
               >
                 <Command className="bg-white">
-                  <CommandInput 
-                    ref={commandInputRef}
-                    placeholder="국가 검색..." 
-                    className="h-11 bg-white border-b border-gray-100"
-                    autoFocus={false}
+                  <div 
+                    onClick={handleSearchAreaClick}
+                    onPointerDown={handleSearchAreaClick}
+                    className="cursor-text border-b border-gray-100"
+                    role="button"
+                    aria-label="국가 검색"
                     tabIndex={0}
-                  />
+                    style={{
+                      pointerEvents: 'auto'
+                    }}
+                  >
+                    <CommandInput 
+                      ref={commandInputRef}
+                      placeholder="국가 검색..." 
+                      className="h-11 bg-white border-0"
+                      autoFocus={false}
+                      tabIndex={isSearchActive ? 0 : -1}
+                      onFocus={() => setIsSearchActive(true)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (!isSearchActive) {
+                          setIsSearchActive(true);
+                          setTimeout(() => {
+                            commandInputRef.current?.focus();
+                          }, 0);
+                        }
+                      }}
+                      onPointerDown={(e) => {
+                        e.stopPropagation();
+                        if (!isSearchActive) {
+                          setIsSearchActive(true);
+                          setTimeout(() => {
+                            commandInputRef.current?.focus();
+                          }, 0);
+                        }
+                      }}
+                      style={{
+                        pointerEvents: isSearchActive ? 'auto' : 'none'
+                      }}
+                    />
+                  </div>
                   <CommandList className="max-h-80 overflow-y-auto bg-white">
                     <CommandEmpty className="py-6 text-sm text-gray-500">찾으시는 국가가 없습니다</CommandEmpty>
                     <CommandGroup>
@@ -551,33 +619,68 @@ const Index = () => {
                 <div className="space-y-1">
                   {customItems.map((item) => {
                     const isChecked = checkedItems.has(item.id);
+                    const checkboxId = `custom-item-check-${item.id}`;
+                    const textInputId = `custom-item-text-${item.id}`;
                     return (
                       <div 
                         key={item.id}
                         className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl transition-all duration-200 group custom-item-container"
                       >
-                        <div 
+                        {/* 체크박스 영역: label로 감싸서 클릭 영역 확대 */}
+                        <label
+                          htmlFor={checkboxId}
                           className={`
-                            flex-shrink-0 w-7 h-7 rounded-lg border-2 flex items-center justify-center transition-all duration-200 mt-0.5 cursor-pointer touch-manipulation
+                            flex-shrink-0 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-200 mt-0.5 cursor-pointer touch-manipulation custom-checkbox-label
                             ${isChecked 
                               ? 'bg-accent border-accent animate-check-bounce shadow-sm' 
                               : 'border-muted-foreground/30'
                             }
                           `}
-                          onClick={(e) => {
+                          onPointerDown={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
+                            // onPointerDown에서만 토글 실행
                             handleToggle(item.id);
                           }}
-                          role="checkbox"
-                          aria-checked={isChecked}
-                          tabIndex={-1}
+                          onClick={(e) => {
+                            // onClick은 label의 기본 동작만 막기
+                            e.preventDefault();
+                            e.stopPropagation();
+                            // onClick에서는 토글하지 않음 (onPointerDown에서 이미 처리됨)
+                          }}
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                          }}
+                          onTouchStart={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                          }}
                         >
+                          <input
+                            type="checkbox"
+                            id={checkboxId}
+                            checked={isChecked}
+                            onChange={(e) => {
+                              // input의 onChange는 완전히 막기
+                              e.preventDefault();
+                              e.stopPropagation();
+                            }}
+                            onClick={(e) => {
+                              // input 클릭도 막기
+                              e.preventDefault();
+                              e.stopPropagation();
+                            }}
+                            readOnly
+                            className="sr-only"
+                            tabIndex={-1}
+                          />
                           {isChecked && (
-                            <Check className="w-4 h-4 text-accent-foreground" strokeWidth={3} />
+                            <Check className="w-4 h-4 text-accent-foreground pointer-events-none" strokeWidth={3} />
                           )}
-                        </div>
+                        </label>
                         <input
+                          id={textInputId}
                           ref={(el) => (customInputRefs.current[item.id] = el)}
                           type="text"
                           value={item.title}
@@ -603,12 +706,21 @@ const Index = () => {
                             display: isChecked ? 'inline-block' : 'block'
                           }}
                           onClick={(e) => e.stopPropagation()}
+                          onPointerDown={(e) => e.stopPropagation()}
                           onMouseDown={(e) => e.stopPropagation()}
                           onTouchStart={(e) => e.stopPropagation()}
                         />
                         <button
-                          onClick={() => deleteCustomItem(item.id)}
-                          className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200 opacity-0 group-hover:opacity-100"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            deleteCustomItem(item.id);
+                          }}
+                          onPointerDown={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                          }}
+                          className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200 opacity-0 group-hover:opacity-100 custom-delete-button"
                           aria-label="항목 삭제"
                         >
                           <X className="w-4 h-4" />
