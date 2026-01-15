@@ -41,11 +41,11 @@ const ChecklistItem = ({ item, isChecked, onToggle }: ChecklistItemProps) => {
         <h4 
           className={`
             font-semibold text-sm sm:text-base transition-all duration-300
-            ${isChecked ? 'text-muted-foreground' : 'text-foreground'}
+            ${isChecked ? 'text-gray-400' : 'text-foreground'}
           `}
           style={{ 
             lineHeight: '1.5',
-            opacity: isChecked ? 0.6 : 1
+            opacity: isChecked ? 0.7 : 1
           }}
         >
           <span 
@@ -61,22 +61,14 @@ const ChecklistItem = ({ item, isChecked, onToggle }: ChecklistItemProps) => {
         <p 
           className={`
             mt-1 text-xs sm:text-sm leading-relaxed transition-all duration-300
-            ${isChecked ? 'text-muted-foreground/60' : 'text-muted-foreground'}
+            ${isChecked ? 'text-gray-400' : 'text-muted-foreground'}
           `}
           style={{ 
             lineHeight: '1.5',
-            opacity: isChecked ? 0.6 : 1
+            opacity: isChecked ? 0.7 : 1
           }}
         >
-          <span 
-            className={isChecked ? 'strikethrough-line' : ''}
-            style={{
-              position: 'relative',
-              display: 'inline-block',
-            }}
-          >
-            {item.description}
-          </span>
+          {item.description}
         </p>
       </div>
 

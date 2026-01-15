@@ -568,13 +568,15 @@ const Index = () => {
                           placeholder="항목을 입력하세요"
                           className={`
                             flex-1 bg-transparent border-none outline-none text-sm sm:text-base font-semibold
-                            ${isChecked ? 'text-muted-foreground line-through' : 'text-foreground'}
+                            ${isChecked ? 'text-gray-400' : 'text-foreground'}
                             focus:ring-2 focus:ring-accent/50 focus:rounded-md focus:px-2 focus:py-1
                             transition-all duration-300
+                            ${isChecked ? 'strikethrough-line' : ''}
                           `}
                           style={{ 
-                            opacity: isChecked ? 0.6 : 1,
-                            textDecoration: isChecked ? 'line-through' : 'none'
+                            opacity: isChecked ? 0.7 : 1,
+                            position: isChecked ? 'relative' : 'static',
+                            display: isChecked ? 'inline-block' : 'block'
                           }}
                           onClick={(e) => e.stopPropagation()}
                         />
