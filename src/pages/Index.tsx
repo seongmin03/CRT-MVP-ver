@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import Header from "@/components/Header";
-import ProgressBarWithPlane from "@/components/ProgressBarWithPlane";
+import BottomProgressSheet from "@/components/BottomProgressSheet";
 import EssentialItems from "@/components/EssentialItems";
 import ChecklistSection from "@/components/ChecklistSection";
 import { checklistData } from "@/data/checklistData";
@@ -304,18 +304,6 @@ const Index = () => {
             <Link className="w-4 h-4" />
             <span>링크 복사</span>
           </button>
-        </div>
-
-        {/* Overall progress with airplane animation */}
-        <div className="card-toss animate-fade-in">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-sm font-semibold text-foreground">전체 준비 현황</span>
-            <span className="text-sm font-bold" style={{ color: "#007BFF" }}>{overallProgress}%</span>
-          </div>
-          <ProgressBarWithPlane progress={overallProgress} />
-          <p className="text-xs text-muted-foreground mt-2">
-            {completedItems}/{totalItems} 항목 완료
-          </p>
         </div>
 
         {/* 1. 최상단: 여행 국가 선택 영역 (검색 가능한 드롭다운) */}
@@ -757,6 +745,13 @@ const Index = () => {
         {/* 이건 꼭 챙기셔야 해요 섹션 */}
         <EssentialItems />
       </div>
+
+      {/* 하단 고정 바텀싯: 전체 준비 현황 */}
+      <BottomProgressSheet 
+        progress={overallProgress}
+        completedItems={completedItems}
+        totalItems={totalItems}
+      />
     </div>
   );
 };
