@@ -7,11 +7,11 @@ interface BottomProgressSheetProps {
 const progressMessages: { threshold: number; message: string }[] = [
   { threshold: 15, message: "여권 한번 더 확인하기!" },
   { threshold: 30, message: "필요한 짐은 다 챙기셨나요?" },
-  { threshold: 45, message: "마이리얼트립이 진정한 여행을 도와줄게요" },
+  { threshold: 45, message: "마이리얼트립과 진짜 여행을!" },
   { threshold: 50, message: "Travel Everyday, Myrealtrip!" },
   { threshold: 65, message: "공항을 나서는 순간, 새로운 세상으로" },
-  { threshold: 80, message: "착륙 준비 중! 체크리스트가 곧 완성됩니다." },
-  { threshold: 90, message: "도착 완료! 이제 여행을 떠나볼까요?" },
+  { threshold: 80, message: "체크리스트가 곧 완성됩니다." },
+  { threshold: 90, message: "이제 여행을 떠나볼까요?" },
   { threshold: 100, message: "준비 끝! 즐거운 여행 되세요! ✈️" },
 ];
 
@@ -33,8 +33,8 @@ const BottomProgressSheet = ({ progress, completedItems, totalItems }: BottomPro
         <div className="px-4 py-1.5">
           {/* 상단: 텍스트 레이어 (한 줄 정렬) */}
           <div className="relative flex flex-row items-center justify-between mb-1">
-            {/* 좌측: 전체 준비 현황 */}
-            <span className="text-sm font-bold text-foreground">전체 준비 현황</span>
+            {/* 좌측: 준비 현황 */}
+            <span className="text-sm font-bold text-foreground">준비 현황</span>
             
             {/* 중앙: 단계별 메시지 (absolute positioning) */}
             <p className="absolute left-1/2 -translate-x-1/2 text-[11px] text-gray-500 leading-none whitespace-nowrap">

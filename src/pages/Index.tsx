@@ -746,7 +746,7 @@ const Index = () => {
         <EssentialItems />
       </div>
 
-      {/* 하단 고정 바텀싯: 전체 준비 현황 */}
+      {/* 하단 고정 바텀싯: 준비 현황 */}
       <BottomProgressSheet 
         progress={overallProgress}
         completedItems={completedItems}
