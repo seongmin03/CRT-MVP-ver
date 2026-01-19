@@ -1,6 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import Header from "@/components/Header";
 import BottomProgressSheet from "@/components/BottomProgressSheet";
+import TravelDurationGuide from "@/components/TravelDurationGuide";
+import TravelCompanionGuide from "@/components/TravelCompanionGuide";
+import TravelFlightGuide from "@/components/TravelFlightGuide";
 import EssentialItems from "@/components/EssentialItems";
 import ChecklistSection from "@/components/ChecklistSection";
 import { checklistData } from "@/data/checklistData";
@@ -305,6 +308,15 @@ const Index = () => {
             <span>링크 복사</span>
           </button>
         </div>
+
+        {/* 여행 기간별 의류 가이드 */}
+        <TravelDurationGuide />
+
+        {/* 동행자별 여행 팁 가이드 */}
+        <TravelCompanionGuide />
+
+        {/* 비행 시간별 기내 팁 가이드 */}
+        <TravelFlightGuide />
 
         {/* 1. 최상단: 여행 국가 선택 영역 (검색 가능한 드롭다운) */}
         <div className="animate-fade-in">
