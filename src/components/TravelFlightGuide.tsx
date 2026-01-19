@@ -2,19 +2,37 @@ import { useState } from "react";
 
 type FlightDurationType = "short" | "medium" | "long";
 
+interface GuideItem {
+  text: string;
+  link?: string;
+}
+
 interface GuideData {
-  items: string[];
+  items: GuideItem[];
 }
 
 const flightGuides: Record<FlightDurationType, GuideData> = {
   short: {
-    items: ["체력 소모 ⬇️", "창가 자리 추천", "이어폰"],
+    items: [
+      { text: "체력 소모 ⬇️" },
+      { text: "창가 자리 추천" },
+      { text: "이어폰" },
+    ],
   },
   medium: {
-    items: ["1회 수면 필수", "통로 자리 추천", "수면안대", "귀마개"],
+    items: [
+      { text: "1회 수면 필수" },
+      { text: "통로 자리 추천" },
+      { text: "수면안대", link: "https://link.coupang.com/a/dvoJfF" },
+      { text: "귀마개", link: "https://link.coupang.com/a/dvoOzX" },
+    ],
   },
   long: {
-    items: ["비행기에서 하루 보내기", "통로 적극 추천", "가습 마스크"],
+    items: [
+      { text: "비행기에서 하루 보내기" },
+      { text: "통로 적극 추천" },
+      { text: "가습 마스크", link: "https://link.coupang.com/a/dvoQlz" },
+    ],
   },
 };
 
@@ -58,10 +76,21 @@ const TravelFlightGuide = () => {
         {/* 하단: 가이드 텍스트 (선택 시에만 표시) */}
         {selectedFlight && (
           <div className="mt-3 pt-3 border-t border-gray-100">
-            <div className="flex flex-wrap gap-x-3 gap-y-1">
+            <div className="flex flex-wrap gap-x-3 gap-y-1.5">
               {flightGuides[selectedFlight].items.map((item, index) => (
                 <span key={index} className="text-sm text-gray-600">
-                  • {item}
+                  • {item.link ? (
+                    <a
+                      href={item.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline text-blue-600 hover:text-blue-800 transition-colors duration-200"
+                    >
+                      {item.text}
+                    </a>
+                  ) : (
+                    item.text
+                  )}
                 </span>
               ))}
             </div>

@@ -99,9 +99,14 @@ const EssentialItems = ({ checkedItems }: EssentialItemsProps) => {
     <div 
       className="rounded-2xl p-5 animate-fade-in bg-rose-50"
     >
-      <h3 className="text-primary font-semibold text-base mb-4 text-center">
-        📢 이건 꼭 챙기셔야 해요
-      </h3>
+      <div className="mb-4 text-center">
+        <h3 className="text-primary font-semibold text-base inline">
+          📢 이건 꼭 챙기셔야 해요
+        </h3>
+        <span className="text-xs text-gray-600 ml-2">
+          아이콘을 클릭해서 정보를 확인하세요
+        </span>
+      </div>
       
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
         {essentialItems.map((item) => {

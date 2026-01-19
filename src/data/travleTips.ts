@@ -30,7 +30,7 @@ export interface TravelTip {
     "중국": [
       { title: "통신 서비스 차단 대비", content: "중국에서는 구글, 인스타 등 해외 서비스가 차단되거나 불안정할 수 있어요. 출국 전 대체 수단(VPN 등)을 준비하세요." },
       { title: "결제 앱 실전 테스트", content: "알리페이/위챗페이로 결제가 이루어져요! 한국에서 미리 등록과 테스트를 마치세요." },
-      { title: "보조배터리 3C 인증", content: "중국 국내선을 탈 때는 <a href='https://link.coupang.com/a/drYfII' target='_blank' rel='noopener noreferrer' class='underline text-blue-600 hover:text-blue-800 font-semibold'>보조배터리 3C 인증</a>이나 용량 표기가 있어야 반입이 가능해요." }
+      { title: "보조배터리 3C 인증", content: "중국 국내선을 탈 때는 <a href='https://link.coupang.com/a/drYfII' target='_blank' rel='noopener noreferrer' class='underline text-blue-600 hover:text-blue-800'>보조배터리 3C 인증</a>이나 용량 표기가 있어야 반입이 가능해요." }
     ],
     "미국 / 괌": [
       { title: "ESTA와 입국 심사", content: "ESTA는 입국 심사를 보장하지 않아요! 숙소 주소 등 질문에 대한 답변을 미리 준비하세요." },
@@ -40,17 +40,17 @@ export interface TravelTip {
     ],
     "홍콩": [
       { title: "옥토퍼스 카드", content: "옥토퍼스 카드는 홍콩의 교통카드에요. 다양한 곳에서 사용할 수 있으니 꼭 발급하세요!" },
-      { title: "우기 대비", content: "우기에는 갑자기 비가 와요! <a href='https://link.coupang.com/a/drYh8F' target='_blank' rel='noopener noreferrer' class='underline text-blue-600 hover:text-blue-800 font-semibold'>우산</a>이나 우비를 미리 준비하세요 :)" },
+      { title: "우기 대비", content: "우기에는 갑자기 비가 와요! <a href='https://link.coupang.com/a/drYh8F' target='_blank' rel='noopener noreferrer' class='underline text-blue-600 hover:text-blue-800'>우산</a>이나 우비를 미리 준비하세요 :)" },
       { title: "합석 문화", content: "맛있는 음식이 정말 많은 홍콩, 그만큼 합석 문화도 존재하므로 당황하지 말고 현지인과 함께 음식을 즐기세요!" },
       { title: "숙소 크기", content: "숙소 객실 크기가 작은 편이에요." }
     ],
     "인도네시아": [
-      { title: "여행자 보험", content: "인도네시아의 외국인 병원비는 비싼편이에요! <a href='https://www.myrealtrip.com/event/flight_insurance' target='_blank' rel='noopener noreferrer' class='underline text-blue-600 hover:text-blue-800 font-semibold'>여행자 보험</a>으로 미리 대비하세요." },
+      { title: "여행자 보험", content: "인도네시아의 외국인 병원비는 비싼편이에요! <a href='https://www.myrealtrip.com/event/flight_insurance' target='_blank' rel='noopener noreferrer' class='underline text-blue-600 hover:text-blue-800'>여행자 보험</a>으로 미리 대비하세요." },
       { title: "현금 준비", content: "여전히 현금 사용 비중이 높아요!" },
       { title: "발리 밸리 주의", content: "발리 밸리(Bali Belly)라는 말이 있듯이 많은 여행자가 소화기 불량, 복통을 호소해요. 안전한 여행이 되도록 유의하세요!" }
     ],
     "유럽": [
-      { title: "소매치기 주의", content: "유럽은 <a href='https://link.coupang.com/a/drYsXL' target='_blank' rel='noopener noreferrer' class='underline text-blue-600 hover:text-blue-800 font-semibold'>소매치기</a>가 빈번해요. 특히 관광지, 대중교통 처럼 사람이 많은 곳에서는 안보이는 가방에 소지품을 넣으세요!" },
+      { title: "소매치기 주의", content: "유럽은 <a href='https://link.coupang.com/a/drYsXL' target='_blank' rel='noopener noreferrer' class='underline text-blue-600 hover:text-blue-800'>소매치기</a>가 빈번해요. 특히 관광지, 대중교통 처럼 사람이 많은 곳에서는 안보이는 가방에 소지품을 넣으세요!" },
       { title: "유료 화장실", content: "유료 화장실이 있는 지역이 많아, 동전이나 소액 결제수단을 준비하면 좋아요." },
       { title: "식당 자릿세", content: "자릿세가 부과되는 식당이 있습니다! 메뉴판을 잘 확인하세요." }
     ],

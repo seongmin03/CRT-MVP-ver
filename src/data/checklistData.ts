@@ -141,7 +141,7 @@ export const checklistData: ChecklistData = {
           cta_type: "none",
           cta_label: "",
           image_url: "/image/capsule.png",
-          link_url: "https://link.coupang.com/a/drYGzJ"
+          link_url: "https://link.coupang.com/a/dvpa8d"
         },
         {
           item_id: "medicine_personal",
@@ -150,7 +150,7 @@ export const checklistData: ChecklistData = {
           cta_type: "none",
           cta_label: "",
           image_url: "/image/script.png",
-          link_url: "https://link.coupang.com/a/drYGzJ"
+          link_url: "https://www.innovation.go.kr/ucms/bbs/B0000058/view.do?nttId=18556&menuNo=300239&searchType=3&pageIndex=1"
         },
         {
           item_id: "hygiene",
