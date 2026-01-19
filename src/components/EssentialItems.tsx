@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { 
   CreditCard, 
   Plane, 
@@ -7,6 +8,7 @@ import {
   Check,
   AlertCircle
 } from "lucide-react";
+import TravelInsuranceModal from "./TravelInsuranceModal";
 
 interface EssentialItemsProps {
   checkedItems: Set<string>;
@@ -46,6 +48,8 @@ const essentialItems = [
 ];
 
 const EssentialItems = ({ checkedItems }: EssentialItemsProps) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   // 항목이 완료되었는지 확인
   const isCompleted = (checkItems: string[]) => {
     if (checkItems.length === 0) return false;
@@ -53,7 +57,13 @@ const EssentialItems = ({ checkedItems }: EssentialItemsProps) => {
   };
 
   // 항목 클릭 시 해당 체크박스로 스크롤 및 강조
-  const handleItemClick = (checkItems: string[]) => {
+  const handleItemClick = (itemId: string, checkItems: string[]) => {
+    // 여행자 보험 클릭 시 모달 열기
+    if (itemId === 'insurance') {
+      setIsModalOpen(true);
+      return;
+    }
+    
     if (checkItems.length === 0) return;
     
     // 모든 연결된 항목 찾기
@@ -101,11 +111,11 @@ const EssentialItems = ({ checkedItems }: EssentialItemsProps) => {
           return (
             <div
               key={item.id}
-              onClick={() => handleItemClick(item.checkItems)}
+              onClick={() => handleItemClick(item.id, item.checkItems)}
               className={`
                 flex flex-col items-center gap-2 p-3 bg-white/70 rounded-xl transition-all duration-300
                 ${completed ? 'opacity-50' : 'hover:bg-white hover:shadow-sm'}
-                ${item.checkItems.length > 0 ? 'cursor-pointer' : ''}
+                ${item.checkItems.length > 0 || isInsurance ? 'cursor-pointer' : ''}
               `}
             >
               <div className="relative">
@@ -148,6 +158,12 @@ const EssentialItems = ({ checkedItems }: EssentialItemsProps) => {
           );
         })}
       </div>
+
+      {/* 여행자 보험 상세 안내 모달 */}
+      <TravelInsuranceModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
     </div>
   );
 };
