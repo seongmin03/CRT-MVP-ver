@@ -578,7 +578,7 @@ const Index = () => {
                 }}
               >
                 <p className="text-sm font-semibold text-foreground">
-                  트래블카드 혜택 보기
+                  마이리얼트립 혜택 보기
                 </p>
               </a>
             )}
