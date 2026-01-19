@@ -66,6 +66,16 @@ const southeastAsiaCountries = [
   "말레이시아", "라오스", "캄보디아", "미얀마", "브루나이"
 ];
 
+// 유럽 국가 리스트
+const europeCountries = [
+  "그리스", "네덜란드", "노르웨이", "덴마크", "라트비아", "러시아", 
+  "루마니아", "룩셈부르크", "리투아니아", "말타", "몬테네그로", "몰도바", 
+  "벨라루스", "벨기에", "불가리아", "세르비아", "스웨덴", "스위스", 
+  "슬로베니아", "아이슬란드", "아일랜드", "알바니아", "에스토니아", 
+  "오스트리아", "우크라이나", "체코", "크로아티아", "포르투갈", "폴란드", 
+  "핀란드", "헝가리", "독일", "영국", "스페인", "이탈리아", "프랑스"
+];
+
 // localStorage 키
 const STORAGE_KEY = 'travel_checklist_status';
 const CUSTOM_ITEMS_KEY = 'travel_checklist_custom_items';
@@ -268,7 +278,6 @@ const Index = () => {
   const otherSections = checklistData.sections.filter(s => s.section_id !== "essentials");
 
   // 선택된 국가의 여행 팁 가져오기 ("미국 / 괌", 유럽 국가들 처리)
-  const europeCountries = ["프랑스", "영국", "스페인", "이탈리아"];
   const travelTipsKey = selectedCountry === "미국" || selectedCountry === "괌" 
     ? "미국 / 괌" 
     : europeCountries.includes(selectedCountry)
