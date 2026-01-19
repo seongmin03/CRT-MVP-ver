@@ -68,8 +68,7 @@ export const checklistData: ChecklistData = {
           description: "해외 사용이 가능한 카드 2종 이상을 준비하면 상황 대응이 수월해요.",
           cta_type: "none",
           cta_label: "",
-          image_url: "/image/card.png",
-          link_url: "https://link.coupang.com/a/drYGzJ"
+          image_url: "/image/card.png"
         },
         {
           item_id: "cash",
@@ -77,8 +76,7 @@ export const checklistData: ChecklistData = {
           description: "카드 결제가 어려운 상황에 대비해 최소한의 현금을 준비하세요.",
           cta_type: "none",
           cta_label: "",
-          image_url: "/image/cash.png",
-          link_url: "https://link.coupang.com/a/drYGzJ"
+          image_url: "/image/cash.png"
         },
         {
           item_id: "backup_payment",
@@ -86,8 +84,7 @@ export const checklistData: ChecklistData = {
           description: "해외 결제 차단 여부와 분실 시 대응 방법을 미리 확인해두세요.",
           cta_type: "none",
           cta_label: "",
-          image_url: "/image/emergency.png",
-          link_url: "https://link.coupang.com/a/drYGzJ"
+          image_url: "/image/emergency.png"
         }
       ]
     },
@@ -120,7 +117,7 @@ export const checklistData: ChecklistData = {
           cta_type: "none",
           cta_label: "",
           image_url: "/image/cable.png",
-          link_url: "https://link.coupang.com/a/drYGzJ"
+          link_url: "https://link.coupang.com/a/dvkWAR"
         },
         {
           item_id: "connectivity",
@@ -129,7 +126,7 @@ export const checklistData: ChecklistData = {
           cta_type: "none",
           cta_label: "",
           image_url: "/image/sim.png",
-          link_url: "https://link.coupang.com/a/drYJWG"
+          link_url: "https://www.myrealtrip.com/search?q=%EC%9C%A0%EC%8B%AC&tab=sim&extra= "
         }
       ]
     },
@@ -177,7 +174,7 @@ export const checklistData: ChecklistData = {
           cta_type: "none",
           cta_label: "",
           image_url: "/image/shorts.png",
-          link_url: "https://link.coupang.com/a/drYGzJ"
+          link_url: "https://link.coupang.com/a/dvlsCi"
         },
         {
           item_id: "underwear",
@@ -185,8 +182,7 @@ export const checklistData: ChecklistData = {
           description: "여행 기간을 기준으로 여유분을 포함해 챙기면 좋아요.",
           cta_type: "none",
           cta_label: "",
-          image_url: "/image/socks.png",
-          link_url: "https://link.coupang.com/a/drYGzJ"
+          image_url: "/image/socks.png"
         },
         {
           item_id: "pouch",

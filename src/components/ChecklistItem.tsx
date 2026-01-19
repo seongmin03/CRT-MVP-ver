@@ -73,22 +73,36 @@ const ChecklistItem = ({ item, isChecked, onToggle }: ChecklistItemProps) => {
       </div>
 
       {/* 이미지 및 링크 - 텍스트 우측에 배치 */}
-      {item.image_url && item.link_url && (
-        <a
-          href={item.link_url}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={(e) => e.stopPropagation()}
-          className="flex-shrink-0 transition-all duration-300 hover:brightness-110 hover:shadow-lg hover:scale-110 active:scale-95"
-          style={{ width: "40px", height: "40px" }}
-        >
-          <img
-            src={item.image_url}
-            alt={item.title}
-            className="w-full h-full object-cover rounded-lg shadow-md"
+      {item.image_url && (
+        item.link_url ? (
+          <a
+            href={item.link_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="flex-shrink-0 transition-all duration-300 hover:brightness-110 hover:shadow-lg hover:scale-110 active:scale-95 cursor-pointer"
             style={{ width: "40px", height: "40px" }}
-          />
-        </a>
+          >
+            <img
+              src={item.image_url}
+              alt={item.title}
+              className="w-full h-full object-cover rounded-lg shadow-md"
+              style={{ width: "40px", height: "40px" }}
+            />
+          </a>
+        ) : (
+          <div
+            className="flex-shrink-0"
+            style={{ width: "40px", height: "40px" }}
+          >
+            <img
+              src={item.image_url}
+              alt={item.title}
+              className="w-full h-full object-cover rounded-lg shadow-md"
+              style={{ width: "40px", height: "40px" }}
+            />
+          </div>
+        )
       )}
     </div>
   );

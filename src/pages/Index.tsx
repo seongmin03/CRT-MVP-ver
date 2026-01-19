@@ -322,7 +322,7 @@ const Index = () => {
         <div className="animate-fade-in">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 p-4 bg-card rounded-xl border border-border shadow-sm">
             <span className="text-sm font-semibold text-foreground">
-              여행 국가를 선택하고 맞춤 혜택을 받으세요!
+              여행지를 선택하고 맞춤 정보를 확인하하세요!
             </span>
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
