@@ -67,21 +67,27 @@ export const checklistData: ChecklistData = {
           title: "해외 결제 가능 카드 준비",
           description: "해외 사용이 가능한 카드 2종 이상을 준비하면 상황 대응이 수월해요.",
           cta_type: "none",
-          cta_label: ""
+          cta_label: "",
+          image_url: "/image/card.png",
+          link_url: "https://link.coupang.com/a/drYGzJ"
         },
         {
           item_id: "cash",
           title: "소액 현금 준비",
           description: "카드 결제가 어려운 상황에 대비해 최소한의 현금을 준비하세요.",
           cta_type: "none",
-          cta_label: ""
+          cta_label: "",
+          image_url: "/image/cash.png",
+          link_url: "https://link.coupang.com/a/drYGzJ"
         },
         {
           item_id: "backup_payment",
           title: "비상 결제 수단 확인",
           description: "해외 결제 차단 여부와 분실 시 대응 방법을 미리 확인해두세요.",
           cta_type: "none",
-          cta_label: ""
+          cta_label: "",
+          image_url: "/image/emergency.png",
+          link_url: "https://link.coupang.com/a/drYGzJ"
         }
       ]
     },
@@ -112,7 +118,9 @@ export const checklistData: ChecklistData = {
           title: "충전 케이블 및 어댑터",
           description: "휴대폰, 카메라 등 사용하는 기기에 맞는 케이블을 챙기세요.",
           cta_type: "none",
-          cta_label: ""
+          cta_label: "",
+          image_url: "/image/cable.png",
+          link_url: "https://link.coupang.com/a/drYGzJ"
         },
         {
           item_id: "connectivity",
@@ -134,14 +142,18 @@ export const checklistData: ChecklistData = {
           title: "기본 상비약 준비",
           description: "해열제, 소화제 등 개인에게 필요한 기본 약품을 준비하세요.",
           cta_type: "none",
-          cta_label: ""
+          cta_label: "",
+          image_url: "/image/capsule.png",
+          link_url: "https://link.coupang.com/a/drYGzJ"
         },
         {
           item_id: "medicine_personal",
           title: "개인 복용 약 확인",
           description: "처방약의 경우 필요 시 설명 자료를 함께 준비하는 것이 좋아요.",
           cta_type: "none",
-          cta_label: ""
+          cta_label: "",
+          image_url: "/image/script.png",
+          link_url: "https://link.coupang.com/a/drYGzJ"
         },
         {
           item_id: "hygiene",
@@ -163,14 +175,18 @@ export const checklistData: ChecklistData = {
           title: "계절에 맞는 의류 준비",
           description: "출발 전 예보와 일정 특성을 참고해 기본 착장을 준비하세요.",
           cta_type: "none",
-          cta_label: ""
+          cta_label: "",
+          image_url: "/image/shorts.png",
+          link_url: "https://link.coupang.com/a/drYGzJ"
         },
         {
           item_id: "underwear",
           title: "속옷 및 양말 준비",
           description: "여행 기간을 기준으로 여유분을 포함해 챙기면 좋아요.",
           cta_type: "none",
-          cta_label: ""
+          cta_label: "",
+          image_url: "/image/socks.png",
+          link_url: "https://link.coupang.com/a/drYGzJ"
         },
         {
           item_id: "pouch",

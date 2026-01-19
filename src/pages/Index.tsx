@@ -512,7 +512,7 @@ const Index = () => {
           <div className="grid grid-cols-2 gap-3">
             {/* 왼쪽 절반: 안전한 여행! 여행자 보험 - 항상 표시 */}
             <a
-              href="https://direct.samsungfire.com/ria/pc/product/factory/?state=Front&product=travel&state=Front"
+              href="https://www.myrealtrip.com/event/flight_insurance"
               target="_blank"
               rel="noopener noreferrer"
               className="block rounded-xl p-4 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
@@ -755,7 +755,9 @@ const Index = () => {
         </div>
 
         {/* 이건 꼭 챙기셔야 해요 섹션 */}
-        <EssentialItems />
+        <div className="mt-6">
+          <EssentialItems checkedItems={checkedItems} />
+        </div>
       </div>
 
       {/* 하단 고정 바텀싯: 준비 현황 */}

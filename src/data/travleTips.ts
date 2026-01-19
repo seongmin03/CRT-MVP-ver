@@ -45,7 +45,7 @@ export interface TravelTip {
       { title: "숙소 크기", content: "숙소 객실 크기가 작은 편이에요." }
     ],
     "인도네시아": [
-      { title: "여행자 보험", content: "인도네시아의 외국인 병원비는 비싼편이에요! <a href='https://direct.samsungfire.com/vd/overture_index.jsp?OTK=F2511AF0520' target='_blank' rel='noopener noreferrer' class='underline text-blue-600 hover:text-blue-800 font-semibold'>여행자 보험</a>으로 미리 대비하세요." },
+      { title: "여행자 보험", content: "인도네시아의 외국인 병원비는 비싼편이에요! <a href='https://www.myrealtrip.com/event/flight_insurance' target='_blank' rel='noopener noreferrer' class='underline text-blue-600 hover:text-blue-800 font-semibold'>여행자 보험</a>으로 미리 대비하세요." },
       { title: "현금 준비", content: "여전히 현금 사용 비중이 높아요!" },
       { title: "발리 밸리 주의", content: "발리 밸리(Bali Belly)라는 말이 있듯이 많은 여행자가 소화기 불량, 복통을 호소해요. 안전한 여행이 되도록 유의하세요!" }
     ],
