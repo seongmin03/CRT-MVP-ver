@@ -66,14 +66,33 @@ const southeastAsiaCountries = [
   "말레이시아", "라오스", "캄보디아", "미얀마", "브루나이"
 ];
 
-// 유럽 국가 리스트
+// 유럽 권역별 국가 리스트
+const northEuropeCountries = [
+  "노르웨이", "덴마크", "스웨덴", "아이슬란드", "핀란드", 
+  "에스토니아", "라트비아", "리투아니아"
+];
+
+const westEuropeCountries = [
+  "영국", "아일랜드", "프랑스", "벨기에", "네덜란드", 
+  "룩셈부르크", "독일", "스위스", "오스트리아"
+];
+
+const southEuropeCountries = [
+  "스페인", "포르투갈", "이탈리아", "그리스", "말타", 
+  "알바니아", "세르비아", "몬테네그로", "크로아티아", "슬로베니아"
+];
+
+const eastEuropeCountries = [
+  "러시아", "폴란드", "체코", "헝가리", "루마니아", 
+  "불가리아", "벨라루스", "우크라이나", "몰도바"
+];
+
+// 전체 유럽 국가 리스트
 const europeCountries = [
-  "그리스", "네덜란드", "노르웨이", "덴마크", "라트비아", "러시아", 
-  "루마니아", "룩셈부르크", "리투아니아", "말타", "몬테네그로", "몰도바", 
-  "벨라루스", "벨기에", "불가리아", "세르비아", "스웨덴", "스위스", 
-  "슬로베니아", "아이슬란드", "아일랜드", "알바니아", "에스토니아", 
-  "오스트리아", "우크라이나", "체코", "크로아티아", "포르투갈", "폴란드", 
-  "핀란드", "헝가리", "독일", "영국", "스페인", "이탈리아", "프랑스"
+  ...northEuropeCountries,
+  ...westEuropeCountries,
+  ...southEuropeCountries,
+  ...eastEuropeCountries
 ];
 
 // localStorage 키
@@ -277,14 +296,42 @@ const Index = () => {
   const essentialsSection = checklistData.sections.find(s => s.section_id === "essentials");
   const otherSections = checklistData.sections.filter(s => s.section_id !== "essentials");
 
-  // 선택된 국가의 여행 팁 가져오기 ("미국 / 괌", 유럽 국가들 처리)
-  const travelTipsKey = selectedCountry === "미국" || selectedCountry === "괌" 
-    ? "미국 / 괌" 
-    : europeCountries.includes(selectedCountry)
-    ? "유럽"
-    : selectedCountry;
+  // 선택된 국가의 여행 팁 가져오기 (권역별 처리)
+  const getTravelTipsKey = (country: string | null): string | null => {
+    if (!country) return null;
+    
+    // 미국/괌 처리
+    if (country === "미국" || country === "괌") return "미국 / 괌";
+    
+    // 유럽 권역별 처리
+    if (northEuropeCountries.includes(country)) return "북유럽";
+    if (westEuropeCountries.includes(country)) return "서유럽";
+    if (southEuropeCountries.includes(country)) return "남유럽";
+    if (eastEuropeCountries.includes(country)) return "동유럽";
+    
+    // 일반 유럽 (폴백)
+    if (europeCountries.includes(country)) return "유럽";
+    
+    // 기타 국가
+    return country;
+  };
+
+  const travelTipsKey = getTravelTipsKey(selectedCountry);
   const currentTravelTips = selectedCountry && travelTipsKey ? travelTips[travelTipsKey] : null;
-  const displayCountryName = europeCountries.includes(selectedCountry) ? "유럽" : selectedCountry;
+  
+  // 표시할 지역명 결정
+  const getDisplayRegionName = (country: string | null): string | null => {
+    if (!country) return null;
+    
+    if (northEuropeCountries.includes(country)) return "북유럽";
+    if (westEuropeCountries.includes(country)) return "서유럽";
+    if (southEuropeCountries.includes(country)) return "남유럽";
+    if (eastEuropeCountries.includes(country)) return "동유럽";
+    
+    return country;
+  };
+  
+  const displayCountryName = getDisplayRegionName(selectedCountry) || selectedCountry;
 
   const copyLink = async () => {
     const url = "https://crt-mvp-ver.vercel.app/";
@@ -436,21 +483,10 @@ const Index = () => {
           <div className="animate-fade-in">
             <div className="bg-blue-50/50 rounded-2xl p-5 border border-blue-100/50 shadow-sm">
               <div className="flex items-center gap-2 mb-4">
-                {europeCountries.includes(selectedCountry) ? (
-                  <>
-                    <span className="text-xl">💡</span>
-                    <h3 className="text-lg font-semibold text-foreground">
-                      유럽 리얼 트립
-                    </h3>
-                  </>
-                ) : (
-                  <>
-                    <span className="text-xl">✈️</span>
-                    <h3 className="text-lg font-semibold text-foreground">
-                      {selectedCountry} 리얼 트립
-                    </h3>
-                  </>
-                )}
+                <span className="text-xl">✈️</span>
+                <h3 className="text-lg font-semibold text-foreground">
+                  {displayCountryName} 리얼 트립
+                </h3>
               </div>
               <div className="flex flex-col sm:flex-row gap-4 items-start">
                 {/* 텍스트 영역 */}
