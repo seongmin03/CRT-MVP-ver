@@ -1,7 +1,7 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import Header from "@/components/Header";
 import BottomProgressSheet from "@/components/BottomProgressSheet";
-import TravelDurationGuide from "@/components/TravelDurationGuide";
+import TravelDurationGuide, { type DurationType } from "@/components/TravelDurationGuide";
 import TravelCompanionGuide from "@/components/TravelCompanionGuide";
 import TravelFlightGuide from "@/components/TravelFlightGuide";
 import EssentialItems from "@/components/EssentialItems";
@@ -167,6 +167,134 @@ const Index = () => {
   const [selectedCountry, setSelectedCountry] = useState<string>("");
   const [open, setOpen] = useState(false);
   const [isSearchActive, setIsSearchActive] = useState(false);
+  // 여행팁 체크리스트 아이템 상태 (selectedCountry에 따라 나중에 동적으로 매핑 가능)
+  const [travelTipItems, setTravelTipItems] = useState<typeof checklistData.sections[0]['items']>([]);
+  // 여행 기간 선택 상태
+  const [selectedDuration, setSelectedDuration] = useState<DurationType | null>(null);
+
+  // 일본 전용 추가 데이터 정의
+  const japanSpecificItems: Record<string, typeof checklistData.sections[0]['items']> = {
+    essentials: [
+      {
+        item_id: "japan_passport_note",
+        title: "여권 준비",
+        description: "일본은 여권 잔여 유효기간 규정이 없으나 체류예정기간보다 넉넉한 유효기간을 권장합니다.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "japan_visa_note",
+        title: "비자 확인",
+        description: "한국인은 관광 목적으로 최대 90일간 무비자 입국이 가능합니다.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "japan_vjw",
+        title: "사전 입국신고서 작성",
+        description: "비짓재팬(전자 입국신고서)을 미리 작성하고 QR코드를 캡처해두세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "japan_immigration",
+        title: "입국 심사 준비",
+        description: "\"관광입니다(칸코데스)\", \"쇼핑입니다(카이모노데스)\" \"호텔(호테루)\", \"여권(파스포토)\"",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "japan_police_check",
+        title: "불심검문 대비",
+        description: "현지 경찰의 불심검문에 대비해 항상 여권을 휴대해야 합니다.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    electronics: [
+      {
+        item_id: "japan_adapter_110v",
+        title: "멀티 어댑터 준비",
+        description: "일본은 110V(11자형) 콘센트를 사용하므로 전용 어댑터가 필수입니다.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "japan_high_power",
+        title: "고전력 제품 주의",
+        description: "고데기, 드라이기 등은 변압기 없이는 고장날 수 있으니 프리볼트 여부를 확인하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "japan_disaster_app",
+        title: "재난 알림 앱 설치",
+        description: "일본 관광청 공식 앱 'Safety tips'를 설치해 한국어 재난 알림을 받으세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "japan_chargespot",
+        title: "보조배터리 공유(ChargeSPOT)",
+        description: "현지 대여 서비스인 차지 스팟 앱을 미리 설치해 방전에 대비하세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    health: [
+      {
+        item_id: "japan_handkerchief",
+        title: "개인용 손수건",
+        description: "일본 공공 화장실은 핸드 드라이어가 없는 경우가 많아 손수건 휴대를 추천합니다.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "japan_medicine_restriction",
+        title: "일본 반입 금지 성분",
+        description: "한국 감기약 중 슈도에페드린, 코데인 성분은 일본 내 반입이 엄격히 제한됩니다.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    travel_tips: [
+      {
+        item_id: "japan_tip_cash",
+        title: "현금은 필수",
+        description: "현금 사용 비중이 높으므로 일본 전용 동전지갑을 준비하면 편리합니다.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "japan_tip_subway",
+        title: "복잡한 지하철 노선",
+        description: "운영사별로 노선이 다르니 보유한 패스의 커버리지를 반드시 확인하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "japan_tip_donki",
+        title: "돈키호테 할인 쿠폰",
+        description: "마이리얼트립에서 제공하는 할인 쿠폰을 미리 챙겨 혜택을 받으세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "japan_tip_convenience",
+        title: "급하다면 편의점으로",
+        description: "편의점 화장실은 대부분 개방되어 있고 청결하여 급할 때 유용합니다.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "japan_tip_bus",
+        title: "버스 요금 계산법",
+        description: "요금함 옆 환전기에서 잔돈을 만든 뒤 정확한 요금만 납부하세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ]
+  };
   const checklistRef = useRef<HTMLDivElement>(null);
   const commandInputRef = useRef<HTMLInputElement>(null);
   const customInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
@@ -288,13 +416,225 @@ const Index = () => {
     }
   };
 
-  const totalItems = checklistData.sections.reduce((acc, section) => acc + section.items.length, 0) + customItems.length;
+  // 기간별 의류 항목 매핑
+  const durationItemsMap: Record<DurationType, string[]> = {
+    "2-3": ['상의 3~4벌', '하의 1~2벌', '속옷 3~4벌', '양말 3~4켤레'],
+    "4-5": ['상의 5~6벌', '하의 2~3벌', '속옷 5~6벌', '양말 5~6켤레'],
+    "6-7": ['상의 6~7벌', '하의 3벌', '속옷 7~8벌', '양말 7~8켤레'],
+    "7+": ['중간 세탁을 고려하세요.', '최대로 빨래를 하지 않고 버티는 날 + 하루 여유분을 준비하세요.']
+  };
+
+  // 선택된 기간에 따른 의류 항목 생성 (useMemo로 최적화)
+  const durationItems = useMemo((): typeof checklistData.sections[0]['items'] => {
+    // 기간이 선택되지 않았으면 빈 배열 반환 (기본 리스트 유지)
+    if (!selectedDuration) {
+      return [];
+    }
+
+    // 선택된 기간에 맞는 세부 수량 아이템들 생성
+    return durationItemsMap[selectedDuration].map((title, index) => ({
+      item_id: `duration_${selectedDuration}_${index}`,
+      title: title,
+      description: "",
+      cta_type: "none",
+      cta_label: ""
+    }));
+  }, [selectedDuration]);
+
+  // 스마트 병합 함수: 제목 매칭 기반으로 치환 및 추가 (안전성 강화) - 먼저 정의
+  const mergeItems = useCallback((
+    baseItems: typeof checklistData.sections[0]['items'],
+    countryItems: typeof checklistData.sections[0]['items']
+  ): typeof checklistData.sections[0]['items'] => {
+    try {
+      // 안전성 체크: baseItems가 없으면 빈 배열 반환
+      if (!baseItems || !Array.isArray(baseItems)) {
+        return countryItems && Array.isArray(countryItems) ? countryItems : [];
+      }
+
+      // 안전성 체크: countryItems가 없으면 baseItems 반환
+      if (!countryItems || !Array.isArray(countryItems) || countryItems.length === 0) {
+        return baseItems;
+      }
+
+      // 1. 기본 항목들을 순회하면서 제목이 일치하는 국가 항목으로 치환
+      const mergedItems = baseItems
+        .filter(item => item && item.title) // 유효한 항목만 처리
+        .map(baseItem => {
+          if (!baseItem || !baseItem.title) return baseItem;
+          
+          const matchingCountryItem = countryItems.find(
+            countryItem => countryItem && countryItem.title && countryItem.title === baseItem.title
+          );
+          // 제목이 일치하면 국가 전용 항목으로 치환, 없으면 기본 항목 유지
+          return matchingCountryItem || baseItem;
+        });
+
+      // 2. 국가 전용 항목 중 기본 항목에 없는 제목은 맨 아래에 추가
+      const baseTitles = new Set(
+        baseItems
+          .filter(item => item && item.title)
+          .map(item => item.title)
+      );
+      const newCountryItems = countryItems.filter(
+        countryItem => countryItem && countryItem.title && !baseTitles.has(countryItem.title)
+      );
+
+      return [...mergedItems, ...newCountryItems];
+    } catch (error) {
+      console.error('Error in mergeItems:', error);
+      // 에러 발생 시 기본 항목 반환 (최소한의 데이터라도 보여주기)
+      return baseItems && Array.isArray(baseItems) ? baseItems : [];
+    }
+  }, []);
+
+  const totalItems = useMemo(() => {
+    try {
+      const isJapan = selectedCountry === "일본";
+      
+      return checklistData.sections.reduce((acc, section) => {
+        if (!section || !section.items) return acc;
+        
+        try {
+          // 여행팁 섹션은 travelTipItems와 일본 전용 항목 병합 결과
+          if (section.section_id === "travel_tips") {
+            const japanItems = isJapan ? (japanSpecificItems["travel_tips"] || []) : [];
+            const merged = mergeItems(travelTipItems || [], japanItems);
+            return acc + (merged?.length || 0);
+          }
+          // packing 섹션 처리
+          if (section.section_id === "packing") {
+            const japanItems = isJapan ? (japanSpecificItems["packing"] || []) : [];
+            let finalItems = [...(section.items || [])];
+            
+            // 기간이 선택되었으면 underwear 제거하고 durationItems 추가
+            if (selectedDuration) {
+              const baseItems = finalItems.filter(item => item && item.item_id !== "underwear");
+              const clothingIndex = baseItems.findIndex(item => item && item.item_id === "clothing");
+              if (clothingIndex !== -1) {
+                finalItems = [
+                  ...baseItems.slice(0, clothingIndex + 1),
+                  ...(durationItems || []),
+                  ...baseItems.slice(clothingIndex + 1)
+                ];
+              } else {
+                finalItems = [...(durationItems || []), ...baseItems];
+              }
+            }
+            
+            const merged = mergeItems(finalItems, japanItems);
+            return acc + (merged?.length || 0);
+          }
+          // 기타 섹션: 기본 항목과 일본 전용 항목 병합 결과
+          const japanItems = isJapan ? (japanSpecificItems[section.section_id] || []) : [];
+          const merged = mergeItems(section.items || [], japanItems);
+          return acc + (merged?.length || 0);
+        } catch (error) {
+          console.error(`Error processing section ${section.section_id}:`, error);
+          return acc + (section.items?.length || 0);
+        }
+      }, 0) + (customItems?.length || 0);
+    } catch (error) {
+      console.error('Error calculating totalItems:', error);
+      // 에러 발생 시 기본값 반환
+      return checklistData.sections.reduce((acc, section) => {
+        return acc + (section?.items?.length || 0);
+      }, 0) + (customItems?.length || 0);
+    }
+  }, [travelTipItems, selectedDuration, durationItems, customItems.length, selectedCountry, mergeItems]);
   const completedItems = checkedItems.size;
   const overallProgress = Math.round((completedItems / totalItems) * 100);
 
-  // 체크리스트 섹션 분리: essentials는 마지막에, 나머지는 먼저
-  const essentialsSection = checklistData.sections.find(s => s.section_id === "essentials");
-  const otherSections = checklistData.sections.filter(s => s.section_id !== "essentials");
+  // 체크리스트 섹션 분리: essentials는 마지막에, 나머지는 먼저 (useMemo로 최적화)
+  const essentialsSection = useMemo(() => {
+    try {
+      const section = checklistData.sections.find(s => s && s.section_id === "essentials");
+      if (!section || !section.items) return null;
+      
+      // 일본 전용 항목 스마트 병합
+      const isJapan = selectedCountry === "일본";
+      const japanItems = isJapan ? (japanSpecificItems["essentials"] || []) : [];
+      
+      const mergedItems = mergeItems(section.items || [], japanItems);
+      
+      return {
+        ...section,
+        items: mergedItems || section.items || []
+      };
+    } catch (error) {
+      console.error('Error processing essentialsSection:', error);
+      // 에러 발생 시 기본 섹션 반환
+      const section = checklistData.sections.find(s => s && s.section_id === "essentials");
+      return section || null;
+    }
+  }, [selectedCountry, mergeItems]);
+
+  const otherSections = useMemo(() => {
+    try {
+      return checklistData.sections
+        .filter(s => s && s.section_id && s.section_id !== "essentials")
+        .map(section => {
+          try {
+            if (!section || !section.items) return section;
+            
+            // 일본 전용 데이터 추가 여부 확인
+            const isJapan = selectedCountry === "일본";
+            const japanItems = isJapan ? (japanSpecificItems[section.section_id] || []) : [];
+
+            // 여행팁 섹션 처리
+            if (section.section_id === "travel_tips") {
+              // travelTipItems와 일본 전용 항목 스마트 병합
+              const mergedItems = mergeItems(travelTipItems || [], japanItems);
+              return {
+                ...section,
+                items: mergedItems || travelTipItems || []
+              };
+            }
+            // packing 섹션 처리
+            if (section.section_id === "packing") {
+              let finalItems = [...(section.items || [])];
+              
+              // 기간이 선택되었으면 'underwear' 항목만 제거하고 durationItems로 교체
+              if (selectedDuration) {
+                const baseItems = finalItems.filter(item => item && item.item_id !== "underwear");
+                // durationItems를 underwear 위치에 삽입 (clothing 다음에)
+                const clothingIndex = baseItems.findIndex(item => item && item.item_id === "clothing");
+                if (clothingIndex !== -1) {
+                  finalItems = [
+                    ...baseItems.slice(0, clothingIndex + 1),
+                    ...(durationItems || []),
+                    ...baseItems.slice(clothingIndex + 1)
+                  ];
+                } else {
+                  finalItems = [...(durationItems || []), ...baseItems];
+                }
+              }
+              
+              // 일본 전용 항목 스마트 병합
+              const mergedItems = mergeItems(finalItems, japanItems);
+              return {
+                ...section,
+                items: mergedItems || finalItems || []
+              };
+            }
+            
+            // 기타 섹션: 기본 항목과 일본 전용 항목 스마트 병합
+            const mergedItems = mergeItems(section.items || [], japanItems);
+            return {
+              ...section,
+              items: mergedItems || section.items || []
+            };
+          } catch (error) {
+            console.error(`Error processing section ${section.section_id}:`, error);
+            return section;
+          }
+        });
+    } catch (error) {
+      console.error('Error processing otherSections:', error);
+      // 에러 발생 시 기본 섹션 반환
+      return checklistData.sections.filter(s => s && s.section_id && s.section_id !== "essentials");
+    }
+  }, [travelTipItems, selectedDuration, durationItems, selectedCountry, mergeItems]);
 
   // 선택된 국가의 여행 팁 가져오기 (권역별 처리)
   const getTravelTipsKey = (country: string | null): string | null => {
@@ -366,7 +706,7 @@ const Index = () => {
         </div>
 
         {/* 여행 기간별 의류 가이드 */}
-        <TravelDurationGuide />
+        <TravelDurationGuide onDurationChange={setSelectedDuration} />
 
         {/* 동행자별 여행 팁 가이드 */}
         <TravelCompanionGuide />
@@ -635,18 +975,28 @@ const Index = () => {
           )}
 
           {/* 일반 체크리스트 (essentials 제외) */}
-          {otherSections.map((section, index) => (
-            <div 
-              key={section.section_id}
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              <ChecklistSection
-                section={section}
-                checkedItems={checkedItems}
-                onToggle={handleToggle}
-              />
+          {otherSections && Array.isArray(otherSections) && otherSections.length > 0 ? (
+            otherSections.map((section, index) => {
+              if (!section || !section.section_id) return null;
+              return (
+                <div 
+                  key={section.section_id}
+                  className="animate-fade-in"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <ChecklistSection
+                    section={section}
+                    checkedItems={checkedItems}
+                    onToggle={handleToggle}
+                  />
+                </div>
+              );
+            })
+          ) : (
+            <div className="text-center py-8 text-muted-foreground">
+              체크리스트를 불러오는 중...
             </div>
-          ))}
+          )}
 
           {/* 커스텀 항목 섹션 */}
           {customItems.length > 0 && (

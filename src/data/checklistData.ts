@@ -203,6 +203,11 @@ export const checklistData: ChecklistData = {
           link_url: "https://link.coupang.com/a/drY6ST"
         }
       ]
+    },
+    {
+      section_id: "travel_tips",
+      section_title: "여행팁",
+      items: []
     }
   ]
 };

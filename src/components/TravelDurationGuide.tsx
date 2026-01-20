@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-type DurationType = "2-3" | "4-5" | "6-7" | "7+";
+export type DurationType = "2-3" | "4-5" | "6-7" | "7+";
 
 interface GuideData {
   items: string;
   note: string;
+}
+
+interface TravelDurationGuideProps {
+  onDurationChange?: (duration: DurationType | null) => void;
 }
 
 const durationGuides: Record<DurationType, GuideData> = {
@@ -26,8 +30,15 @@ const durationGuides: Record<DurationType, GuideData> = {
   },
 };
 
-const TravelDurationGuide = () => {
+const TravelDurationGuide = ({ onDurationChange }: TravelDurationGuideProps) => {
   const [selectedDuration, setSelectedDuration] = useState<DurationType | null>(null);
+
+  // 선택된 기간이 변경될 때 부모에게 알림
+  useEffect(() => {
+    if (onDurationChange) {
+      onDurationChange(selectedDuration);
+    }
+  }, [selectedDuration, onDurationChange]);
 
   const durations: { value: DurationType; label: string }[] = [
     { value: "2-3", label: "2~3일" },

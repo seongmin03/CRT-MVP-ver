@@ -41,7 +41,7 @@ const ChecklistItem = ({ item, isChecked, onToggle }: ChecklistItemProps) => {
         <h4 
           className={`
             font-semibold text-sm sm:text-base transition-all duration-300
-            ${isChecked ? 'text-gray-400' : 'text-foreground'}
+            ${isChecked ? 'text-gray-400' : 'text-slate-900 dark:text-white'}
           `}
           style={{ 
             lineHeight: '1.5',
@@ -61,7 +61,7 @@ const ChecklistItem = ({ item, isChecked, onToggle }: ChecklistItemProps) => {
         <p 
           className={`
             mt-1 text-xs sm:text-sm leading-relaxed transition-all duration-300
-            ${isChecked ? 'text-gray-400' : 'text-muted-foreground'}
+            ${isChecked ? 'text-gray-400' : 'text-slate-700 dark:text-gray-300'}
           `}
           style={{ 
             lineHeight: '1.5',
