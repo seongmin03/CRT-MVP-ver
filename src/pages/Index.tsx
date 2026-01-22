@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import Header from "@/components/Header";
 import BottomProgressSheet from "@/components/BottomProgressSheet";
-import TravelDurationGuide, { type DurationType } from "@/components/TravelDurationGuide";
+import { type DurationType } from "@/components/TravelDurationGuide";
 import TravelCompanionGuide from "@/components/TravelCompanionGuide";
 import TravelFlightGuide from "@/components/TravelFlightGuide";
 import EssentialItems from "@/components/EssentialItems";
 import ChecklistSection from "@/components/ChecklistSection";
+import FlightLuggageGuideModal from "@/components/FlightLuggageGuideModal";
 import { checklistData } from "@/data/checklistData";
 import { travelTips } from "@/data/travleTips";
 import { Lightbulb, Check, ChevronDown, Search, Link, X, Plus } from "lucide-react";
@@ -171,6 +172,8 @@ const Index = () => {
   const [travelTipItems, setTravelTipItems] = useState<typeof checklistData.sections[0]['items']>([]);
   // 여행 기간 선택 상태
   const [selectedDuration, setSelectedDuration] = useState<DurationType | null>(null);
+  // 항공기 반입 물품 가이드 모달 상태
+  const [isFlightGuideOpen, setIsFlightGuideOpen] = useState(false);
 
   // 일본 전용 추가 데이터 정의
   const japanSpecificItems: Record<string, typeof checklistData.sections[0]['items']> = {
@@ -298,6 +301,14 @@ const Index = () => {
   const checklistRef = useRef<HTMLDivElement>(null);
   const commandInputRef = useRef<HTMLInputElement>(null);
   const customInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
+
+  // 국가 변경 시 체크 상태 초기화
+  useEffect(() => {
+    if (selectedCountry) {
+      setCheckedItems(new Set<string>());
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  }, [selectedCountry]);
 
   // 체크 상태가 변경될 때마다 localStorage에 저장
   useEffect(() => {
@@ -496,11 +507,9 @@ const Index = () => {
         if (!section || !section.items) return acc;
         
         try {
-          // 여행팁 섹션은 travelTipItems와 일본 전용 항목 병합 결과
+          // 여행팁 섹션은 체크박스가 없으므로 진행률 계산에서 제외
           if (section.section_id === "travel_tips") {
-            const japanItems = isJapan ? (japanSpecificItems["travel_tips"] || []) : [];
-            const merged = mergeItems(travelTipItems || [], japanItems);
-            return acc + (merged?.length || 0);
+            return acc;
           }
           // packing 섹션 처리
           if (section.section_id === "packing") {
@@ -536,8 +545,9 @@ const Index = () => {
       }, 0) + (customItems?.length || 0);
     } catch (error) {
       console.error('Error calculating totalItems:', error);
-      // 에러 발생 시 기본값 반환
+      // 에러 발생 시 기본값 반환 (여행팁 섹션 제외)
       return checklistData.sections.reduce((acc, section) => {
+        if (section?.section_id === "travel_tips") return acc;
         return acc + (section?.items?.length || 0);
       }, 0) + (customItems?.length || 0);
     }
@@ -704,9 +714,6 @@ const Index = () => {
             <span>링크 복사</span>
           </button>
         </div>
-
-        {/* 여행 기간별 의류 가이드 */}
-        <TravelDurationGuide onDurationChange={setSelectedDuration} />
 
         {/* 동행자별 여행 팁 가이드 */}
         <TravelCompanionGuide />
@@ -895,21 +902,15 @@ const Index = () => {
         {/* 3. 중단: 혜택 탭 2분할 - 항상 표시 */}
         <div className="animate-fade-in">
           <div className="grid grid-cols-2 gap-3">
-            {/* 왼쪽 절반: 안전한 여행! 여행자 보험 - 항상 표시 */}
-            <a
-              href="https://www.myrealtrip.com/event/flight_insurance"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block rounded-xl p-4 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
-              style={{ 
-                backgroundColor: "#FEF9E7",
-                border: "1px solid rgba(0, 0, 0, 0.05)"
-              }}
+            {/* 왼쪽 절반: 항공기 반입 물품 가이드 */}
+            <button
+              onClick={() => setIsFlightGuideOpen(true)}
+              className="block rounded-xl p-4 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 bg-sky-500/100 text-white"
             >
-              <p className="text-sm font-semibold text-foreground">
-                안전한 여행! 여행자 보험
+              <p className="text-sm font-semibold">
+                항공기 반입 물품 가이드
               </p>
-            </a>
+            </button>
 
             {/* 오른쪽 절반: 국가별 가변 */}
             {selectedCountry === "일본" ? (
@@ -970,6 +971,8 @@ const Index = () => {
                 section={essentialsSection}
                 checkedItems={checkedItems}
                 onToggle={handleToggle}
+                selectedDuration={selectedDuration}
+                onDurationChange={setSelectedDuration}
               />
             </div>
           )}
@@ -988,6 +991,8 @@ const Index = () => {
                     section={section}
                     checkedItems={checkedItems}
                     onToggle={handleToggle}
+                    selectedDuration={selectedDuration}
+                    onDurationChange={setSelectedDuration}
                   />
                 </div>
               );
@@ -1160,6 +1165,12 @@ const Index = () => {
         progress={overallProgress}
         completedItems={completedItems}
         totalItems={totalItems}
+      />
+
+      {/* 항공기 반입 물품 가이드 모달 */}
+      <FlightLuggageGuideModal 
+        isOpen={isFlightGuideOpen} 
+        onClose={() => setIsFlightGuideOpen(false)} 
       />
     </div>
   );

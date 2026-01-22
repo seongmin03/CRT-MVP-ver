@@ -47,6 +47,7 @@ const ChecklistItem = ({ item, isChecked, onToggle }: ChecklistItemProps) => {
             lineHeight: '1.5',
             opacity: isChecked ? 0.7 : 1
           }}
+          data-item-title={item.title}
         >
           <span 
             className={isChecked ? 'strikethrough-line' : ''}

@@ -56,7 +56,7 @@ const EssentialItems = ({ checkedItems }: EssentialItemsProps) => {
     return checkItems.every(itemId => checkedItems.has(itemId));
   };
 
-  // 항목 클릭 시 해당 체크박스로 스크롤 및 강조
+  // 항목 클릭 시 해당 체크박스로 스크롤 및 강조 (텍스트 기반 매칭)
   const handleItemClick = (itemId: string, checkItems: string[]) => {
     // 여행자 보험 클릭 시 모달 열기
     if (itemId === 'insurance') {
@@ -66,10 +66,38 @@ const EssentialItems = ({ checkedItems }: EssentialItemsProps) => {
     
     if (checkItems.length === 0) return;
     
-    // 모든 연결된 항목 찾기
-    const targetElements = checkItems
-      .map(itemId => document.querySelector(`[data-item-id="${itemId}"]`))
-      .filter(el => el !== null);
+    // 텍스트 기반 매칭을 위한 제목 매핑
+    const titleMapping: Record<string, string[]> = {
+      "passport": ["여권 준비"],
+      "connectivity": ["유심 / eSIM / 로밍 준비"],
+      "payment_card": ["해외 결제 가능 카드 준비"],
+      "cash": ["소액 현금 준비"],
+      "flight_ticket": ["항공권 예약 정보 확인"],
+      "accommodation": ["숙소 예약 정보 정리"]
+    };
+    
+    // 모든 연결된 항목의 제목 찾기
+    const targetTitles: string[] = [];
+    checkItems.forEach(itemId => {
+      const titles = titleMapping[itemId];
+      if (titles) {
+        targetTitles.push(...titles);
+      }
+    });
+    
+    if (targetTitles.length === 0) return;
+    
+    // 제목 텍스트로 항목 찾기
+    const targetElements = targetTitles
+      .map(title => {
+        // data-item-title 속성으로 찾기
+        const element = document.querySelector(`[data-item-title="${title}"]`);
+        if (element) return element;
+        // 없으면 텍스트 내용으로 찾기
+        const allItems = document.querySelectorAll('[data-item-title]');
+        return Array.from(allItems).find(el => el.textContent?.trim() === title) || null;
+      })
+      .filter(el => el !== null) as HTMLElement[];
     
     if (targetElements.length === 0) return;
     
