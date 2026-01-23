@@ -2,11 +2,10 @@ import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import Header from "@/components/Header";
 import BottomProgressSheet from "@/components/BottomProgressSheet";
 import { type DurationType } from "@/components/TravelDurationGuide";
-import TravelCompanionGuide from "@/components/TravelCompanionGuide";
-import TravelFlightGuide from "@/components/TravelFlightGuide";
 import EssentialItems from "@/components/EssentialItems";
 import ChecklistSection from "@/components/ChecklistSection";
 import FlightLuggageGuideModal from "@/components/FlightLuggageGuideModal";
+import MedicalCardModal, { type MedicalCardData } from "@/components/MedicalCardModal";
 import { checklistData } from "@/data/checklistData";
 import { travelTips } from "@/data/travleTips";
 import { Lightbulb, Check, ChevronDown, Search, Link, X, Plus } from "lucide-react";
@@ -174,6 +173,10 @@ const Index = () => {
   const [selectedDuration, setSelectedDuration] = useState<DurationType | null>(null);
   // 항공기 반입 물품 가이드 모달 상태
   const [isFlightGuideOpen, setIsFlightGuideOpen] = useState(false);
+  // 응급 의료 카드 모달 상태
+  const [isMedicalCardOpen, setIsMedicalCardOpen] = useState(false);
+  // 응급 의료 카드 데이터 (흡연 여부는 별도 저장)
+  const [medicalCardData, setMedicalCardData] = useState<MedicalCardData | null>(null);
 
   // 일본 전용 추가 데이터 정의
   const japanSpecificItems: Record<string, typeof checklistData.sections[0]['items']> = {
@@ -704,8 +707,8 @@ const Index = () => {
       <div className="max-w-2xl mx-auto px-4 sm:px-6 space-y-8">
         <Header />
 
-        {/* 링크 복사 버튼 */}
-        <div className="flex justify-center animate-fade-in -mt-4">
+        {/* 링크 복사 버튼 및 안내 문구 */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 animate-fade-in -mt-4">
           <button
             onClick={copyLink}
             className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-all duration-200 text-sm text-gray-700 hover:text-gray-900 shadow-sm hover:shadow"
@@ -713,13 +716,10 @@ const Index = () => {
             <Link className="w-4 h-4" />
             <span>링크 복사</span>
           </button>
+          <p className="text-xs sm:text-sm text-black text-center">
+            링크를 저장하거나 마이리얼트립에서 체크리스트를 검색하세요
+          </p>
         </div>
-
-        {/* 동행자별 여행 팁 가이드 */}
-        <TravelCompanionGuide />
-
-        {/* 비행 시간별 기내 팁 가이드 */}
-        <TravelFlightGuide />
 
         {/* 1. 최상단: 여행 국가 선택 영역 (검색 가능한 드롭다운) */}
         <div className="animate-fade-in">
@@ -993,6 +993,7 @@ const Index = () => {
                     onToggle={handleToggle}
                     selectedDuration={selectedDuration}
                     onDurationChange={setSelectedDuration}
+                    onMedicalCardClick={section.section_id === "health" ? () => setIsMedicalCardOpen(true) : undefined}
                   />
                 </div>
               );
@@ -1171,6 +1172,19 @@ const Index = () => {
       <FlightLuggageGuideModal 
         isOpen={isFlightGuideOpen} 
         onClose={() => setIsFlightGuideOpen(false)} 
+      />
+
+      {/* 응급 의료 카드 모달 */}
+      <MedicalCardModal
+        isOpen={isMedicalCardOpen}
+        onClose={() => setIsMedicalCardOpen(false)}
+        onSave={(data) => {
+          setMedicalCardData(data);
+          // 흡연 여부는 별도 상태로 저장 (아이코스 파트너십 활용)
+          console.log("Medical Card Data:", data);
+          console.log("Is Smoker:", data.isSmoker);
+          // TODO: 메디컬 카드 이미지 템플릿에 데이터 매핑
+        }}
       />
     </div>
   );

@@ -8,6 +8,7 @@ interface ChecklistSectionProps {
   onToggle: (itemId: string) => void;
   selectedDuration?: DurationType | null;
   onDurationChange?: (duration: DurationType | null) => void;
+  onMedicalCardClick?: () => void;
 }
 
 const sectionIcons: Record<string, string> = {
@@ -19,7 +20,7 @@ const sectionIcons: Record<string, string> = {
   travel_tips: "💡",
 };
 
-const ChecklistSection = ({ section, checkedItems, onToggle, selectedDuration, onDurationChange }: ChecklistSectionProps) => {
+const ChecklistSection = ({ section, checkedItems, onToggle, selectedDuration, onDurationChange, onMedicalCardClick }: ChecklistSectionProps) => {
   // 안전성 체크: section과 items가 유효한지 확인
   if (!section || !section.items || !Array.isArray(section.items)) {
     return (
@@ -110,6 +111,24 @@ const ChecklistSection = ({ section, checkedItems, onToggle, selectedDuration, o
       )}
 
       <div className="space-y-1">
+        {/* health 섹션일 때 응급 의료 카드 섹션을 최상단에 추가 */}
+        {section.section_id === "health" && onMedicalCardClick && (
+          <div className="mb-3 p-4 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-xl">🚨</span>
+              <span className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white">
+                응급 의료 카드 만들기
+              </span>
+            </div>
+            <button
+              onClick={onMedicalCardClick}
+              className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-sm font-medium text-slate-900 transition-all duration-200"
+            >
+              정보입력
+            </button>
+          </div>
+        )}
+
         {validItems && validItems.length > 0 ? (
           // 여행팁 섹션은 체크박스 없이 정보성 텍스트로만 표시
           section.section_id === "travel_tips" ? (
