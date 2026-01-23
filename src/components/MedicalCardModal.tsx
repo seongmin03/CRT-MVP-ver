@@ -151,10 +151,79 @@ const MedicalCardModal = ({ isOpen, onClose, onSave }: MedicalCardModalProps) =>
     setIsGenerating(true);
     
     try {
+      // 데이터 변환 (스프레드시트 전송용)
+      const spreadsheetTransformedData = transformDataForCard(finalData);
+      
+      // 언어 변환 (Korean / English 형식)
+      const languages = finalData.languages
+        .filter(lang => lang !== "한국어")
+        .map(lang => {
+          const langMap: Record<string, string> = {
+            "영어": "English",
+            "일본어": "Japanese",
+            "중국어": "Chinese",
+            "러시아어": "Russian",
+            "스페인어": "Spanish",
+            "프랑스어": "French",
+            "기타": "Other",
+          };
+          return langMap[lang] || lang;
+        });
+      const languageString = languages.length > 0 
+        ? `Korean / ${languages.join(" / ")}`
+        : "Korean";
+      
+      // 관계 변환
+      const relationshipMap: Record<string, string> = {
+        "가족": "Family",
+        "친구": "Friend",
+        "지인": "Acquaintance",
+      };
+      const relationship = relationshipMap[finalData.emergencyContact.relationship] || "Acquaintance";
+      
+      // 원천 데이터에서 순수 입력값 추출
+      const phoneMiddleDigits = finalData.phoneNumber.middle.padStart(4, "0");
+      const phoneLastDigits = finalData.phoneNumber.last.padStart(4, "0");
+      const emergencyMiddleDigits = finalData.emergencyContact.phone.middle.padStart(4, "0");
+      const emergencyLastDigits = finalData.emergencyContact.phone.last.padStart(4, "0");
+      
+      // DB 전송용 포맷 조립 (새로운 문자열 생성)
+      const numForSpreadsheet = `'010-${phoneMiddleDigits}-${phoneLastDigits}`;
+      const emergencyPhoneForSpreadsheet = `'010-${emergencyMiddleDigits}-${emergencyLastDigits}`;
+      
+      // 스프레드시트 전송용 데이터 구성
+      const spreadsheetData = {
+        name_en: finalData.englishName || "",
+        name_kr: finalData.koreanName || "",
+        DOB: spreadsheetTransformedData.birthDate || "",
+        nation: "한국",
+        language: languageString,
+        bloodtype: finalData.bloodType || "",
+        num: numForSpreadsheet,
+        email: spreadsheetTransformedData.email || "",
+        emergency: `${emergencyPhoneForSpreadsheet} (${relationship})`,
+        all: finalData.hasAllergy === "yes" ? "Yes" : "No",
+        smoking: finalData.isSmoker === "yes" ? "Yes" : "No",
+      };
+      
+      // 구글 스프레드시트로 데이터 전송 (비동기, 에러가 나도 계속 진행)
+      const GAS_URL = "https://script.google.com/macros/s/AKfycbwJBQkD1ypEwHCD6kyD3OTyj63XM3ykQFyW8R1QIdS15slBpayYB-Pb6yQp9dyUE-fDkQ/exec";
+      fetch(GAS_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(spreadsheetData),
+      }).catch((error) => {
+        console.error("스프레드시트 전송 실패:", error);
+        // 에러가 나도 계속 진행
+      });
+      
       // 폰트 로딩 완료 대기
       await document.fonts.ready;
       
-      // 1.5초 대기
+      // 1.5초 대기 (로딩 애니메이션 + 스프레드시트 전송 시간)
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       // 백그라운드에서 렌더링 영역 생성
@@ -188,8 +257,8 @@ const MedicalCardModal = ({ isOpen, onClose, onSave }: MedicalCardModalProps) =>
       bgImgElement.style.objectFit = "cover";
       renderContainer.appendChild(bgImgElement);
       
-      // 데이터 변환
-      const transformedData = transformDataForCard(finalData);
+      // 데이터 변환 (카드 렌더링용)
+      const cardRenderData = transformDataForCard(finalData);
       
       // 텍스트 오버레이 생성
       const overlay = document.createElement("div");
@@ -232,23 +301,23 @@ const MedicalCardModal = ({ isOpen, onClose, onSave }: MedicalCardModalProps) =>
       };
       
       // 텍스트 배치
-      addTextElement(transformedData.englishName, 300, 357);
-      addTextElement(transformedData.koreanName, 300, 436);
-      addTextElement(transformedData.birthDate, 300, 515);
-      addTextElement(transformedData.languages, 300, 673, "34px");
-      addTextElement(transformedData.bloodType, 300, 752, "34px", "bold");
-      addTextElement(transformedData.phoneNumber, 365, 977);
-      addTextElement(transformedData.email, 365, 1056);
-      addTextElement(transformedData.emergencyContact, 418, 1135);
+      addTextElement(cardRenderData.englishName, 300, 357);
+      addTextElement(cardRenderData.koreanName, 300, 436);
+      addTextElement(cardRenderData.birthDate, 300, 515);
+      addTextElement(cardRenderData.languages, 300, 673, "34px");
+      addTextElement(cardRenderData.bloodType, 300, 752, "34px", "bold");
+      addTextElement(cardRenderData.phoneNumber, 365, 977);
+      addTextElement(cardRenderData.email, 365, 1056);
+      addTextElement(cardRenderData.emergencyContact, 418, 1135);
       
       // 체크박스 배치
-      if (transformedData.hasAllergy === "yes") {
+      if (cardRenderData.hasAllergy === "yes") {
         addCheckMark(632, 1438);
       } else {
         addCheckMark(891, 1438);
       }
       
-      if (transformedData.isSmoker === "yes") {
+      if (cardRenderData.isSmoker === "yes") {
         addCheckMark(632, 1559);
       } else {
         addCheckMark(891, 1559);
