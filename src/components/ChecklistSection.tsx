@@ -113,16 +113,16 @@ const ChecklistSection = ({ section, checkedItems, onToggle, selectedDuration, o
       <div className="space-y-1">
         {/* health 섹션일 때 응급 의료 카드 섹션을 최상단에 추가 */}
         {section.section_id === "health" && onMedicalCardClick && (
-          <div className="mb-3 p-4 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
+          <div className="mb-3 p-4 bg-red-300 rounded-xl border border-red-200 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="text-xl">🚨</span>
-              <span className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white">
+              <span className="font-semibold text-sm sm:text-base text-white">
                 응급 의료 카드 만들기
               </span>
             </div>
             <button
               onClick={onMedicalCardClick}
-              className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-sm font-medium text-slate-900 transition-all duration-200"
+              className="px-4 py-2 bg-red-400 hover:bg-red-500 rounded-lg text-sm font-medium text-white transition-all duration-200 shadow-sm"
             >
               정보입력
             </button>
