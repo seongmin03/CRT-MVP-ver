@@ -190,7 +190,7 @@ const Index = () => {
       },
       {
         item_id: "japan_visa_note",
-        title: "비자 확인",
+        title: "비자 / 입국 허가 확인",
         description: "한국인은 관광 목적으로 최대 90일간 무비자 입국이 가능합니다.",
         cta_type: "none",
         cta_label: ""
@@ -301,6 +301,212 @@ const Index = () => {
       }
     ]
   };
+
+  // 베트남 전용 추가 데이터 정의
+  const vietnamSpecificItems: Record<string, typeof checklistData.sections[0]['items']> = {
+    essentials: [
+      {
+        item_id: "vietnam_passport_note",
+        title: "여권 준비",
+        description: "무비자 45일 입국을 위해 여권의 유효기간이 최소 6개월 이상 남아있어야 해요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "vietnam_visa_note",
+        title: "비자 / 입국 허가 확인",
+        description: "전자 비자를 신청할 경우 최대 90일까지 체류할 수 있어요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "vietnam_return_flight",
+        title: "귀국 항공편 준비",
+        description: "베트남 입국심사 시 왕복 항공권을 요청하는 경우가 있어요. 귀국 항공편을 미리 저장하거나 출력하세요!",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "vietnam_immigration",
+        title: "입국 심사 준비",
+        description: "관광(Du lịch - 주 릭), 출장(Công tác - 꽁 딱), 항공권(Vé máy bay - 베 마이 바이), 호텔(Khách sạn - 카익 산)",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "vietnam_family_certificate",
+        title: "영문 가족관계증명서",
+        description: "부모와 아이의 성이 다르거나 부모 중 한 명만 동반할 경우 입국 시 확인 절차가 있을 수 있습니다.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "vietnam_driving_license",
+        title: "국제 운전 면허증과 운전",
+        description: "오토바이 암행 단속이 잦고 도로마다 속도 제한이 다르므로 항상 주의하세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    electronics: [
+      {
+        item_id: "vietnam_adapter_note",
+        title: "멀티 어댑터 준비",
+        description: "베트남의 220V 플러그는 모양이 다를 수 있어요. 멀티 어댑터나 3구 멀티탭을 챙기면 문제 해결!",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "vietnam_powerbank_note",
+        title: "보조배터리 준비",
+        description: "그랩 호출이나 구글 맵 사용 시 배터리가 금방 소모되니 필수입니다.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "vietnam_waterproof_pack",
+        title: "방수팩 준비",
+        description: "베트남은 갑작스러운 소나기(스콜)가 잦아요. 전자기기를 보호할 방수팩을 준비하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "vietnam_sim_note",
+        title: "유심 / eSIM / 로밍 준비",
+        description: "일반적으로 비엣텔(Viettel) 망이 커버리지가 넓은 것으로 알려져 있어요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "vietnam_bus_booking",
+        title: "베트남 버스 예약",
+        description: "'베쎄레(VEXERE)'는 베트남 최대 버스 승차권 예매 플랫폼이에요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "vietnam_zalo",
+        title: "베트남 국민 메신저",
+        description: "현지인과 소통할 경우 국민 앱인 '잘로(Zalo)'를 다운받으세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    health: [
+      {
+        item_id: "vietnam_bandage",
+        title: "방수 밴드와 연고",
+        description: "맨발에 슬리퍼를 신고 다니다가 발에 상처가 생기는 경우가 흔해요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "vietnam_motion_sickness",
+        title: "멀미약 준비",
+        description: "도시를 연결하는 슬리핑 버스는 매력적이지만 흔들림이 있으니 미리 방지하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "vietnam_shower_filter",
+        title: "휴대용 샤워기 필터",
+        description: "수돗물의 석회질이나 노후 배관 불순물이 걱정된다면 준비하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "vietnam_mosquito_repellent",
+        title: "모기 기피제",
+        description: "동남아 모기는 한국보다 독해요! 기피제 혹은 가려움 완화제를 준비하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "vietnam_sunscreen_repellent",
+        title: "선크림과 기피제",
+        description: "선크림을 먼저 바르고 30분 뒤에 기피제를 발라야 차단 효과가 유지됩니다.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    packing: [
+      {
+        item_id: "vietnam_extra_clothes",
+        title: "여분의 반팔과 속옷",
+        description: "땀이 많이 나는 날이 잦으므로 갈아입을 옷을 조금 넉넉히 챙기세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "vietnam_slippers",
+        title: "슬리퍼 또는 샌들",
+        description: "비 오는 날이나 숙소 근처 이동, 해변 일정 시 특히 유용해요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "vietnam_laundry_pouch",
+        title: "빨래용 소형 파우치",
+        description: "땀에 젖은 옷과 깨끗한 옷을 분리 보관하기 좋아 장기 여행 시 유용해요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    travel_tips: [
+      {
+        item_id: "vietnam_tip_grab",
+        title: "Grab 앱 설치 및 결제수단 등록",
+        description: "택시 흥정 스트레스를 줄일 수 있어요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "vietnam_tip_water",
+        title: "생수로 양치하기",
+        description: "수돗물은 석회질 등으로 인해 음용에 적합하지 않아요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "vietnam_tip_damaged_bills",
+        title: "훼손된 지폐 확인 필수",
+        description: "조금만 찢어져도 사용이 거절될 수 있으니 상태를 꼭 확인하세요. 훼손된 소액권은 은행에서만 교환이 가능합니다.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "vietnam_tip_snatch",
+        title: "오토바이 날치기 주의",
+        description: "스마트폰을 볼 때는 차도 쪽이 아닌 건물 쪽으로 몸을 돌려 보세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "vietnam_tip_crossing",
+        title: "길 건너기 스킬",
+        description: "오토바이가 몰려와도 멈추지 말고 일정한 속도로 천천히 걸어가세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "vietnam_tip_cilantro",
+        title: "고수 빼기",
+        description: "고수를 못 드신다면 미리 메모를 보여주세요. (북부: Không cho rau mùi / 남부: Không cho rau ngò)",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    finance: [
+      {
+        item_id: "vietnam_vnd_calculation",
+        title: "베트남 동(VND) 계산법 숙지",
+        description: "단위가 커서 헷갈릴 땐 '0 하나 빼고 2로 나누기'를 기억하세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ]
+  };
+
   const checklistRef = useRef<HTMLDivElement>(null);
   const commandInputRef = useRef<HTMLInputElement>(null);
   const customInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
@@ -505,6 +711,7 @@ const Index = () => {
   const totalItems = useMemo(() => {
     try {
       const isJapan = selectedCountry === "일본";
+      const isVietnam = selectedCountry === "베트남";
       
       return checklistData.sections.reduce((acc, section) => {
         if (!section || !section.items) return acc;
@@ -517,6 +724,7 @@ const Index = () => {
           // packing 섹션 처리
           if (section.section_id === "packing") {
             const japanItems = isJapan ? (japanSpecificItems["packing"] || []) : [];
+            const vietnamItems = isVietnam ? (vietnamSpecificItems["packing"] || []) : [];
             let finalItems = [...(section.items || [])];
             
             // 기간이 선택되었으면 underwear 제거하고 durationItems 추가
@@ -534,12 +742,13 @@ const Index = () => {
               }
             }
             
-            const merged = mergeItems(finalItems, japanItems);
+            const merged = mergeItems(finalItems, mergeItems(japanItems, vietnamItems));
             return acc + (merged?.length || 0);
           }
-          // 기타 섹션: 기본 항목과 일본 전용 항목 병합 결과
+          // 기타 섹션: 기본 항목과 국가 전용 항목 병합 결과
           const japanItems = isJapan ? (japanSpecificItems[section.section_id] || []) : [];
-          const merged = mergeItems(section.items || [], japanItems);
+          const vietnamItems = isVietnam ? (vietnamSpecificItems[section.section_id] || []) : [];
+          const merged = mergeItems(section.items || [], mergeItems(japanItems, vietnamItems));
           return acc + (merged?.length || 0);
         } catch (error) {
           console.error(`Error processing section ${section.section_id}:`, error);
@@ -564,11 +773,13 @@ const Index = () => {
       const section = checklistData.sections.find(s => s && s.section_id === "essentials");
       if (!section || !section.items) return null;
       
-      // 일본 전용 항목 스마트 병합
+      // 국가 전용 항목 스마트 병합
       const isJapan = selectedCountry === "일본";
+      const isVietnam = selectedCountry === "베트남";
       const japanItems = isJapan ? (japanSpecificItems["essentials"] || []) : [];
+      const vietnamItems = isVietnam ? (vietnamSpecificItems["essentials"] || []) : [];
       
-      const mergedItems = mergeItems(section.items || [], japanItems);
+      const mergedItems = mergeItems(section.items || [], mergeItems(japanItems, vietnamItems));
       
       return {
         ...section,
@@ -590,14 +801,16 @@ const Index = () => {
           try {
             if (!section || !section.items) return section;
             
-            // 일본 전용 데이터 추가 여부 확인
+            // 국가 전용 데이터 추가 여부 확인
             const isJapan = selectedCountry === "일본";
+            const isVietnam = selectedCountry === "베트남";
             const japanItems = isJapan ? (japanSpecificItems[section.section_id] || []) : [];
+            const vietnamItems = isVietnam ? (vietnamSpecificItems[section.section_id] || []) : [];
 
             // 여행팁 섹션 처리
             if (section.section_id === "travel_tips") {
-              // travelTipItems와 일본 전용 항목 스마트 병합
-              const mergedItems = mergeItems(travelTipItems || [], japanItems);
+              // travelTipItems와 국가 전용 항목 스마트 병합
+              const mergedItems = mergeItems(travelTipItems || [], mergeItems(japanItems, vietnamItems));
               return {
                 ...section,
                 items: mergedItems || travelTipItems || []
@@ -623,16 +836,16 @@ const Index = () => {
                 }
               }
               
-              // 일본 전용 항목 스마트 병합
-              const mergedItems = mergeItems(finalItems, japanItems);
+              // 국가 전용 항목 스마트 병합
+              const mergedItems = mergeItems(finalItems, mergeItems(japanItems, vietnamItems));
               return {
                 ...section,
                 items: mergedItems || finalItems || []
               };
             }
             
-            // 기타 섹션: 기본 항목과 일본 전용 항목 스마트 병합
-            const mergedItems = mergeItems(section.items || [], japanItems);
+            // 기타 섹션: 기본 항목과 국가 전용 항목 스마트 병합
+            const mergedItems = mergeItems(section.items || [], mergeItems(japanItems, vietnamItems));
             return {
               ...section,
               items: mergedItems || section.items || []
