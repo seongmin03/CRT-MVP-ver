@@ -507,6 +507,162 @@ const Index = () => {
     ]
   };
 
+  // 태국 전용 추가 데이터 정의
+  const thailandSpecificItems: Record<string, typeof checklistData.sections[0]['items']> = {
+    essentials: [
+      {
+        item_id: "thailand_tdac",
+        title: "태국 디지털 입국 카드",
+        description: "TDAC는 입국 3일 전부터 작성 가능해요. 공식 사이트는 무료이니 유료 대행 사이트를 주의하세요!",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "thailand_visa_note",
+        title: "비자 / 입국 허가 확인",
+        description: "관광 목적으로 최대 90일까지 무비자 입국이 가능해요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "thailand_long_stay",
+        title: "장기 체류",
+        description: "90일 이상 체류 시 거주지 신고(90-day report)가 필요할 수 있으니 확인하세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    finance: [
+      {
+        item_id: "thailand_atm_fee",
+        title: "ATM 인출 주의",
+        description: "수수료가 비싼 편이니 소액으로 여러 번 뽑기보다 한 번에 큰 금액을 인출하는 것이 경제적이에요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "thailand_app_card",
+        title: "어플 카드 등록",
+        description: "Grab이나 Bolt 등 현지 앱에 카드를 등록할 때 절차가 복잡할 수 있으니 한국에서 미리 설정하세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    electronics: [
+      {
+        item_id: "thailand_grab_bolt",
+        title: "Grab과 Bolt",
+        description: "가격은 높지만 빠른 Grab, 배차는 길지만 저렴한 Bolt를 상황에 맞게 이용해 보세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "thailand_sim_note",
+        title: "유심 / eSIM / 로밍 준비",
+        description: "태국에서는 AIS 통신사가 가장 안정적인 커버리지를 제공하는 것으로 알려져 있어요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "thailand_waterproof_pack",
+        title: "방수팩 준비",
+        description: "갑작스러운 소나기(스콜)가 잦으므로 전자기기를 보호할 방수팩을 챙기세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    health: [
+      {
+        item_id: "thailand_bandage",
+        title: "방수 밴드와 연고",
+        description: "슬리퍼를 신고 걷다 생기는 발 상처에 대비하여 방수 기능이 있는 밴드를 준비하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "thailand_shower_filter",
+        title: "휴대용 샤워기 필터",
+        description: "수돗물의 석회질이나 노후 배관 불순물이 걱정된다면 필터 사용을 추천해요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "thailand_mosquito_repellent",
+        title: "모기 기피제",
+        description: "태국 모기는 매우 독해요! 현지에서 강력한 기피제나 완화제를 꼭 구비하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "thailand_sunscreen_repellent",
+        title: "선크림과 기피제",
+        description: "선크림을 먼저 바르고 30분 정도 흡수시킨 뒤 기피제를 발라야 효과가 유지됩니다.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    packing: [
+      {
+        item_id: "thailand_extra_clothes",
+        title: "여분의 반팔과 속옷",
+        description: "땀이 많이 나는 날씨이므로 갈아입을 옷을 평소보다 넉넉히 챙기세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "thailand_slippers",
+        title: "슬리퍼 또는 샌들",
+        description: "비 오는 날이나 숙소 근처, 해변 일정이 있을 때 가장 유용합니다.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "thailand_laundry_pouch",
+        title: "빨래용 소형 파우치",
+        description: "장기 여행 시 젖은 옷과 깨끗한 옷을 분리하여 쾌적하게 보관하세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    travel_tips: [
+      {
+        item_id: "thailand_tip_traffic",
+        title: "교통체증과 오토바이",
+        description: "차가 심하게 막힐 땐 오토바이 택시(Win)를 이용해 보세요. 단거리를 빠르게 이동할 수 있어요!",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "thailand_tip_rain_taxi",
+        title: "비 올 때 택시",
+        description: "비가 오면 앱 호출 대기가 매우 길어지니 일정을 여유 있게 잡거나 미리 이동하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "thailand_tip_ice",
+        title: "식용 얼음 확인",
+        description: "노점 얼음이 불안하다면 가운데 구멍이 뚫린 공장제 얼음인지 확인하세요. 비교적 안전한 정수물 얼음입니다.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "thailand_tip_shoes",
+        title: "신발 분실 주의",
+        description: "맨발로 입장하는 사원에서는 비슷한 신발이 많아 바뀔 수 있으니 주의가 필요해요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "thailand_tip_ecig_ban",
+        title: "전자담배 전면 금지",
+        description: "태국은 전자담배가 전면 불법이에요! 절대 가져가지 마세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ]
+  };
+
   const checklistRef = useRef<HTMLDivElement>(null);
   const commandInputRef = useRef<HTMLInputElement>(null);
   const customInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
@@ -712,6 +868,7 @@ const Index = () => {
     try {
       const isJapan = selectedCountry === "일본";
       const isVietnam = selectedCountry === "베트남";
+      const isThailand = selectedCountry === "태국";
       
       return checklistData.sections.reduce((acc, section) => {
         if (!section || !section.items) return acc;
@@ -725,6 +882,7 @@ const Index = () => {
           if (section.section_id === "packing") {
             const japanItems = isJapan ? (japanSpecificItems["packing"] || []) : [];
             const vietnamItems = isVietnam ? (vietnamSpecificItems["packing"] || []) : [];
+            const thailandItems = isThailand ? (thailandSpecificItems["packing"] || []) : [];
             let finalItems = [...(section.items || [])];
             
             // 기간이 선택되었으면 underwear 제거하고 durationItems 추가
@@ -742,13 +900,14 @@ const Index = () => {
               }
             }
             
-            const merged = mergeItems(finalItems, mergeItems(japanItems, vietnamItems));
+            const merged = mergeItems(finalItems, mergeItems(mergeItems(japanItems, vietnamItems), thailandItems));
             return acc + (merged?.length || 0);
           }
           // 기타 섹션: 기본 항목과 국가 전용 항목 병합 결과
           const japanItems = isJapan ? (japanSpecificItems[section.section_id] || []) : [];
           const vietnamItems = isVietnam ? (vietnamSpecificItems[section.section_id] || []) : [];
-          const merged = mergeItems(section.items || [], mergeItems(japanItems, vietnamItems));
+          const thailandItems = isThailand ? (thailandSpecificItems[section.section_id] || []) : [];
+          const merged = mergeItems(section.items || [], mergeItems(mergeItems(japanItems, vietnamItems), thailandItems));
           return acc + (merged?.length || 0);
         } catch (error) {
           console.error(`Error processing section ${section.section_id}:`, error);
@@ -776,10 +935,12 @@ const Index = () => {
       // 국가 전용 항목 스마트 병합
       const isJapan = selectedCountry === "일본";
       const isVietnam = selectedCountry === "베트남";
+      const isThailand = selectedCountry === "태국";
       const japanItems = isJapan ? (japanSpecificItems["essentials"] || []) : [];
       const vietnamItems = isVietnam ? (vietnamSpecificItems["essentials"] || []) : [];
+      const thailandItems = isThailand ? (thailandSpecificItems["essentials"] || []) : [];
       
-      const mergedItems = mergeItems(section.items || [], mergeItems(japanItems, vietnamItems));
+      const mergedItems = mergeItems(section.items || [], mergeItems(mergeItems(japanItems, vietnamItems), thailandItems));
       
       return {
         ...section,
@@ -804,13 +965,15 @@ const Index = () => {
             // 국가 전용 데이터 추가 여부 확인
             const isJapan = selectedCountry === "일본";
             const isVietnam = selectedCountry === "베트남";
+            const isThailand = selectedCountry === "태국";
             const japanItems = isJapan ? (japanSpecificItems[section.section_id] || []) : [];
             const vietnamItems = isVietnam ? (vietnamSpecificItems[section.section_id] || []) : [];
+            const thailandItems = isThailand ? (thailandSpecificItems[section.section_id] || []) : [];
 
             // 여행팁 섹션 처리
             if (section.section_id === "travel_tips") {
               // travelTipItems와 국가 전용 항목 스마트 병합
-              const mergedItems = mergeItems(travelTipItems || [], mergeItems(japanItems, vietnamItems));
+              const mergedItems = mergeItems(travelTipItems || [], mergeItems(mergeItems(japanItems, vietnamItems), thailandItems));
               return {
                 ...section,
                 items: mergedItems || travelTipItems || []
@@ -837,7 +1000,7 @@ const Index = () => {
               }
               
               // 국가 전용 항목 스마트 병합
-              const mergedItems = mergeItems(finalItems, mergeItems(japanItems, vietnamItems));
+              const mergedItems = mergeItems(finalItems, mergeItems(mergeItems(japanItems, vietnamItems), thailandItems));
               return {
                 ...section,
                 items: mergedItems || finalItems || []
@@ -845,7 +1008,7 @@ const Index = () => {
             }
             
             // 기타 섹션: 기본 항목과 국가 전용 항목 스마트 병합
-            const mergedItems = mergeItems(section.items || [], mergeItems(japanItems, vietnamItems));
+            const mergedItems = mergeItems(section.items || [], mergeItems(mergeItems(japanItems, vietnamItems), thailandItems));
             return {
               ...section,
               items: mergedItems || section.items || []

@@ -57,6 +57,9 @@ const MedicalCardModal = ({ isOpen, onClose, onSave }: MedicalCardModalProps) =>
   // 로딩 상태
   const [isGenerating, setIsGenerating] = useState(false);
   const rendererRef = useRef<HTMLDivElement>(null);
+  
+  // 마케팅 동의 팝업 상태
+  const [showMarketingPopup, setShowMarketingPopup] = useState(false);
 
   const [formData, setFormData] = useState<MedicalCardData>({
     englishName: "",
@@ -136,7 +139,8 @@ const MedicalCardModal = ({ isOpen, onClose, onSave }: MedicalCardModalProps) =>
     return `${year}${formattedMonth}${formattedDay}`;
   };
 
-  const handleSubmit = async () => {
+  // 실제 카드 생성 로직 (팝업에서 호출하거나 직접 호출)
+  const proceedWithCardGeneration = async () => {
     // 생년월일을 YYYYMMDD 형식으로 변환하여 저장
     const formattedBirthDate = formatBirthDate(birthYear, birthMonth, birthDay);
     const finalData = {
@@ -374,6 +378,30 @@ const MedicalCardModal = ({ isOpen, onClose, onSave }: MedicalCardModalProps) =>
         variant: "destructive",
       });
     }
+  };
+
+  // 입력 완료 버튼 클릭 핸들러
+  const handleSubmit = () => {
+    // 흡연 여부 확인
+    if (formData.isSmoker === "yes") {
+      // 흡연자인 경우 마케팅 팝업 표시
+      setShowMarketingPopup(true);
+    } else {
+      // 비흡연자인 경우 바로 카드 생성 진행
+      proceedWithCardGeneration();
+    }
+  };
+
+  // 마케팅 팝업에서 동의 버튼 클릭 핸들러
+  const handleMarketingConsent = (userChoice: boolean) => {
+    // TODO: DB 연동 시 사용할 변수
+    // const iqosConsent = userChoice;
+    
+    // 팝업 닫기
+    setShowMarketingPopup(false);
+    
+    // 카드 생성 진행
+    proceedWithCardGeneration();
   };
 
   // 월/일 입력 시 한 자리 수는 앞에 0을 붙이는 로직
@@ -756,6 +784,39 @@ const MedicalCardModal = ({ isOpen, onClose, onSave }: MedicalCardModalProps) =>
           )}
         </div>
       </DialogContent>
+
+      {/* 마케팅 동의 팝업 */}
+      <Dialog open={showMarketingPopup} onOpenChange={setShowMarketingPopup}>
+        <DialogContent className="max-w-md p-0 sm:rounded-lg overflow-hidden">
+          <DialogHeader className="bg-white dark:bg-slate-900 border-b px-6 py-4">
+            <DialogTitle className="text-lg font-semibold text-center text-slate-900 dark:text-white">
+              🚬 해외 여행 흡연 에티켓 안내 (MyRealTrip x IQOS)
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="px-6 py-6 space-y-6">
+            <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+              마이리얼트립과 아이코스가 준비한 해외 여행 흡연 에티켓을 알려드려요! 정보제공에 동의하시면 입력하신 메일로 관련 정보 및 면세점 담배 팁을 보내드립니다! 동의하시겠습니까?
+            </p>
+            
+            <div className="flex flex-col gap-3">
+              <Button
+                onClick={() => handleMarketingConsent(true)}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-6 text-base font-semibold"
+              >
+                동의하고 혜택 받기
+              </Button>
+              <Button
+                onClick={() => handleMarketingConsent(false)}
+                variant="outline"
+                className="w-full py-6 text-base font-semibold border-gray-300 hover:bg-gray-50"
+              >
+                괜찮습니다
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </Dialog>
   );
 };
