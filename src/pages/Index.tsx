@@ -1138,6 +1138,297 @@ const Index = () => {
     ]
   };
 
+  // 미국 전용 추가 데이터 정의
+  const usaSpecificItems: Record<string, typeof checklistData.sections[0]['items']> = {
+    essentials: [
+      {
+        item_id: "usa_passport_note",
+        title: "여권 준비",
+        description: "여권 유효기간이 최소 6개월 이상 남아있는지 반드시 확인하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "usa_esta",
+        title: "ESTA 준비",
+        description: "미국의 전자 여행 허가 프로그램입니다. 승인 시 최대 90일 체류가 가능하며 출국 전 미리 신청하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "usa_accommodation_address",
+        title: "영문 숙소 주소 및 연락처",
+        description: "입국 심사 시 가장 꼼꼼하게 묻는 항목입니다. 인쇄하거나 메모지에 따로 적어두세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "usa_driving_license",
+        title: "국제운전면허증과 한국 면허증",
+        description: "렌터카 이용 시 국제운전면허증뿐만 아니라 한국 면허증도 함께 요구하므로 둘다 지참하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "usa_immigration",
+        title: "입국 심사 준비",
+        description: "관광 목적임을 분명히 하고 체류 후 반드시 한국으로 돌아갈 계획임을 명확히 설명하는 것이 중요해요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    finance: [
+      {
+        item_id: "usa_card_name_match",
+        title: "본인 명의 카드 이용",
+        description: "카드에 적힌 영문 이름과 여권 상의 이름이 일치하는지 확인하는 경우가 많으니 체크하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "usa_zip_code",
+        title: "ZIP Code(우편번호) 숙지",
+        description: "무인 결제기에서 우편번호를 요구할 때가 있어요. 숙소 우편번호를 입력하면 성공률이 높아요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "usa_small_cash",
+        title: "소액 현금 준비",
+        description: "현금만 받는 가게나 팁 지불 상황을 대비해 1달러, 5달러 등 소액 지폐를 넉넉히 준비하세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    electronics: [
+      {
+        item_id: "usa_powerbank_note",
+        title: "보조배터리 준비",
+        description: "장거리 이동과 지도 사용이 잦은 미국 여행에서 보조배터리는 필수 생존 아이템이에요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "usa_uber_lyft",
+        title: "Uber와 Lyft 비교",
+        description: "우버와 리프트는 미국의 대표 택시 앱이에요. 같은 거리라도 요금이 다르니 두 앱을 비교한 뒤 호출하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "usa_yelp",
+        title: "Yelp 앱 설치",
+        description: "현지인들의 검증된 맛집 정보를 볼 수 있습니다. 별점 4.0 이상인 곳을 공략하면 실패 확률이 거의 없어요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "usa_adapter_note",
+        title: "멀티 어댑터 준비",
+        description: "미국은 110V 전압을 사용하므로 '돼지코' 모양의 멀티 어댑터가 필요합니다.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "usa_high_power",
+        title: "고전력 제품 주의",
+        description: "고데기나 드라이기 같은 전자제품은 과열될 수 있으니 반드시 프리볼트 여부를 확인하세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    health: [
+      {
+        item_id: "usa_prescription_medicine",
+        title: "처방약 소분 금지",
+        description: "불필요한 오해를 피하기 위해 처방약은 소분하지 말고 처방전이 포함된 원래 용기 그대로 지참하세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    packing: [
+      {
+        item_id: "usa_sunglasses_sunscreen",
+        title: "선글라스와 선크림",
+        description: "미국의 자외선은 한국보다 훨씬 강력해요. 눈과 피부 보호를 위한 필수 생존템으로 챙기세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    travel_tips: [
+      {
+        item_id: "usa_tip_included",
+        title: "영수증 팁 포함 여부 확인",
+        description: "'Gratuity'나 'Service Charge'가 이미 포함되어 있는지 확인하여 팁을 중복 지출하지 않도록 주의하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "usa_sales_tax",
+        title: "부가세 별도 결제",
+        description: "가격표 금액이 끝이 아닙니다! 주마다 다른 판매세가 결제 시 붙으니 예산에 10% 정도 여유를 두세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "usa_public_drinking",
+        title: "공공장소 음주 금지",
+        description: "길거리나 공원 등 야외에서 술을 마시는 것은 불법입니다. 술은 식당 내부나 숙소에서만 즐기세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "usa_tip_culture",
+        title: "팁 문화 숙지",
+        description: "식당 서비스 이용 시 보통 결제 금액의 18% 내외를 팁으로 주는 것이 일반적이에요!",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "usa_no_tip",
+        title: "No-Tip 상황",
+        description: "패스트푸드점이나 셀프 서비스 등 직접적인 서빙을 받지 않는 곳에서는 팁을 주지 않아도 괜찮아요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ]
+  };
+
+  // 홍콩 전용 추가 데이터 정의
+  const hongkongSpecificItems: Record<string, typeof checklistData.sections[0]['items']> = {
+    essentials: [
+      {
+        item_id: "hongkong_passport_note",
+        title: "여권 준비",
+        description: "홍콩 입국 시 여권 유효기간이 최소 30일 이상 남아있어야 해요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "hongkong_visa_note",
+        title: "비자 / 입국 허가 확인",
+        description: "대한민국 여권 소지자는 관광 목적으로 최대 90일간 무비자 체류가 가능해요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "hongkong_landing_slip",
+        title: "입국 슬립(랜딩 슬립) 보관",
+        description: "여권 사이에 끼워주는 작은 종이 슬립은 여행 중 신분 확인용으로 쓰일 수 있으니 잘 보관하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "hongkong_macau_passport",
+        title: "마카오 여권 유효기간 확인",
+        description: "마카오 방문 계획이 있다면 유효기간이 90일 이상 남았는지 꼭 확인하세요. 홍콩보다 엄격합니다!",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "hongkong_student_id",
+        title: "국제학생증 발급",
+        description: "대학생이라면 학생 할인이 적용되는 미술관, 박물관이 많으니 사전에 발급받으세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    finance: [
+      {
+        item_id: "hongkong_octopus_card",
+        title: "옥토퍼스 카드 발급",
+        description: "홍콩의 만능 교통카드입니다. 대중교통은 물론 편의점, 식당에서도 널리 쓰이니 필수입니다.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "hongkong_cash",
+        title: "소액 현금 준비",
+        description: "로컬 노포 식당이나 재래시장에서는 카드 결제가 안 되는 곳이 많으니 현금을 챙기세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    electronics: [
+      {
+        item_id: "hongkong_powerbank_note",
+        title: "보조배터리 준비",
+        description: "빽빽한 고층 빌딩 숲에서 길을 찾고 사진을 찍다 보면 배터리가 매우 빨리 소모됩니다.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "hongkong_citymapper",
+        title: "Citymapper 설치",
+        description: "홍콩 대중교통 경로를 정확하게 안내해주는 필수 지도 어플입니다.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "hongkong_uber",
+        title: "Uber 설치",
+        description: "택시 호출이 편리하고 투명한 결제가 가능하므로 이동 시 유용하게 사용하세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    health: [
+      {
+        item_id: "hongkong_bandage",
+        title: "방수 밴드와 연고",
+        description: "많이 걷게 되는 홍콩 여행 특성상 발 상처에 대비하는 것이 좋습니다.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    packing: [
+      {
+        item_id: "hongkong_small_bag",
+        title: "작은 백팩 또는 크로스백",
+        description: "인파가 많은 야시장이나 대중교통 이용 시 몸에 밀착되는 작은 가방이 활동하기 편해요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "hongkong_rain_preparation",
+        title: "우기 대비",
+        description: "갑작스러운 비에 대비해 가벼운 휴대용 우산이나 우비를 준비하세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    travel_tips: [
+      {
+        item_id: "hongkong_cigarette_limit",
+        title: "담배 소지 주의",
+        description: "홍콩 입국 시 면세 담배는 딱 '19개비'까지만 허용됩니다. 1갑(20개비)만 가져가도 벌금이 부과되니 주의하세요!",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "hongkong_seatbelt",
+        title: "대중교통 안전벨트",
+        description: "미니버스 등 대중교통 이용 시 안전벨트 착용은 의무이며 미착용 시 벌금이 부과될 수 있어요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "hongkong_tea_water",
+        title: "식사 전 식기 세척",
+        description: "식당에서 주는 뜨거운 찻물은 마시는 용도가 아니라 수저와 앞접시를 헹구는 용도이니 자연스럽게 헹구세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "hongkong_sharing_table",
+        title: "합석 문화",
+        description: "좁은 식당에서는 합석이 일상이니 당황하지 말고 현지의 식사 문화를 즐겨보세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ]
+  };
+
   const checklistRef = useRef<HTMLDivElement>(null);
   const commandInputRef = useRef<HTMLInputElement>(null);
   const customInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
@@ -1414,14 +1705,18 @@ const Index = () => {
       const isPhilippines = selectedCountry === "필리핀";
       const isChina = selectedCountry === "중국";
       const isTaiwan = selectedCountry === "대만";
+      const isUSA = selectedCountry === "미국";
+      const isHongkong = selectedCountry === "홍콩";
       const japanItems = isJapan ? (japanSpecificItems["essentials"] || []) : [];
       const vietnamItems = isVietnam ? (vietnamSpecificItems["essentials"] || []) : [];
       const thailandItems = isThailand ? (thailandSpecificItems["essentials"] || []) : [];
       const philippinesItems = isPhilippines ? (philippinesSpecificItems["essentials"] || []) : [];
       const chinaItems = isChina ? (chinaSpecificItems["essentials"] || []) : [];
       const taiwanItems = isTaiwan ? (taiwanSpecificItems["essentials"] || []) : [];
+      const usaItems = isUSA ? (usaSpecificItems["essentials"] || []) : [];
+      const hongkongItems = isHongkong ? (hongkongSpecificItems["essentials"] || []) : [];
       
-      const mergedItems = mergeItems(section.items || [], mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems), taiwanItems));
+      const mergedItems = mergeItems(section.items || [], mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems), taiwanItems), usaItems), hongkongItems));
       
       return {
         ...section,
@@ -1450,17 +1745,21 @@ const Index = () => {
             const isPhilippines = selectedCountry === "필리핀";
             const isChina = selectedCountry === "중국";
             const isTaiwan = selectedCountry === "대만";
+            const isUSA = selectedCountry === "미국";
+            const isHongkong = selectedCountry === "홍콩";
             const japanItems = isJapan ? (japanSpecificItems[section.section_id] || []) : [];
             const vietnamItems = isVietnam ? (vietnamSpecificItems[section.section_id] || []) : [];
             const thailandItems = isThailand ? (thailandSpecificItems[section.section_id] || []) : [];
             const philippinesItems = isPhilippines ? (philippinesSpecificItems[section.section_id] || []) : [];
             const chinaItems = isChina ? (chinaSpecificItems[section.section_id] || []) : [];
             const taiwanItems = isTaiwan ? (taiwanSpecificItems[section.section_id] || []) : [];
+            const usaItems = isUSA ? (usaSpecificItems[section.section_id] || []) : [];
+            const hongkongItems = isHongkong ? (hongkongSpecificItems[section.section_id] || []) : [];
 
             // 여행팁 섹션 처리
             if (section.section_id === "travel_tips") {
               // travelTipItems와 국가 전용 항목 스마트 병합
-              const mergedItems = mergeItems(travelTipItems || [], mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems), taiwanItems));
+              const mergedItems = mergeItems(travelTipItems || [], mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems), taiwanItems), usaItems), hongkongItems));
               return {
                 ...section,
                 items: mergedItems || travelTipItems || []
@@ -1487,7 +1786,7 @@ const Index = () => {
               }
               
               // 국가 전용 항목 스마트 병합
-              const mergedItems = mergeItems(finalItems, mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems), taiwanItems));
+              const mergedItems = mergeItems(finalItems, mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems), taiwanItems), usaItems), hongkongItems));
               return {
                 ...section,
                 items: mergedItems || finalItems || []
@@ -1495,7 +1794,7 @@ const Index = () => {
             }
             
             // 기타 섹션: 기본 항목과 국가 전용 항목 스마트 병합
-            const mergedItems = mergeItems(section.items || [], mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems), taiwanItems));
+            const mergedItems = mergeItems(section.items || [], mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems), taiwanItems), usaItems), hongkongItems));
             return {
               ...section,
               items: mergedItems || section.items || []
