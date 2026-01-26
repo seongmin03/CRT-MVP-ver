@@ -361,7 +361,7 @@ const MedicalCardModal = ({ isOpen, onClose, onSave }: MedicalCardModalProps) =>
       // 토스트 메시지 표시
       toast({
         title: "저장 완료",
-        description: "저장이 완료되었습니다. 갤러리에서 확인하세요!",
+        description: "저장이 완료되었습니다. 파일에서 확인하세요!",
       });
       
       // 팝업 자동 닫기

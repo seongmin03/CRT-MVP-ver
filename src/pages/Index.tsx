@@ -982,6 +982,162 @@ const Index = () => {
     ]
   };
 
+  // 대만 전용 추가 데이터 정의
+  const taiwanSpecificItems: Record<string, typeof checklistData.sections[0]['items']> = {
+    essentials: [
+      {
+        item_id: "taiwan_passport_note",
+        title: "여권 준비",
+        description: "여권 유효기간이 최소 6개월 이상 남아있는지 반드시 확인하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "taiwan_visa_note",
+        title: "비자 / 입국 허가 확인",
+        description: "대한민국 여권 소지자는 관광 목적으로 최대 90일까지 무비자 체류가 가능해요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "taiwan_twac",
+        title: "온라인 입국신고서 작성",
+        description: "TWAC(Taiwan Arrival Card)는 필수입니다. 입국 심사 전까지 온라인 등록을 완료하세요!",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "taiwan_egate",
+        title: "e-Gate 이용",
+        description: "한국-대만 자동출입국 심사대 프로그램을 통해 대면 심사 없이 빠르게 입국하세요. (만 17세 이상 가능)",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "taiwan_passport_copy",
+        title: "여권 사본 준비",
+        description: "야시장 신분 확인이나 택스 리펀 시 유용하니 사본을 저장하거나 인쇄해 두세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "taiwan_hotel_chinese",
+        title: "호텔 중국어 표기 저장",
+        description: "확실한 소통을 위해 호텔 이름과 주소를 영어뿐만 아니라 중국어로도 준비하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "taiwan_immigration",
+        title: "입국 심사 준비",
+        description: "왕복 항공권 제시를 요구받을 수 있으니 항공권을 미리 인쇄하거나 캡처하세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    finance: [
+      {
+        item_id: "taiwan_easycard",
+        title: "이지카드(EasyCard) 발급",
+        description: "교통뿐만 아니라 병원, 카페, 식당에서도 쓰이는 만능 직불카드입니다. 역이나 편의점에서 구입하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "taiwan_easycard_app",
+        title: "이지카드 잔액 확인 앱",
+        description: "이지카드를 다양하게 사용하는 만큼 실시간 잔액 확인 앱을 설치해 관리하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "taiwan_small_denomination",
+        title: "소액 위주 환전",
+        description: "야시장, 로컬 택시, 작은 카페 등에서는 큰 지폐 사용이 어려울 수 있으니 소액권을 준비하세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    electronics: [
+      {
+        item_id: "taiwan_powerbank_note",
+        title: "보조배터리 준비",
+        description: "길 찾기와 이지카드 잔액 확인 등 핸드폰 사용이 많으니 보조배터리는 필수입니다.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    health: [
+      {
+        item_id: "taiwan_mosquito_repellent",
+        title: "소흑문(샤오하이) 퇴치제",
+        description: "대만의 작은 모기 '소흑문'은 매우 독해요. 현지에서 전용 퇴치제(Sheng Wen)를 구입해 사용하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "taiwan_tissue",
+        title: "휴대용 티슈와 물티슈",
+        description: "야시장 음식 섭취 전후나 화장실 이용 시 유용하니 항상 소지하세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    packing: [
+      {
+        item_id: "taiwan_mall_temperature",
+        title: "대형 쇼핑몰 실내 온도",
+        description: "실외는 덥지만 실내는 에어컨으로 인해 춥습니다. 가벼운 겉옷을 꼭 챙기세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "taiwan_umbrella",
+        title: "튼튼한 우양산",
+        description: "변덕스러운 소나기와 강한 자외선을 동시에 막아줄 우양산은 가방에 항상 넣어두세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    travel_tips: [
+      {
+        item_id: "taiwan_minor_immigration",
+        title: "만 17세 이하 입국 심사",
+        description: "만 17세 이하 여행자는 e-Gate 이용이 불가하므로 대면 입국 심사대를 이용해야 합니다.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "taiwan_lucky_draw",
+        title: "럭키 드로우 종료 안내",
+        description: "대만 여행지원금 이벤트는 2025년 9월 30일부로 종료되었으니 참고하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "taiwan_night_market",
+        title: "대만 야시장 방문",
+        description: "야시장이 가장 활기찬 시간은 저녁 7시부터 10시 사이입니다.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "taiwan_receipt_lottery",
+        title: "대만 영수증 복권 확인",
+        description: "영수증 하단 번호는 국가 발행 복권입니다. 외국인도 당첨금 수령이 가능하니 버리지 마세요!",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "taiwan_mrt_no_eating",
+        title: "지하철(MRT) 내 취식 엄금",
+        description: "개찰구 안쪽부터는 물, 껌을 포함한 모든 취식이 금지되며 위반 시 벌금이 부과되니 주의하세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ]
+  };
+
   const checklistRef = useRef<HTMLDivElement>(null);
   const commandInputRef = useRef<HTMLInputElement>(null);
   const customInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
@@ -1257,13 +1413,15 @@ const Index = () => {
       const isThailand = selectedCountry === "태국";
       const isPhilippines = selectedCountry === "필리핀";
       const isChina = selectedCountry === "중국";
+      const isTaiwan = selectedCountry === "대만";
       const japanItems = isJapan ? (japanSpecificItems["essentials"] || []) : [];
       const vietnamItems = isVietnam ? (vietnamSpecificItems["essentials"] || []) : [];
       const thailandItems = isThailand ? (thailandSpecificItems["essentials"] || []) : [];
       const philippinesItems = isPhilippines ? (philippinesSpecificItems["essentials"] || []) : [];
       const chinaItems = isChina ? (chinaSpecificItems["essentials"] || []) : [];
+      const taiwanItems = isTaiwan ? (taiwanSpecificItems["essentials"] || []) : [];
       
-      const mergedItems = mergeItems(section.items || [], mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems));
+      const mergedItems = mergeItems(section.items || [], mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems), taiwanItems));
       
       return {
         ...section,
@@ -1291,16 +1449,18 @@ const Index = () => {
             const isThailand = selectedCountry === "태국";
             const isPhilippines = selectedCountry === "필리핀";
             const isChina = selectedCountry === "중국";
+            const isTaiwan = selectedCountry === "대만";
             const japanItems = isJapan ? (japanSpecificItems[section.section_id] || []) : [];
             const vietnamItems = isVietnam ? (vietnamSpecificItems[section.section_id] || []) : [];
             const thailandItems = isThailand ? (thailandSpecificItems[section.section_id] || []) : [];
             const philippinesItems = isPhilippines ? (philippinesSpecificItems[section.section_id] || []) : [];
             const chinaItems = isChina ? (chinaSpecificItems[section.section_id] || []) : [];
+            const taiwanItems = isTaiwan ? (taiwanSpecificItems[section.section_id] || []) : [];
 
             // 여행팁 섹션 처리
             if (section.section_id === "travel_tips") {
               // travelTipItems와 국가 전용 항목 스마트 병합
-              const mergedItems = mergeItems(travelTipItems || [], mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems));
+              const mergedItems = mergeItems(travelTipItems || [], mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems), taiwanItems));
               return {
                 ...section,
                 items: mergedItems || travelTipItems || []
@@ -1327,7 +1487,7 @@ const Index = () => {
               }
               
               // 국가 전용 항목 스마트 병합
-              const mergedItems = mergeItems(finalItems, mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems));
+              const mergedItems = mergeItems(finalItems, mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems), taiwanItems));
               return {
                 ...section,
                 items: mergedItems || finalItems || []
@@ -1335,7 +1495,7 @@ const Index = () => {
             }
             
             // 기타 섹션: 기본 항목과 국가 전용 항목 스마트 병합
-            const mergedItems = mergeItems(section.items || [], mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems));
+            const mergedItems = mergeItems(section.items || [], mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems), taiwanItems));
             return {
               ...section,
               items: mergedItems || section.items || []
