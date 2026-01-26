@@ -420,13 +420,6 @@ const Index = () => {
         description: "동남아 모기는 한국보다 독해요! 기피제 혹은 가려움 완화제를 준비하세요.",
         cta_type: "none",
         cta_label: ""
-      },
-      {
-        item_id: "vietnam_sunscreen_repellent",
-        title: "선크림과 기피제",
-        description: "선크림을 먼저 바르고 30분 뒤에 기피제를 발라야 차단 효과가 유지됩니다.",
-        cta_type: "none",
-        cta_label: ""
       }
     ],
     packing: [
@@ -492,6 +485,13 @@ const Index = () => {
         item_id: "vietnam_tip_cilantro",
         title: "고수 빼기",
         description: "고수를 못 드신다면 미리 메모를 보여주세요. (북부: Không cho rau mùi / 남부: Không cho rau ngò)",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "vietnam_tip_sunscreen_repellent",
+        title: "선크림과 기피제",
+        description: "선크림을 먼저 바르고 30분 뒤에 기피제를 발라야 차단 효과가 유지됩니다.",
         cta_type: "none",
         cta_label: ""
       }
@@ -657,6 +657,325 @@ const Index = () => {
         item_id: "thailand_tip_ecig_ban",
         title: "전자담배 전면 금지",
         description: "태국은 전자담배가 전면 불법이에요! 절대 가져가지 마세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ]
+  };
+
+  // 필리핀 전용 추가 데이터 정의
+  const philippinesSpecificItems: Record<string, typeof checklistData.sections[0]['items']> = {
+    essentials: [
+      {
+        item_id: "philippines_passport_note",
+        title: "여권 준비",
+        description: "여권 유효기간이 최소 6개월 이상 남아있는지 꼭 확인하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "philippines_visa_note",
+        title: "비자 / 입국 허가 확인",
+        description: "대한민국 여권 소지자는 관광 목적으로 비자 없이 최대 30일간 체류할 수 있어요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "philippines_etravel",
+        title: "eTravel 작성",
+        description: "필리핀 온라인 입국 수속 서비스입니다. 무료로 등록하고 QR코드를 미리 저장하여 빠르게 입국하세요!",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "philippines_immigration",
+        title: "입국 심사 준비",
+        description: "왕복 항공권을 요구하는 경우가 많으므로 항공권을 사전에 인쇄하거나 캡처해두세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "philippines_family_certificate",
+        title: "영문 가족관계 증명서",
+        description: "부모와 아이의 성이 달라 자녀 관계 증명이 필요할 수 있으니 준비하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "philippines_passport_cover",
+        title: "여권 보호용 커버 & 방수팩",
+        description: "필리핀은 비가 잦은 지역이므로 소중한 여권이 젖지 않도록 주의하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "philippines_terminal_fee",
+        title: "공항세(Terminal Fee)",
+        description: "일부 공항은 현장에서 현금으로 공항세를 받는 경우가 있으니 미리 확인하고 현금을 준비하세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    finance: [
+      {
+        item_id: "philippines_usd_to_peso",
+        title: "달러에서 페소",
+        description: "원화를 바로 페소로 바꾸는 것보다 달러로 먼저 환전한 뒤 현지에서 페소로 환전하는 것이 유리한 경우가 많아요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "philippines_official_exchange",
+        title: "공식 환전소 이용",
+        description: "길거리 환전소는 위조지폐 위험이 있으니 반드시 공식 환전소나 쇼핑몰 내 환전소를 이용하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "philippines_small_denomination",
+        title: "소액권 환전",
+        description: "가게나 택시에서 거스름돈이 부족할 수 있으니 소액권을 섞어서 환전하는 것이 좋습니다.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    electronics: [
+      {
+        item_id: "philippines_adapter_note",
+        title: "멀티 어댑터 준비",
+        description: "전압은 220V로 같지만 콘센트 모양이 '11자'인 곳이 있으니 멀티 어댑터를 챙기세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "philippines_multitap",
+        title: "멀티탭 준비",
+        description: "콘센트가 부족할 수 있고, 정전 후 복구 시 전자기기 보호를 위해 멀티탭 사용을 권장해요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "philippines_offline_map",
+        title: "구글 지도 오프라인 다운로드",
+        description: "인터넷이 느리거나 끊기는 상황에 대비해 미리 지도를 다운로드해 두세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    health: [
+      {
+        item_id: "philippines_shower_filter",
+        title: "휴대용 샤워기 필터",
+        description: "수돗물의 석회질이나 노후 배관 불순물이 걱정된다면 필터 사용을 추천해요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "philippines_bandage",
+        title: "방수 밴드와 연고",
+        description: "슬리퍼를 신고 걷다 생기는 발 상처에 대비하여 방수 기능이 있는 밴드를 준비하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "philippines_mosquito_repellent",
+        title: "모기 기피제",
+        description: "동남아 모기는 매우 독해요! 현지에서 강력한 기피제나 완화제를 꼭 구비하세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    packing: [
+      {
+        item_id: "philippines_mall_temperature",
+        title: "대형 쇼핑몰 실내 온도",
+        description: "실외는 덥지만 쇼핑몰 내부는 에어컨 때문에 매우 춥습니다. 가벼운 겉옷을 준비하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "philippines_functional_clothing",
+        title: "기능성 의류",
+        description: "습도가 높아 옷이 잘 마르지 않으므로 건조가 빠른 기능성 의류를 챙기면 유용해요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    travel_tips: [
+      {
+        item_id: "philippines_filipino_time",
+        title: "필리피노 타임",
+        description: "느긋하고 천천히 삶의 여유를 즐기는 현지 문화를 존중하며 여유로운 마음을 가지세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "philippines_tip_culture",
+        title: "팁 문화",
+        description: "벨보이나 마사지사에게 고마움의 표시로 50~100페소 정도의 팁을 건네는 것이 관례입니다.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ]
+  };
+
+  // 중국 전용 추가 데이터 정의
+  const chinaSpecificItems: Record<string, typeof checklistData.sections[0]['items']> = {
+    essentials: [
+      {
+        item_id: "china_passport_note",
+        title: "여권 준비",
+        description: "여권 유효기간이 최소 6개월 이상 남아있는지 반드시 확인하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "china_visa_note",
+        title: "비자 / 입국 허가 확인",
+        description: "관광이나 비즈니스 목적으로 30일 이내 무비자 체류가 가능해요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "china_arrival_card",
+        title: "Arrival Card 작성",
+        description: "중국의 전자 입국 신고서입니다. QR코드를 생성하여 저장하거나 출력해 입국 심사 시 제시하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "china_immigration",
+        title: "입국 심사 준비",
+        description: "왕복 항공권을 요구하는 경우가 많으니 사전에 증빙 서류를 인쇄해 두세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    finance: [
+      {
+        item_id: "china_payment_apps",
+        title: "출국 전 카드 연동",
+        description: "현지 필수 결제 수단인 알리페이(Alipay)와 위챗페이(WeChat Pay)에 카드를 미리 연동하세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    electronics: [
+      {
+        item_id: "china_powerbank_note",
+        title: "보조배터리 준비",
+        description: "대부분의 결제가 QR로 이루어지므로 핸드폰 배터리 방전에 각별히 주의해야 합니다.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "china_vpn_roaming",
+        title: "통신 서비스 차단 대비",
+        description: "구글, 인스타그램 등 해외 서비스 이용을 위해 로밍이나 VPN 등 대체 수단을 미리 준비하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "china_gaode_map",
+        title: "고덕지도 다운로드",
+        description: "현지 정보가 가장 정확한 고덕지도(가오더 지도)를 미리 설치해 두세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "china_translation_app",
+        title: "번역 앱 설치",
+        description: "파파고나 바이두 번역 앱을 설치하면 현지 소통에 큰 도움이 됩니다.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "china_didi",
+        title: "디디추싱 설치",
+        description: "길거리 택시 잡기가 매우 어렵습니다. 택시 호출 앱인 디디추싱(DiDi)을 미리 설치하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "china_transformer",
+        title: "변압기 준비",
+        description: "한국과 전압은 같지만 주파수가 달라 고전력 제품(고데기 등)은 과열될 수 있으니 주의하세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    health: [
+      {
+        item_id: "china_digestive_medicine",
+        title: "지사제와 소화제",
+        description: "기름진 음식과 강한 향신료로 인해 위장이 탈나기 쉬우니 비상약을 꼭 챙기세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "china_tissue",
+        title: "휴대용 티슈와 물티슈",
+        description: "로컬 식당이나 공공 화장실에 휴지가 없는 경우가 많으므로 항상 소지하세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    packing: [
+      {
+        item_id: "china_mall_temperature",
+        title: "대형 쇼핑몰 실내 온도",
+        description: "실내 에어컨 가동으로 온도가 낮을 수 있으니 가벼운 겉옷을 준비하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "china_functional_clothing",
+        title: "기능성 의류",
+        description: "습한 날씨에는 옷이 잘 마르지 않으므로 건조가 빠른 기능성 의류가 유용합니다.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    travel_tips: [
+      {
+        item_id: "china_payment_test",
+        title: "결제 앱 실전 테스트",
+        description: "한국에서 미리 등록을 마치고 결제가 정상적으로 작동하는지 확인하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "china_battery_3c",
+        title: "보조배터리 3C 인증",
+        description: "중국 국내선 탑승 시 3C 인증이나 용량 표기가 없는 배터리는 반입이 불가할 수 있습니다.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "china_chinese_address",
+        title: "주소는 '중국어 원문'으로 저장",
+        description: "영어 주소는 기사님이 이해하기 어려우니 반드시 목적지의 중국어 주소를 저장해 두세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "china_high_speed_rail",
+        title: "대륙의 고속철",
+        description: "기차역 보안 검색이 공항 수준으로 철저하므로 시간적 여유를 두고 출발하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "china_museum_booking",
+        title: "박물관/명소 사전 예약",
+        description: "유명 관광지는 사전 예약 없이는 입장이 불가한 경우가 많으니 확인하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "china_hot_water",
+        title: "뜨거운 물 문화",
+        description: "식당에서는 주로 뜨거운 물이 제공됩니다. 찬물을 원하시면 '빙수이(冰水)'를 요청하세요.",
         cta_type: "none",
         cta_label: ""
       }
@@ -936,11 +1255,15 @@ const Index = () => {
       const isJapan = selectedCountry === "일본";
       const isVietnam = selectedCountry === "베트남";
       const isThailand = selectedCountry === "태국";
+      const isPhilippines = selectedCountry === "필리핀";
+      const isChina = selectedCountry === "중국";
       const japanItems = isJapan ? (japanSpecificItems["essentials"] || []) : [];
       const vietnamItems = isVietnam ? (vietnamSpecificItems["essentials"] || []) : [];
       const thailandItems = isThailand ? (thailandSpecificItems["essentials"] || []) : [];
+      const philippinesItems = isPhilippines ? (philippinesSpecificItems["essentials"] || []) : [];
+      const chinaItems = isChina ? (chinaSpecificItems["essentials"] || []) : [];
       
-      const mergedItems = mergeItems(section.items || [], mergeItems(mergeItems(japanItems, vietnamItems), thailandItems));
+      const mergedItems = mergeItems(section.items || [], mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems));
       
       return {
         ...section,
@@ -966,14 +1289,18 @@ const Index = () => {
             const isJapan = selectedCountry === "일본";
             const isVietnam = selectedCountry === "베트남";
             const isThailand = selectedCountry === "태국";
+            const isPhilippines = selectedCountry === "필리핀";
+            const isChina = selectedCountry === "중국";
             const japanItems = isJapan ? (japanSpecificItems[section.section_id] || []) : [];
             const vietnamItems = isVietnam ? (vietnamSpecificItems[section.section_id] || []) : [];
             const thailandItems = isThailand ? (thailandSpecificItems[section.section_id] || []) : [];
+            const philippinesItems = isPhilippines ? (philippinesSpecificItems[section.section_id] || []) : [];
+            const chinaItems = isChina ? (chinaSpecificItems[section.section_id] || []) : [];
 
             // 여행팁 섹션 처리
             if (section.section_id === "travel_tips") {
               // travelTipItems와 국가 전용 항목 스마트 병합
-              const mergedItems = mergeItems(travelTipItems || [], mergeItems(mergeItems(japanItems, vietnamItems), thailandItems));
+              const mergedItems = mergeItems(travelTipItems || [], mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems));
               return {
                 ...section,
                 items: mergedItems || travelTipItems || []
@@ -1000,7 +1327,7 @@ const Index = () => {
               }
               
               // 국가 전용 항목 스마트 병합
-              const mergedItems = mergeItems(finalItems, mergeItems(mergeItems(japanItems, vietnamItems), thailandItems));
+              const mergedItems = mergeItems(finalItems, mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems));
               return {
                 ...section,
                 items: mergedItems || finalItems || []
@@ -1008,7 +1335,7 @@ const Index = () => {
             }
             
             // 기타 섹션: 기본 항목과 국가 전용 항목 스마트 병합
-            const mergedItems = mergeItems(section.items || [], mergeItems(mergeItems(japanItems, vietnamItems), thailandItems));
+            const mergedItems = mergeItems(section.items || [], mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems));
             return {
               ...section,
               items: mergedItems || section.items || []
