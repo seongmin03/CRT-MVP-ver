@@ -55,6 +55,13 @@ export const checklistData: ChecklistData = {
           description: "입국 심사나 이동 시 주소 확인이 필요한 경우를 대비해 정리해두세요.",
           cta_type: "none",
           cta_label: ""
+        },
+        {
+          item_id: "passport_copy_photo",
+          title: "여권 사본 및 증명사진",
+          description: "분실 대비용으로 스마트폰에 저장하거나 실물 사본을 각각 준비하세요.",
+          cta_type: "none",
+          cta_label: ""
         }
       ]
     },
