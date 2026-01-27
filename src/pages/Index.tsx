@@ -756,8 +756,8 @@ const Index = () => {
       },
       {
         item_id: "philippines_offline_map",
-        title: "구글 지도 오프라인 다운로드",
-        description: "인터넷이 느리거나 끊기는 상황에 대비해 미리 지도를 다운로드해 두세요.",
+        title: "지도 오프라인 다운로드",
+        description: "인터넷이 느리거나 끊기는 상황에 대비해 미리 지도를 다운로하세요.",
         cta_type: "none",
         cta_label: ""
       }
@@ -1429,6 +1429,225 @@ const Index = () => {
     ]
   };
 
+  // 인도네시아 전용 추가 데이터 정의
+  const indonesiaSpecificItems: Record<string, typeof checklistData.sections[0]['items']> = {
+    essentials: [
+      {
+        item_id: "indonesia_passport_note",
+        title: "여권 준비",
+        description: "인도네시아 입국을 위해 여권 유효기간이 최소 6개월 이상 남아있어야 해요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "indonesia_visa_note",
+        title: "비자 / 입국 허가 확인",
+        description: "관광 목적 방문 시 eVOA(전자도착비자) 발급이 필수입니다. 온라인으로 미리 신청하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "indonesia_evoa_documents",
+        title: "eVOA 준비물",
+        description: "여권 사본, 비자용 사진, 영문 왕복 항공권, 숙소 정보가 필요하니 파일로 저장해두세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "indonesia_departure_ticket",
+        title: "출국 항공권 저장",
+        description: "체류 의도를 확인하기 위해 입국 심사 시 요구하는 경우가 많으니 미리 준비하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "indonesia_all_indonesia",
+        title: "올 인도네시아(All Indonesia) 작성",
+        description: "출입국, 세관, 검역이 통합된 새로운 온라인 신고서입니다. 입국 3일 전부터 작성 가능해요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "indonesia_bali_tax",
+        title: "발리 관광세 납부",
+        description: "발리 방문 시 1인당 150,000루피아의 환경 부담금을 납부하고 QR코드나 영수증을 지참하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "indonesia_driving_license",
+        title: "국제운전면허증 지참",
+        description: "스쿠터 대여 시 요구되지만, 인도네시아는 공식적으로 국제면허증을 인정하지 않아 단속 대상이 될 수 있으니 주의하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "indonesia_travel_insurance",
+        title: "여행자 보험 가입",
+        description: "외국인 대상 현지 병원비가 매우 비싸므로 만약의 상황을 대비해 보험 가입을 권장합니다.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    finance: [
+      {
+        item_id: "indonesia_idr_exchange",
+        title: "루피아(IDR) 환전",
+        description: "원화 직환전보다 달러(USD)로 환전 후 현지에서 루피아로 바꾸는 것이 환율 면에서 유리할 수 있어요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "indonesia_cash",
+        title: "소액 현금 준비",
+        description: "로컬 노포나 시장, 일부 주차비 등은 현금만 받는 경우가 많으니 소액권을 챙기세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "indonesia_gopay",
+        title: "GoPay 등록",
+        description: "인도네시아의 대표 전자결제 수단입니다. 현지 전화번호가 있어야 가입 가능하니 참고하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "indonesia_offline_map",
+        title: "지도 오프라인 다운로드",
+        description: "인터넷 속도가 느리거나 끊길 수 있으니 구글 맵 등의 오프라인 지도를 미리 받아두세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    electronics: [
+      {
+        item_id: "indonesia_adapter_note",
+        title: "멀티 어댑터 준비",
+        description: "220V로 한국과 동일하지만 주파수 차이로 고전력 제품(드라이기 등) 사용 시 주의가 필요해요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "indonesia_imei",
+        title: "핸드폰 IMEI 등록",
+        description: "90일 이상 장기 체류 시 기기 등록(IMEI)을 하지 않으면 현지 유심 사용이 차단됩니다.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "indonesia_grab_gojek",
+        title: "Grab / Gojek 설치",
+        description: "인도네시아 필수 택시/배달 앱입니다. 결제 수단까지 한국에서 미리 등록해두면 편리해요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "indonesia_whatsapp",
+        title: "WhatsApp 설치",
+        description: "현지 업체나 식당 예약 시 가장 널리 쓰이는 메신저이므로 필수 설치를 권장합니다.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "indonesia_powerbank_note",
+        title: "보조배터리 준비",
+        description: "장거리 이동과 잦은 지도 확인으로 배터리 소모가 빠르니 반드시 챙기세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    health: [
+      {
+        item_id: "indonesia_mosquito_repellent",
+        title: "모기 기피제",
+        description: "한국보다 강력한 현지 기피제나 완화제를 구비하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "indonesia_tissue",
+        title: "휴대용 티슈와 물티슈",
+        description: "공공 화장실에 화장지가 없는 경우가 빈번하므로 항상 휴대하세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    packing: [
+      {
+        item_id: "indonesia_small_bag",
+        title: "작은 백팩 또는 크로스백",
+        description: "활동량이 많은 투어나 혼잡한 장소 이동 시 소지품 관리가 편한 가방을 준비하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "indonesia_rain_preparation",
+        title: "우기 대비 용품",
+        description: "갑작스러운 폭우에 대비해 가벼운 우산이나 우비를 상비하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "indonesia_waterproof_pack",
+        title: "방수팩 준비",
+        description: "해양 액티비티나 비 오는 날 소지품 보호를 위해 유용하게 쓰입니다.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "indonesia_long_sleeve",
+        title: "얇은 긴팔 의류",
+        description: "강한 자외선 차단과 모기 방지를 위해 통기성 좋은 긴팔 옷을 챙기세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "indonesia_bali_belly",
+        title: "발리 밸리(Bali Belly) 주의",
+        description: "수돗물이나 오염된 음식으로 인한 배탈에 대비해 지사제와 소화제를 꼭 준비하세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    travel_tips: [
+      {
+        item_id: "indonesia_police_check",
+        title: "경찰 검문 대비",
+        description: "오토바이 운전 시 헬멧 착용은 필수이며 검문 시 당황하지 말고 국제면허증을 제시하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "indonesia_tip_culture",
+        title: "팁 문화",
+        description: "필수는 아니지만 만족스러운 서비스를 받았다면 소액의 팁을 건네보세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "indonesia_water_caution",
+        title: "물갈이 및 양치질 주의",
+        description: "수돗물로 양치하거나 노점 얼음을 먹는 것은 위험할 수 있으니 가급적 생수를 사용하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "indonesia_swimming_hygiene",
+        title: "수영 후 구강 위생",
+        description: "수영장이나 바다 수영 후 깨끗한 물로 입안을 헹구면 배탈(발리 밸리) 예방에 도움이 됩니다.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "indonesia_sunscreen_repellent",
+        title: "선크림과 기피제 순서",
+        description: "선크림을 먼저 바르고 30분 후 기피제를 발라야 두 제품의 효과를 모두 지킬 수 있어요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ]
+  };
+
   const checklistRef = useRef<HTMLDivElement>(null);
   const commandInputRef = useRef<HTMLInputElement>(null);
   const customInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
@@ -1707,6 +1926,7 @@ const Index = () => {
       const isTaiwan = selectedCountry === "대만";
       const isUSA = selectedCountry === "미국";
       const isHongkong = selectedCountry === "홍콩";
+      const isIndonesia = selectedCountry === "인도네시아";
       const japanItems = isJapan ? (japanSpecificItems["essentials"] || []) : [];
       const vietnamItems = isVietnam ? (vietnamSpecificItems["essentials"] || []) : [];
       const thailandItems = isThailand ? (thailandSpecificItems["essentials"] || []) : [];
@@ -1715,8 +1935,9 @@ const Index = () => {
       const taiwanItems = isTaiwan ? (taiwanSpecificItems["essentials"] || []) : [];
       const usaItems = isUSA ? (usaSpecificItems["essentials"] || []) : [];
       const hongkongItems = isHongkong ? (hongkongSpecificItems["essentials"] || []) : [];
+      const indonesiaItems = isIndonesia ? (indonesiaSpecificItems["essentials"] || []) : [];
       
-      const mergedItems = mergeItems(section.items || [], mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems), taiwanItems), usaItems), hongkongItems));
+      const mergedItems = mergeItems(section.items || [], mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems), taiwanItems), usaItems), hongkongItems), indonesiaItems));
       
       return {
         ...section,
@@ -1747,6 +1968,7 @@ const Index = () => {
             const isTaiwan = selectedCountry === "대만";
             const isUSA = selectedCountry === "미국";
             const isHongkong = selectedCountry === "홍콩";
+            const isIndonesia = selectedCountry === "인도네시아";
             const japanItems = isJapan ? (japanSpecificItems[section.section_id] || []) : [];
             const vietnamItems = isVietnam ? (vietnamSpecificItems[section.section_id] || []) : [];
             const thailandItems = isThailand ? (thailandSpecificItems[section.section_id] || []) : [];
@@ -1755,11 +1977,12 @@ const Index = () => {
             const taiwanItems = isTaiwan ? (taiwanSpecificItems[section.section_id] || []) : [];
             const usaItems = isUSA ? (usaSpecificItems[section.section_id] || []) : [];
             const hongkongItems = isHongkong ? (hongkongSpecificItems[section.section_id] || []) : [];
+            const indonesiaItems = isIndonesia ? (indonesiaSpecificItems[section.section_id] || []) : [];
 
             // 여행팁 섹션 처리
             if (section.section_id === "travel_tips") {
               // travelTipItems와 국가 전용 항목 스마트 병합
-              const mergedItems = mergeItems(travelTipItems || [], mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems), taiwanItems), usaItems), hongkongItems));
+              const mergedItems = mergeItems(travelTipItems || [], mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems), taiwanItems), usaItems), hongkongItems), indonesiaItems));
               return {
                 ...section,
                 items: mergedItems || travelTipItems || []
@@ -1786,7 +2009,7 @@ const Index = () => {
               }
               
               // 국가 전용 항목 스마트 병합
-              const mergedItems = mergeItems(finalItems, mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems), taiwanItems), usaItems), hongkongItems));
+              const mergedItems = mergeItems(finalItems, mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems), taiwanItems), usaItems), hongkongItems), indonesiaItems));
               return {
                 ...section,
                 items: mergedItems || finalItems || []
@@ -1794,7 +2017,7 @@ const Index = () => {
             }
             
             // 기타 섹션: 기본 항목과 국가 전용 항목 스마트 병합
-            const mergedItems = mergeItems(section.items || [], mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems), taiwanItems), usaItems), hongkongItems));
+            const mergedItems = mergeItems(section.items || [], mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems), taiwanItems), usaItems), hongkongItems), indonesiaItems));
             return {
               ...section,
               items: mergedItems || section.items || []
