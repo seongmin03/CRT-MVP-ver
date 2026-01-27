@@ -77,16 +77,6 @@ const TravelInsuranceModal = ({ isOpen, onClose }: TravelInsuranceModalProps) =>
               </p>
             </div>
           </div>
-
-          {/* 하단 액션 버튼 */}
-          <a
-            href="https://www.myrealtrip.com/event/flight_insurance"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-center rounded-xl transition-colors duration-200 shadow-md hover:shadow-lg"
-          >
-            마이리얼트립 보험 혜택 보기
-          </a>
         </div>
       </div>
     </div>

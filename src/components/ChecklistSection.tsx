@@ -1,6 +1,7 @@
 import type { ChecklistSection as ChecklistSectionType } from "@/data/checklistData";
 import ChecklistItem from "./ChecklistItem";
 import { type DurationType } from "./TravelDurationGuide";
+import { parseTextWithLinks } from "@/lib/linkUtils";
 
 interface ChecklistSectionProps {
   section: ChecklistSectionType;
@@ -9,6 +10,7 @@ interface ChecklistSectionProps {
   selectedDuration?: DurationType | null;
   onDurationChange?: (duration: DurationType | null) => void;
   onMedicalCardClick?: () => void;
+  selectedCountry?: string | null;
 }
 
 const sectionIcons: Record<string, string> = {
@@ -20,7 +22,7 @@ const sectionIcons: Record<string, string> = {
   travel_tips: "💡",
 };
 
-const ChecklistSection = ({ section, checkedItems, onToggle, selectedDuration, onDurationChange, onMedicalCardClick }: ChecklistSectionProps) => {
+const ChecklistSection = ({ section, checkedItems, onToggle, selectedDuration, onDurationChange, onMedicalCardClick, selectedCountry }: ChecklistSectionProps) => {
   // 안전성 체크: section과 items가 유효한지 확인
   if (!section || !section.items || !Array.isArray(section.items)) {
     return (
@@ -114,15 +116,20 @@ const ChecklistSection = ({ section, checkedItems, onToggle, selectedDuration, o
         {/* health 섹션일 때 응급 의료 카드 섹션을 최상단에 추가 */}
         {section.section_id === "health" && onMedicalCardClick && (
           <div className="mb-3 p-4 bg-red-300 rounded-xl border border-red-200 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="text-xl">🚨</span>
-              <span className="font-semibold text-sm sm:text-base text-white">
-                응급 의료 카드 만들기
-              </span>
+            <div className="flex-1">
+              <div className="flex items-center gap-2">
+                <span className="text-xl">🚨</span>
+                <span className="font-semibold text-sm sm:text-base text-white">
+                  응급 의료 카드 만들기
+                </span>
+              </div>
+              <p className="text-[11px] text-white mt-1.5 ml-8">
+                해외 병원에서 이 카드를 제시하면 입력하신 정보를 통해 상황 전달을 도울 수 있어요.
+              </p>
             </div>
             <button
               onClick={onMedicalCardClick}
-              className="px-4 py-2 bg-red-400 hover:bg-red-500 rounded-lg text-sm font-medium text-white transition-all duration-200 shadow-sm"
+              className="px-4 py-2 bg-red-400 hover:bg-red-500 rounded-lg text-sm font-medium text-white transition-all duration-200 shadow-sm ml-3 flex-shrink-0"
             >
               정보입력
             </button>
@@ -152,7 +159,7 @@ const ChecklistSection = ({ section, checkedItems, onToggle, selectedDuration, o
                         className="text-xs sm:text-sm leading-relaxed text-slate-700 dark:text-gray-300 mt-1"
                         style={{ lineHeight: '1.5' }}
                       >
-                        {item.description}
+                        {parseTextWithLinks(item.description, selectedCountry)}
                       </p>
                     )}
                   </div>
@@ -168,6 +175,7 @@ const ChecklistSection = ({ section, checkedItems, onToggle, selectedDuration, o
                   item={item}
                   isChecked={checkedItems.has(item.item_id)}
                   onToggle={onToggle}
+                  selectedCountry={selectedCountry}
                 />
               );
             })

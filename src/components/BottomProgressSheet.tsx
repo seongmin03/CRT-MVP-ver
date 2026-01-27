@@ -2,6 +2,7 @@ interface BottomProgressSheetProps {
   progress: number;
   completedItems: number;
   totalItems: number;
+  isInline?: boolean;
 }
 
 const progressMessages: { threshold: number; message: string }[] = [
@@ -24,12 +25,12 @@ const getProgressMessage = (progress: number): string => {
   return progressMessages[progressMessages.length - 1].message;
 };
 
-const BottomProgressSheet = ({ progress, completedItems, totalItems }: BottomProgressSheetProps) => {
+const BottomProgressSheet = ({ progress, completedItems, totalItems, isInline = false }: BottomProgressSheetProps) => {
   const message = getProgressMessage(progress);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 max-w-2xl mx-auto px-4 sm:px-6">
-      <div className="bg-white/90 backdrop-blur-sm rounded-t-2xl shadow-[0_-8px_10px_-5px_rgba(0,0,0,0.08)] border-t border-gray-100/50">
+    <div className={isInline ? "w-full max-w-2xl mx-auto px-4 sm:px-6 mb-10 animate-fade-in" : "fixed bottom-0 left-0 right-0 z-50 max-w-2xl mx-auto px-4 sm:px-6 transition-all duration-300"}>
+      <div className={`bg-white/90 backdrop-blur-sm ${isInline ? 'rounded-2xl shadow-lg' : 'rounded-t-2xl shadow-[0_-8px_10px_-5px_rgba(0,0,0,0.08)]'} border-t border-gray-100/50 transition-all duration-300`}>
         <div className="px-4 py-1.5">
           {/* 상단: 텍스트 레이어 (한 줄 정렬) */}
           <div className="relative flex flex-row items-center justify-between mb-1">

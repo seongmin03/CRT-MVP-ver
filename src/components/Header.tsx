@@ -2,8 +2,8 @@ import { Plane } from "lucide-react";
 
 const Header = () => {
   return (
-    <header className="text-center py-8 animate-fade-in">
-      <div className="flex items-center justify-center gap-3 mb-2">
+    <header className="text-center py-4 animate-fade-in">
+      <div className="flex items-center justify-center gap-3 mb-1">
         <div className="w-12 h-12 bg-accent rounded-2xl flex items-center justify-center shadow-lg">
           <Plane className="w-6 h-6 text-accent-foreground" />
         </div>

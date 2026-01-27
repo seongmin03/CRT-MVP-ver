@@ -9,6 +9,7 @@ import MedicalCardModal, { type MedicalCardData } from "@/components/MedicalCard
 import { checklistData } from "@/data/checklistData";
 import { travelTips } from "@/data/travleTips";
 import { Lightbulb, Check, ChevronDown, Search, Link, X, Plus } from "lucide-react";
+import { parseTextWithLinks } from "@/lib/linkUtils";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import {
@@ -169,6 +170,8 @@ const Index = () => {
   const [isSearchActive, setIsSearchActive] = useState(false);
   // 여행팁 체크리스트 아이템 상태 (selectedCountry에 따라 나중에 동적으로 매핑 가능)
   const [travelTipItems, setTravelTipItems] = useState<typeof checklistData.sections[0]['items']>([]);
+  // 여행팁 아코디언 펼침 상태
+  const [isTravelTipsExpanded, setIsTravelTipsExpanded] = useState(false);
   // 여행 기간 선택 상태
   const [selectedDuration, setSelectedDuration] = useState<DurationType | null>(null);
   // 항공기 반입 물품 가이드 모달 상태
@@ -592,13 +595,6 @@ const Index = () => {
         description: "태국 모기는 매우 독해요! 현지에서 강력한 기피제나 완화제를 꼭 구비하세요.",
         cta_type: "none",
         cta_label: ""
-      },
-      {
-        item_id: "thailand_sunscreen_repellent",
-        title: "선크림과 기피제",
-        description: "선크림을 먼저 바르고 30분 정도 흡수시킨 뒤 기피제를 발라야 효과가 유지됩니다.",
-        cta_type: "none",
-        cta_label: ""
       }
     ],
     packing: [
@@ -657,6 +653,13 @@ const Index = () => {
         item_id: "thailand_tip_ecig_ban",
         title: "전자담배 전면 금지",
         description: "태국은 전자담배가 전면 불법이에요! 절대 가져가지 마세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "thailand_tip_sunscreen_repellent",
+        title: "선크림과 기피제",
+        description: "선크림을 먼저 바르고 30분 정도 흡수시킨 뒤 기피제를 발라야 효과가 유지됩니다.",
         cta_type: "none",
         cta_label: ""
       }
@@ -1648,15 +1651,363 @@ const Index = () => {
     ]
   };
 
+  // 프랑스 전용 추가 데이터 정의
+  const franceSpecificItems: Record<string, typeof checklistData.sections[0]['items']> = {
+    essentials: [
+      {
+        item_id: "france_passport_note",
+        title: "여권 준비",
+        description: "프랑스 입국 시 여권 유효기간이 최소 3개월 이상 남아있어야 해요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "france_passport_copy",
+        title: "여권 사본 및 증명사진",
+        description: "소매치기로 인한 분실 사고를 대비해 여권 사본과 증명사진을 별도로 준비하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "france_visa_note",
+        title: "비자 / 입국 허가 확인",
+        description: "최대 90일 무비자 체류가 가능하며 2026년 4분기부터는 온라인 입국 허가(ETIAS)가 필수입니다.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "france_student_id",
+        title: "국제학생증 발급",
+        description: "미술관이나 박물관에서 학생 할인이 가능하므로 대학생이라면 반드시 지참하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "france_extra_photos",
+        title: "추가적인 증명사진",
+        description: "교통카드(나비고) 발급 등에 사진이 필요할 수 있습니다. (여권 3.5x4.5 / 나비고 2.5x3)",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "france_booking_offline",
+        title: "관광지 예약 내역 저장",
+        description: "현지 데이터 연결이 불안정할 수 있으니 티켓이나 예약증은 오프라인 파일로 저장해두세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    finance: [
+      {
+        item_id: "france_small_cash",
+        title: "소액 현금 준비",
+        description: "0.5~1유로의 유료 화장실이나 일부 노포 식당 이용을 위해 소액 유로 화폐를 지참하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "france_card_pin",
+        title: "카드 PIN번호 확인",
+        description: "결제 시 IC카드 비밀번호를 요구합니다. 보통 4자리지만 6자리를 요구할 경우 '비밀번호 4자리 + 00'을 입력해 보세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "france_card_app",
+        title: "카드사 공식 앱 설치",
+        description: "분실 즉시 카드를 정지하거나 해외 결제를 차단할 수 있도록 앱 설치와 로그인을 미리 마치세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "france_virtual_card",
+        title: "안심 카드번호 서비스",
+        description: "부적절한 결제 방지를 위해 카드사에서 제공하는 가상 카드번호 서비스를 신청해 이용하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "france_split_storage",
+        title: "나눠서 보관",
+        description: "카드와 현금을 한곳에 모으지 말고 가방, 지갑, 캐리어 등에 나누어 보관해 리스크를 줄이세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    electronics: [
+      {
+        item_id: "france_adapter_note",
+        title: "멀티 어댑터 준비",
+        description: "220V로 한국과 동일하지만 주파수 차이로 고전력 제품(고데기 등)은 과열될 수 있으니 주의하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "france_bonjour_ratp",
+        title: "Bonjour RATP 설치",
+        description: "파리 대중교통 공식 앱입니다. 파업이나 지연 상황을 가장 빠르게 반영하므로 필수 설치하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "france_uber_bolt",
+        title: "Uber와 Bolt 비교",
+        description: "글로벌 택시 앱인 우버와 볼트를 모두 설치하여 가격과 도착 시간을 비교해 호출하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "france_velib",
+        title: "Velib(벨리브) 설치",
+        description: "파리 시내 곳곳을 이동하기 좋은 공공자전거 대여 서비스입니다. 앱으로 쉽게 이용하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "france_blablacar",
+        title: "BlaBlaCar(블라블라카) 설치",
+        description: "유럽 내 장거리 도시 이동 시 유용한 카풀 서비스입니다. 비용을 절감하고 싶을 때 고려하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "france_the_fork",
+        title: "The Fork(더 포크) 설치",
+        description: "프랑스 맛집 예약 앱입니다. 리뷰 확인과 예약은 물론 할인 혜택도 받을 수 있어요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    health: [
+      {
+        item_id: "france_shower_filter",
+        title: "휴대용 샤워기 필터",
+        description: "프랑스는 석회수 성분이 강해 피부 트러블이나 머릿결 손상이 발생할 수 있으니 필터를 꼭 챙기세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "france_bedbug_spray",
+        title: "베드버그 스프레이",
+        description: "숙소 도착 즉시 매트리스와 가구에 스프레이를 뿌려 베드버그 피해를 예방하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "france_tissue",
+        title: "휴대용 티슈와 물티슈",
+        description: "공공 화장실에 화장지가 없는 경우가 빈번하므로 항상 주머니에 상비하세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    packing: [
+      {
+        item_id: "france_earplugs",
+        title: "수면용 귀마개 준비",
+        description: "프랑스 구시가지 숙소는 방음이 약하고 실외 소음이 심할 수 있으니 숙면을 위해 준비하세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    travel_tips: [
+      {
+        item_id: "france_online_booking",
+        title: "온라인 사전 예약 권장",
+        description: "루브르 등 주요 명소는 현장 발권이 불가능한 경우가 많으므로 반드시 온라인 예약을 완료하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "france_tap_water",
+        title: "무료 식수(Tap Water)",
+        description: "식당에서 'Carafe d'eau(까라프 도)'를 요청하면 무료로 수돗물을 제공받을 수 있어요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "france_navigo_toilet",
+        title: "기차역 화장실 팁",
+        description: "유효한 나비고(Navigo) 카드가 있다면 주요 기차역 내 유료 화장실을 무료로 이용 가능합니다.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "france_bonjour",
+        title: "인사 문화(Bonjour)",
+        description: "상점이나 식당 입장 시 무조건 \"Bonjour(봉쥬르)\" 먼저 인사하세요. 인사는 서비스의 질이 결정되는 중요한 예절이에요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ]
+  };
+
+  // 싱가포르 전용 추가 데이터 정의
+  const singaporeSpecificItems: Record<string, typeof checklistData.sections[0]['items']> = {
+    essentials: [
+      {
+        item_id: "singapore_passport_note",
+        title: "여권 준비",
+        description: "싱가포르 입국을 위해 여권 유효기간이 최소 6개월 이상 남아있어야 해요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "singapore_visa_note",
+        title: "비자 / 입국 허가 확인",
+        description: "대한민국 국민은 비자 없이 최대 90일간 체류할 수 있으며 전자 입국카드는 필수 제출 사항입니다.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "singapore_arrival_card",
+        title: "SG Arrival Card 작성",
+        description: "싱가포르의 전자 입국카드입니다. 입국 3일 전부터 온라인으로 작성할 수 있어요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "singapore_return_ticket",
+        title: "귀국 항공권 저장",
+        description: "입국 심사 시 귀국 항공권 제시를 요구할 수 있으니 미리 파일로 저장해두세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    finance: [
+      {
+        item_id: "singapore_contactless_card",
+        title: "컨택리스 카드 지참",
+        description: "매장 결제와 대중교통 이용 시 컨택리스 결제가 보편적입니다. 카드에 와이파이 모양 아이콘이 있는지 확인하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "singapore_small_cash",
+        title: "현금은 소액만 준비",
+        description: "카드 결제가 매우 잘 정착된 나라입니다. 일부 재래시장이나 식당을 대비해 약간의 현금만 챙기셔도 충분해요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "singapore_taxi_app_payment",
+        title: "택시 앱 결제 수단 등록",
+        description: "공항 도착 후 당황하지 않도록 한국에서 미리 택시 앱에 결제 카드를 등록해두세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    electronics: [
+      {
+        item_id: "singapore_adapter_note",
+        title: "멀티 어댑터 준비",
+        description: "싱가포르는 콘센트 모양이 우리나라와 다르므로 반드시 멀티 어댑터를 준비하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "singapore_powerbank_note",
+        title: "보조배터리 준비",
+        description: "사진 촬영, 지도 확인, 택시 호출 등으로 배터리 소모가 빠르니 상시 휴대하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "singapore_grab",
+        title: "Grab(그랩) 설치",
+        description: "동남아 여행 필수 택시 앱입니다. 현지에서 가장 빠르고 편리하게 이동할 수 있어요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "singapore_map_apps",
+        title: "지도 앱 설치(Google/Citymapper)",
+        description: "글로벌 지도인 구글맵과 더불어 대중교통 정보가 상세한 시티매퍼를 함께 활용해 보세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "singapore_bus_timing",
+        title: "SG Bus Timing 설치",
+        description: "싱가포르 버스의 실시간 도착 정보를 확인할 수 있어 정류장에서 유용합니다.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    health: [
+      {
+        item_id: "singapore_wet_tissue",
+        title: "휴대용 물티슈와 비닐장갑",
+        description: "일부 식당은 물티슈를 유료로 판매합니다. 개인용 물티슈를 지참하면 위생적이고 경제적이에요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "singapore_aircon_medicine",
+        title: "냉방병 대비 약 준비",
+        description: "실외는 덥지만 실내는 에어컨이 매우 강해 온도 차가 큽니다. 감기약이나 해열제 등 복약을 챙기세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "singapore_mosquito_repellent",
+        title: "모기 퇴치제 준비",
+        description: "가든스 바이 더 베이나 보타닉 가든 등 숲이 우거진 관광지를 방문할 때 필수입니다.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    packing: [
+      {
+        item_id: "singapore_light_outer",
+        title: "얇은 아우터 상비",
+        description: "지하철, 쇼핑몰, 영화관 내부가 상당히 춥습니다. 가벼운 가디건이나 바람막이를 준비하세요.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "singapore_umbrella",
+        title: "튼튼한 우양산",
+        description: "갑작스러운 소나기와 뜨거운 자외선을 동시에 막아줄 튼튼한 우양산을 가방에 넣어두세요.",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ],
+    travel_tips: [
+      {
+        item_id: "singapore_gum_ban",
+        title: "껌 반입 금지",
+        description: "싱가포르는 껌 반입과 판매가 엄격히 금지되어 있습니다. 입국 시 소지하지 않도록 주의하세요!",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "singapore_no_food_transit",
+        title: "대중교통 음식물 섭취 금지",
+        description: "지하철이나 버스 내에서 물을 포함한 음식물 섭취 시 고액의 벌금이 부과될 수 있습니다.",
+        cta_type: "none",
+        cta_label: ""
+      },
+      {
+        item_id: "singapore_hawker_chope",
+        title: "호커 센터 자리 맡기",
+        description: "휴지나 명함으로 자리를 먼저 찜한 뒤 주문하는 현지 문화가 있으니 당황하지 마세요!",
+        cta_type: "none",
+        cta_label: ""
+      }
+    ]
+  };
+
   const checklistRef = useRef<HTMLDivElement>(null);
   const commandInputRef = useRef<HTMLInputElement>(null);
   const customInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
 
-  // 국가 변경 시 체크 상태 초기화
+  // 국가 변경 시 체크 상태 초기화 및 아코디언 접기
   useEffect(() => {
     if (selectedCountry) {
       setCheckedItems(new Set<string>());
       localStorage.removeItem(STORAGE_KEY);
+      setIsTravelTipsExpanded(false);
     }
   }, [selectedCountry]);
 
@@ -1669,6 +2020,7 @@ const Index = () => {
   useEffect(() => {
     saveCustomItemsToStorage(customItems);
   }, [customItems]);
+
 
   // Popover가 열릴 때 검색창 자동 포커스 방지 및 검색 활성화 상태 리셋
   useEffect(() => {
@@ -1927,6 +2279,8 @@ const Index = () => {
       const isUSA = selectedCountry === "미국";
       const isHongkong = selectedCountry === "홍콩";
       const isIndonesia = selectedCountry === "인도네시아";
+      const isFrance = selectedCountry === "프랑스";
+      const isSingapore = selectedCountry === "싱가포르";
       const japanItems = isJapan ? (japanSpecificItems["essentials"] || []) : [];
       const vietnamItems = isVietnam ? (vietnamSpecificItems["essentials"] || []) : [];
       const thailandItems = isThailand ? (thailandSpecificItems["essentials"] || []) : [];
@@ -1936,8 +2290,10 @@ const Index = () => {
       const usaItems = isUSA ? (usaSpecificItems["essentials"] || []) : [];
       const hongkongItems = isHongkong ? (hongkongSpecificItems["essentials"] || []) : [];
       const indonesiaItems = isIndonesia ? (indonesiaSpecificItems["essentials"] || []) : [];
+      const franceItems = isFrance ? (franceSpecificItems["essentials"] || []) : [];
+      const singaporeItems = isSingapore ? (singaporeSpecificItems["essentials"] || []) : [];
       
-      const mergedItems = mergeItems(section.items || [], mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems), taiwanItems), usaItems), hongkongItems), indonesiaItems));
+      const mergedItems = mergeItems(section.items || [], mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems), taiwanItems), usaItems), hongkongItems), indonesiaItems), franceItems), singaporeItems));
       
       return {
         ...section,
@@ -1969,6 +2325,8 @@ const Index = () => {
             const isUSA = selectedCountry === "미국";
             const isHongkong = selectedCountry === "홍콩";
             const isIndonesia = selectedCountry === "인도네시아";
+            const isFrance = selectedCountry === "프랑스";
+            const isSingapore = selectedCountry === "싱가포르";
             const japanItems = isJapan ? (japanSpecificItems[section.section_id] || []) : [];
             const vietnamItems = isVietnam ? (vietnamSpecificItems[section.section_id] || []) : [];
             const thailandItems = isThailand ? (thailandSpecificItems[section.section_id] || []) : [];
@@ -1978,11 +2336,13 @@ const Index = () => {
             const usaItems = isUSA ? (usaSpecificItems[section.section_id] || []) : [];
             const hongkongItems = isHongkong ? (hongkongSpecificItems[section.section_id] || []) : [];
             const indonesiaItems = isIndonesia ? (indonesiaSpecificItems[section.section_id] || []) : [];
+            const franceItems = isFrance ? (franceSpecificItems[section.section_id] || []) : [];
+            const singaporeItems = isSingapore ? (singaporeSpecificItems[section.section_id] || []) : [];
 
             // 여행팁 섹션 처리
             if (section.section_id === "travel_tips") {
               // travelTipItems와 국가 전용 항목 스마트 병합
-              const mergedItems = mergeItems(travelTipItems || [], mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems), taiwanItems), usaItems), hongkongItems), indonesiaItems));
+              const mergedItems = mergeItems(travelTipItems || [], mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems), taiwanItems), usaItems), hongkongItems), indonesiaItems), franceItems), singaporeItems));
               return {
                 ...section,
                 items: mergedItems || travelTipItems || []
@@ -2009,7 +2369,7 @@ const Index = () => {
               }
               
               // 국가 전용 항목 스마트 병합
-              const mergedItems = mergeItems(finalItems, mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems), taiwanItems), usaItems), hongkongItems), indonesiaItems));
+              const mergedItems = mergeItems(finalItems, mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems), taiwanItems), usaItems), hongkongItems), indonesiaItems), franceItems), singaporeItems));
               return {
                 ...section,
                 items: mergedItems || finalItems || []
@@ -2017,7 +2377,7 @@ const Index = () => {
             }
             
             // 기타 섹션: 기본 항목과 국가 전용 항목 스마트 병합
-            const mergedItems = mergeItems(section.items || [], mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems), taiwanItems), usaItems), hongkongItems), indonesiaItems));
+            const mergedItems = mergeItems(section.items || [], mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems), taiwanItems), usaItems), hongkongItems), indonesiaItems), franceItems), singaporeItems));
             return {
               ...section,
               items: mergedItems || section.items || []
@@ -2089,11 +2449,11 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background pb-8">
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 space-y-8">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 space-y-4">
         <Header />
 
         {/* 링크 복사 버튼 및 안내 문구 */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 animate-fade-in -mt-4">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 animate-fade-in -mt-2 mb-1">
           <button
             onClick={copyLink}
             className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-all duration-200 text-sm text-gray-700 hover:text-gray-900 shadow-sm hover:shadow"
@@ -2101,14 +2461,11 @@ const Index = () => {
             <Link className="w-4 h-4" />
             <span>링크 복사</span>
           </button>
-          <p className="text-xs sm:text-sm text-black text-center">
-            링크를 저장하거나 마이리얼트립에서 체크리스트를 검색하세요
-          </p>
         </div>
 
         {/* 1. 최상단: 여행 국가 선택 영역 (검색 가능한 드롭다운) */}
         <div className="animate-fade-in">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 p-4 bg-card rounded-xl border border-border shadow-sm">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3 p-3 bg-card rounded-xl border border-border shadow-sm">
             <span className="text-sm font-semibold text-foreground">
               여행지를 선택하고 맞춤 정보를 확인하하세요!
             </span>
@@ -2118,7 +2475,7 @@ const Index = () => {
                   variant="outline"
                   role="combobox"
                   aria-expanded={open}
-                  className="w-full sm:w-[200px] justify-between"
+                  className="w-full sm:w-[200px] justify-between h-9"
                 >
                   {selectedCountry || "국가 선택"}
                   <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -2210,142 +2567,78 @@ const Index = () => {
           </div>
         </div>
 
-        {/* 2. 선택된 국가의 리얼 트립 섹션 - 국가 선택 시에만 표시 */}
-        {selectedCountry && currentTravelTips && (
-          <div className="animate-fade-in">
-            <div className="bg-blue-50/50 rounded-2xl p-5 border border-blue-100/50 shadow-sm">
-              <div className="flex items-center gap-2 mb-4">
-                <span className="text-xl">✈️</span>
-                <h3 className="text-lg font-semibold text-foreground">
-                  {displayCountryName} 리얼 트립
-                </h3>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-4 items-start">
-                {/* 텍스트 영역 */}
-                <div className="flex-1 space-y-3">
-                  {currentTravelTips.map((tip, index) => (
-                    <div key={index} className="flex items-start gap-3">
-                      <div className="flex-shrink-0 mt-0.5">
-                        <Check className="w-4 h-4 text-blue-600" strokeWidth={2.5} />
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-sm text-foreground mb-1 leading-tight">
-                          {tip.title}
-                        </h4>
-                        <p 
-                          className="text-sm text-muted-foreground leading-relaxed travel-tip-content"
-                          dangerouslySetInnerHTML={{ __html: tip.content }}
-                        />
-                      </div>
-                    </div>
-                  ))}
+        {/* 여행팁 아코디언 - 국가 선택 시에만 표시 */}
+        {selectedCountry && (() => {
+          const travelTipsSection = otherSections.find(s => s?.section_id === "travel_tips");
+          const tipsItems = travelTipsSection?.items || [];
+          
+          if (tipsItems.length === 0) return null;
+          
+          return (
+            <div className="animate-fade-in">
+              <div className="w-full rounded-lg overflow-hidden">
+                {/* 아코디언 헤더 */}
+                <button
+                  onClick={() => setIsTravelTipsExpanded(!isTravelTipsExpanded)}
+                  className={cn(
+                    "w-full py-2 px-4 flex justify-between items-center cursor-pointer transition-all duration-200",
+                    "bg-blue-400 hover:bg-blue-500 text-white"
+                  )}
+                >
+                  <span className="text-sm font-medium text-white">
+                    💡 {selectedCountry} 여행팁 펼쳐보기
+                  </span>
+                  <ChevronDown 
+                    className={cn(
+                      "w-4 h-4 text-white transition-transform duration-200",
+                      isTravelTipsExpanded && "transform rotate-180"
+                    )}
+                  />
+                </button>
+                
+                {/* 아코디언 컨텐츠 */}
+                <div
+                  className={cn(
+                    "overflow-hidden transition-all duration-300 ease-in-out",
+                    isTravelTipsExpanded ? "max-h-[5000px] opacity-100" : "max-h-0 opacity-0"
+                  )}
+                >
+                  <div className="px-4 py-3 space-y-3 bg-blue-50 border-t border-blue-100 rounded-b-lg">
+                    {tipsItems.map((item) => {
+                      if (!item || !item.item_id) return null;
+                      return (
+                        <div
+                          key={item.item_id}
+                          className="flex items-start gap-3"
+                        >
+                          <div className="flex-shrink-0 mt-0.5">
+                            <Check className="w-4 h-4 text-blue-600" strokeWidth={2.5} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h4 
+                              className="font-bold text-sm sm:text-base text-slate-900 dark:text-white mb-1"
+                              style={{ lineHeight: '1.5' }}
+                            >
+                              {item.title}
+                            </h4>
+                            {item.description && (
+                              <p 
+                                className="text-xs sm:text-sm leading-relaxed text-slate-700 dark:text-gray-300 mt-1"
+                                style={{ lineHeight: '1.5' }}
+                              >
+                                {parseTextWithLinks(item.description, selectedCountry)}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-                
-                {/* 이미지 영역 (일본 또는 동남아시아 국가인 경우 표시) */}
-                {selectedCountry === "일본" && (
-                  <div className="flex-shrink-0 flex flex-col items-center justify-start w-full sm:w-auto sm:max-w-[128px] mt-4 sm:mt-0">
-                    <a
-                      href="/image/info/japan_donki.png"
-                      download="돈키호테_추천템.png"
-                      className="block cursor-pointer transition-all duration-300 hover:opacity-90 hover:scale-105 active:scale-95"
-                    >
-                      <img
-                        src="/image/info/japan_donki.png"
-                        alt="돈키호테 추천템"
-                        className="w-32 h-auto rounded-lg shadow-sm object-cover"
-                      />
-                    </a>
-                    <p className="text-xs text-gray-500 text-center mt-2">
-                      이미지를 눌러 다운받기
-                    </p>
-                  </div>
-                )}
-                
-                {southeastAsiaCountries.includes(selectedCountry) && (
-                  <div className="flex-shrink-0 flex flex-col items-center justify-start w-full sm:w-auto sm:max-w-[128px] mt-4 sm:mt-0">
-                    <a
-                      href="/image/info/seAsia_water.png"
-                      download="동남아시아_물갈이가이드.png"
-                      className="block cursor-pointer transition-all duration-300 hover:opacity-90 hover:scale-105 active:scale-95"
-                    >
-                      <img
-                        src="/image/info/seAsia_water.png"
-                        alt="동남아시아 물갈이 가이드"
-                        className="w-32 h-auto rounded-lg shadow-sm object-cover"
-                      />
-                    </a>
-                    <p className="text-xs text-gray-500 text-center mt-2 whitespace-pre-line">
-                      이미지를 눌러 다운받기
-                    </p>
-                  </div>
-                )}
               </div>
             </div>
-          </div>
-        )}
-
-        {/* 3. 중단: 혜택 탭 2분할 - 항상 표시 */}
-        <div className="animate-fade-in">
-          <div className="grid grid-cols-2 gap-3">
-            {/* 왼쪽 절반: 항공기 반입 물품 가이드 */}
-            <button
-              onClick={() => setIsFlightGuideOpen(true)}
-              className="block rounded-xl p-4 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 bg-sky-500/100 text-white"
-            >
-              <p className="text-sm font-semibold">
-                항공기 반입 물품 가이드
-              </p>
-            </button>
-
-            {/* 오른쪽 절반: 국가별 가변 */}
-            {selectedCountry === "일본" ? (
-              <a
-                href="https://www.myrealtrip.com/promotions/Japan_donki_coupon"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block rounded-xl p-4 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
-                style={{ 
-                  backgroundColor: "#FFDB58",
-                  border: "1px solid rgba(0, 0, 0, 0.05)"
-                }}
-              >
-                <p className="text-sm font-semibold text-foreground">
-                  돈키호테 할인 쿠폰 증정!
-                </p>
-              </a>
-            ) : selectedCountry === "베트남" || selectedCountry === "태국" ? (
-              <a
-                href="mrt://web?url=https%3A%2F%2Fgrab.onelink.me%2F2695613898%3Fpid%3DDB--MyRealTrip%26c%3DKR_CM0002_CLUSTERALL-CLUSTERALL_PAX_GT_ALL_031225_ACQ-MAIA-APPC_ASR__RG23GTPAT1KRTRAVQ1_DB--MyRealTrip_int_1170x1560_StdBnr_ADTK_ManualPlacement_pop-up-251202%26is_retargeting%3Dtrue%26af_dp%3DNA%26af_force_deeplink%3Dtrue%26af_sub5%3Ddisplay%26af_ad%3DKR_CM0002_CLUSTERALL-CLUSTERALL_PAX_GT_ALL_031225_ACQ-MAIA-APPC_ASR__RG23GTPAT1KRTRAVQ1_DB--MyRealTrip_int_1170x1560_StdBnr_ADTK_ManualPlacement_pop-up-251202%26af_adset%3DKR_CM0002_CLUSTERALL-CLUSTERALL_PAX_GT_ALL_031225_ACQ-MAIA-APPC_ASR__RG23GTPAT1KRTRAVQ1_DB--MyRealTrip_int_1170x1560_StdBnr_ADTK_ManualPlacement_pop-up-251202%26af_siteID%3DDB--MyRealTrip"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block rounded-xl p-4 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
-                style={{ 
-                  backgroundColor: "#D4EDDA",
-                  border: "1px solid rgba(0, 0, 0, 0.05)"
-                }}
-              >
-                <p className="text-sm font-semibold text-foreground">
-                  Grab 프로모션 확인하기
-                </p>
-              </a>
-            ) : (
-              <a
-                href="https://www.myrealtrip.com/promotions/benefit"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block rounded-xl p-4 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
-                style={{ 
-                  backgroundColor: "#E3F2FD",
-                  border: "1px solid rgba(0, 0, 0, 0.05)"
-                }}
-              >
-                <p className="text-sm font-semibold text-foreground">
-                  마이리얼트립 혜택 보기
-                </p>
-              </a>
-            )}
-          </div>
-        </div>
+          );
+        })()}
 
         {/* 체크리스트 영역만 Export 대상 */}
         <div ref={checklistRef} id="checklist-root" className="space-y-4 bg-background rounded-xl pb-24">
@@ -2358,31 +2651,35 @@ const Index = () => {
                 onToggle={handleToggle}
                 selectedDuration={selectedDuration}
                 onDurationChange={setSelectedDuration}
+                selectedCountry={selectedCountry}
               />
             </div>
           )}
 
-          {/* 일반 체크리스트 (essentials 제외) */}
+          {/* 일반 체크리스트 (essentials, travel_tips 제외) */}
           {otherSections && Array.isArray(otherSections) && otherSections.length > 0 ? (
-            otherSections.map((section, index) => {
-              if (!section || !section.section_id) return null;
-              return (
-                <div 
-                  key={section.section_id}
-                  className="animate-fade-in"
-                  style={{ animationDelay: `${index * 100}ms` }}
-                >
-                  <ChecklistSection
-                    section={section}
-                    checkedItems={checkedItems}
-                    onToggle={handleToggle}
-                    selectedDuration={selectedDuration}
-                    onDurationChange={setSelectedDuration}
-                    onMedicalCardClick={section.section_id === "health" ? () => setIsMedicalCardOpen(true) : undefined}
-                  />
-                </div>
-              );
-            })
+            otherSections
+              .filter(section => section && section.section_id && section.section_id !== "travel_tips")
+              .map((section, index) => {
+                if (!section || !section.section_id) return null;
+                return (
+                  <div 
+                    key={section.section_id}
+                    className="animate-fade-in"
+                    style={{ animationDelay: `${index * 100}ms` }}
+                  >
+                    <ChecklistSection
+                      section={section}
+                      checkedItems={checkedItems}
+                      onToggle={handleToggle}
+                      selectedDuration={selectedDuration}
+                      onDurationChange={setSelectedDuration}
+                      onMedicalCardClick={section.section_id === "health" ? () => setIsMedicalCardOpen(true) : undefined}
+                      selectedCountry={selectedCountry}
+                    />
+                  </div>
+                );
+              })
           ) : (
             <div className="text-center py-8 text-muted-foreground">
               체크리스트를 불러오는 중...
@@ -2544,13 +2841,91 @@ const Index = () => {
         <div className="mt-6">
           <EssentialItems checkedItems={checkedItems} />
         </div>
+
+        {/* 하단 혜택 버튼 섹션 */}
+        <div className="mt-6 animate-fade-in">
+          <div className="grid grid-cols-2 gap-2">
+            {/* 항공기 반입 물품 가이드 */}
+            <button
+              onClick={() => setIsFlightGuideOpen(true)}
+              className="rounded-xl text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 bg-sky-500/100 text-white flex flex-col items-center justify-start"
+              style={{
+                paddingTop: '16px',
+                paddingBottom: '29px',
+                minHeight: '65px'
+              }}
+            >
+              <p className="text-sm font-semibold" style={{ marginTop: '0', marginBottom: '0' }}>
+                항공기 반입 물품 가이드
+              </p>
+            </button>
+
+            {/* 국가별 가변 혜택 버튼 */}
+            {selectedCountry === "일본" ? (
+              <a
+                href="https://www.myrealtrip.com/promotions/Japan_donki_coupon"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block rounded-xl text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 flex flex-col items-center justify-start"
+                style={{ 
+                  backgroundColor: "#FFDB58",
+                  border: "1px solid rgba(0, 0, 0, 0.05)",
+                  paddingTop: '16px',
+                  paddingBottom: '29px',
+                  minHeight: '65px'
+                }}
+              >
+                <p className="text-sm font-semibold text-foreground" style={{ marginTop: '0', marginBottom: '0' }}>
+                  돈키호테 할인 쿠폰 증정!
+                </p>
+              </a>
+            ) : selectedCountry === "베트남" || selectedCountry === "태국" ? (
+              <a
+                href="mrt://web?url=https%3A%2F%2Fgrab.onelink.me%2F2695613898%3Fpid%3DDB--MyRealTrip%26c%3DKR_CM0002_CLUSTERALL-CLUSTERALL_PAX_GT_ALL_031225_ACQ-MAIA-APPC_ASR__RG23GTPAT1KRTRAVQ1_DB--MyRealTrip_int_1170x1560_StdBnr_ADTK_ManualPlacement_pop-up-251202%26is_retargeting%3Dtrue%26af_dp%3DNA%26af_force_deeplink%3Dtrue%26af_sub5%3Ddisplay%26af_ad%3DKR_CM0002_CLUSTERALL-CLUSTERALL_PAX_GT_ALL_031225_ACQ-MAIA-APPC_ASR__RG23GTPAT1KRTRAVQ1_DB--MyRealTrip_int_1170x1560_StdBnr_ADTK_ManualPlacement_pop-up-251202%26af_adset%3DKR_CM0002_CLUSTERALL-CLUSTERALL_PAX_GT_ALL_031225_ACQ-MAIA-APPC_ASR__RG23GTPAT1KRTRAVQ1_DB--MyRealTrip_int_1170x1560_StdBnr_ADTK_ManualPlacement_pop-up-251202%26af_siteID%3DDB--MyRealTrip"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block rounded-xl text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 flex flex-col items-center justify-start"
+                style={{ 
+                  backgroundColor: "#D4EDDA",
+                  border: "1px solid rgba(0, 0, 0, 0.05)",
+                  paddingTop: '16px',
+                  paddingBottom: '29px',
+                  minHeight: '65px'
+                }}
+              >
+                <p className="text-sm font-semibold text-foreground" style={{ marginTop: '0', marginBottom: '0' }}>
+                  Grab 프로모션 확인하기
+                </p>
+              </a>
+            ) : (
+              <a
+                href="https://www.myrealtrip.com/promotions/benefit"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block rounded-xl text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 flex flex-col items-center justify-start"
+                style={{ 
+                  backgroundColor: "#E3F2FD",
+                  border: "1px solid rgba(0, 0, 0, 0.05)",
+                  paddingTop: '16px',
+                  paddingBottom: '29px',
+                  minHeight: '65px'
+                }}
+              >
+                <p className="text-sm font-semibold text-foreground" style={{ marginTop: '0', marginBottom: '0' }}>
+                  마이리얼트립 혜택 보기
+                </p>
+              </a>
+            )}
+          </div>
+        </div>
       </div>
 
-      {/* 하단 고정 바텀싯: 준비 현황 */}
+      {/* 준비현황 바: 화면 하단에 고정 */}
       <BottomProgressSheet 
         progress={overallProgress}
         completedItems={completedItems}
         totalItems={totalItems}
+        isInline={false}
       />
 
       {/* 항공기 반입 물품 가이드 모달 */}

@@ -1,13 +1,15 @@
 import { Check } from "lucide-react";
 import type { ChecklistItem as ChecklistItemType } from "@/data/checklistData";
+import { parseTextWithLinks } from "@/lib/linkUtils";
 
 interface ChecklistItemProps {
   item: ChecklistItemType;
   isChecked: boolean;
   onToggle: (itemId: string) => void;
+  selectedCountry?: string | null;
 }
 
-const ChecklistItem = ({ item, isChecked, onToggle }: ChecklistItemProps) => {
+const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry }: ChecklistItemProps) => {
   const handleItemClick = (e: React.MouseEvent) => {
     // 이미지나 링크 클릭 시에는 체크박스 토글이 아닌 링크로 이동
     if ((e.target as HTMLElement).closest('a, img')) {
@@ -69,7 +71,7 @@ const ChecklistItem = ({ item, isChecked, onToggle }: ChecklistItemProps) => {
             opacity: isChecked ? 0.7 : 1
           }}
         >
-          {item.description}
+          {parseTextWithLinks(item.description || '', selectedCountry)}
         </p>
       </div>
 
