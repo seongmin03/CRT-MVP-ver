@@ -3128,7 +3128,6 @@ const Index = () => {
         onClose={() => setIsMedicalCardOpen(false)}
         onSave={(data) => {
           setMedicalCardData(data);
-          // 흡연 여부는 별도 상태로 저장 (아이코스 파트너십 활용)
           console.log("Medical Card Data:", data);
           console.log("Is Smoker:", data.isSmoker);
           // TODO: 메디컬 카드 이미지 템플릿에 데이터 매핑

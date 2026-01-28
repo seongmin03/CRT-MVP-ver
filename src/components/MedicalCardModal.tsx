@@ -58,9 +58,6 @@ const MedicalCardModal = ({ isOpen, onClose, onSave }: MedicalCardModalProps) =>
   const [isGenerating, setIsGenerating] = useState(false);
   const rendererRef = useRef<HTMLDivElement>(null);
   
-  // 마케팅 동의 팝업 상태
-  const [showMarketingPopup, setShowMarketingPopup] = useState(false);
-
   const [formData, setFormData] = useState<MedicalCardData>({
     englishName: "",
     koreanName: "",
@@ -155,80 +152,14 @@ const MedicalCardModal = ({ isOpen, onClose, onSave }: MedicalCardModalProps) =>
     setIsGenerating(true);
     
     try {
-      // 데이터 변환 (스프레드시트 전송용)
+      // 데이터 변환
       const spreadsheetTransformedData = transformDataForCard(finalData);
-      
-      // 언어 변환 (Korean / English 형식)
-      const languages = finalData.languages
-        .filter(lang => lang !== "한국어")
-        .map(lang => {
-          const langMap: Record<string, string> = {
-            "영어": "English",
-            "일본어": "Japanese",
-            "중국어": "Chinese",
-            "러시아어": "Russian",
-            "스페인어": "Spanish",
-            "프랑스어": "French",
-            "기타": "Other",
-          };
-          return langMap[lang] || lang;
-        });
-      const languageString = languages.length > 0 
-        ? `Korean / ${languages.join(" / ")}`
-        : "Korean";
-      
-      // 관계 변환
-      const relationshipMap: Record<string, string> = {
-        "가족": "Family",
-        "친구": "Friend",
-        "지인": "Acquaintance",
-      };
-      const relationship = relationshipMap[finalData.emergencyContact.relationship] || "Acquaintance";
-      
-      // 원천 데이터에서 순수 입력값 추출
-      const phoneMiddleDigits = finalData.phoneNumber.middle.padStart(4, "0");
-      const phoneLastDigits = finalData.phoneNumber.last.padStart(4, "0");
-      const emergencyMiddleDigits = finalData.emergencyContact.phone.middle.padStart(4, "0");
-      const emergencyLastDigits = finalData.emergencyContact.phone.last.padStart(4, "0");
-      
-      // DB 전송용 포맷 조립 (새로운 문자열 생성)
-      const numForSpreadsheet = `'010-${phoneMiddleDigits}-${phoneLastDigits}`;
-      const emergencyPhoneForSpreadsheet = `'010-${emergencyMiddleDigits}-${emergencyLastDigits}`;
-      
-      // 스프레드시트 전송용 데이터 구성
-      const spreadsheetData = {
-        name_en: finalData.englishName || "",
-        name_kr: finalData.koreanName || "",
-        DOB: spreadsheetTransformedData.birthDate || "",
-        nation: "한국",
-        language: languageString,
-        bloodtype: finalData.bloodType || "",
-        num: numForSpreadsheet,
-        email: spreadsheetTransformedData.email || "",
-        emergency: `${emergencyPhoneForSpreadsheet} (${relationship})`,
-        all: finalData.hasAllergy === "yes" ? "Yes" : "No",
-        smoking: finalData.isSmoker === "yes" ? "Yes" : "No",
-      };
-      
-      // 구글 스프레드시트로 데이터 전송 (비동기, 에러가 나도 계속 진행)
-      const GAS_URL = "https://script.google.com/macros/s/AKfycbwJBQkD1ypEwHCD6kyD3OTyj63XM3ykQFyW8R1QIdS15slBpayYB-Pb6yQp9dyUE-fDkQ/exec";
-      fetch(GAS_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(spreadsheetData),
-      }).catch((error) => {
-        console.error("스프레드시트 전송 실패:", error);
-        // 에러가 나도 계속 진행
-      });
       
       // 폰트 로딩 완료 대기
       await document.fonts.ready;
       
-      // 1.5초 대기 (로딩 애니메이션 + 스프레드시트 전송 시간)
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // 로딩 애니메이션 대기
+      await new Promise(resolve => setTimeout(resolve, 500));
       
       // 백그라운드에서 렌더링 영역 생성
       const renderContainer = document.createElement("div");
@@ -382,25 +313,6 @@ const MedicalCardModal = ({ isOpen, onClose, onSave }: MedicalCardModalProps) =>
 
   // 카드 만들기 버튼 클릭 핸들러
   const handleSubmit = () => {
-    // 흡연 여부 확인
-    if (formData.isSmoker === "yes") {
-      // 흡연자인 경우 마케팅 팝업 표시
-      setShowMarketingPopup(true);
-    } else {
-      // 비흡연자인 경우 바로 카드 생성 진행
-      proceedWithCardGeneration();
-    }
-  };
-
-  // 마케팅 팝업에서 동의 버튼 클릭 핸들러
-  const handleMarketingConsent = (userChoice: boolean) => {
-    // TODO: DB 연동 시 사용할 변수
-    // const iqosConsent = userChoice;
-    
-    // 팝업 닫기
-    setShowMarketingPopup(false);
-    
-    // 카드 생성 진행
     proceedWithCardGeneration();
   };
 
@@ -784,39 +696,6 @@ const MedicalCardModal = ({ isOpen, onClose, onSave }: MedicalCardModalProps) =>
           )}
         </div>
       </DialogContent>
-
-      {/* 마케팅 동의 팝업 */}
-      <Dialog open={showMarketingPopup} onOpenChange={setShowMarketingPopup}>
-        <DialogContent className="max-w-md p-0 sm:rounded-lg overflow-hidden">
-          <DialogHeader className="bg-white dark:bg-slate-900 border-b px-6 py-4">
-            <DialogTitle className="text-lg font-semibold text-center text-slate-900 dark:text-white">
-              🚬 해외 여행 흡연 에티켓 안내 (MyRealTrip x IQOS)
-            </DialogTitle>
-          </DialogHeader>
-          
-          <div className="px-6 py-6 space-y-6">
-            <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-              마이리얼트립과 아이코스가 준비한 해외 여행 흡연 에티켓을 알려드려요! 정보제공에 동의하시면 입력하신 메일로 관련 정보 및 면세점 담배 팁을 보내드립니다! 동의하시겠습니까?
-            </p>
-            
-            <div className="flex flex-col gap-3">
-              <Button
-                onClick={() => handleMarketingConsent(true)}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-6 text-base font-semibold"
-              >
-                동의하고 혜택 받기
-              </Button>
-              <Button
-                onClick={() => handleMarketingConsent(false)}
-                variant="outline"
-                className="w-full py-6 text-base font-semibold border-gray-300 hover:bg-gray-50"
-              >
-                괜찮습니다
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </Dialog>
   );
 };
