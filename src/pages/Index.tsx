@@ -170,6 +170,10 @@ const Index = () => {
   const [isClosingCelebrationModal, setIsClosingCelebrationModal] = useState(false);
   // 이전 progress 추적 (100% 달성 감지용)
   const prevProgressRef = useRef<number>(0);
+  // 현재 국가에서 축하 효과가 이미 실행되었는지 추적 (중복 실행 방지)
+  const isCelebratedRef = useRef<boolean>(false);
+  // 초기 로딩 완료 여부 (초기 로딩 중 일시적 100% 상태 무시)
+  const isInitializedRef = useRef<boolean>(false);
 
   // 일본 전용 추가 데이터 정의
   const japanSpecificItems: Record<string, typeof checklistData.sections[0]['items']> = {
@@ -2066,6 +2070,8 @@ const Index = () => {
       }
       return newSet;
     });
+    // 사용자 액션 플래그 설정 (체크박스 클릭)
+    checkAndTriggerCelebration();
   };
 
   // 체크리스트 초기화 함수
@@ -2321,10 +2327,12 @@ const Index = () => {
   }, [travelTipItems, selectedDuration, durationItems, selectedCountry, mergeItems]);
 
   // 현재 선택된 국가의 모든 체크 가능한 항목 ID 수집 (useMemo로 최적화)
+  // 실제 화면에 렌더링되는 체크박스 항목만 수집하여 동적 카운팅의 기준으로 사용
+  // ⚠️ 여행팁(travel_tips) 섹션은 체크박스가 없는 정보성 섹션이므로 제외
   const allCheckableItemIds = useMemo(() => {
     const itemIds = new Set<string>();
     
-    // essentials 섹션 항목 추가
+    // essentials 섹션 항목 추가 (체크박스가 있는 항목만)
     if (essentialsSection?.items) {
       essentialsSection.items.forEach(item => {
         if (item && item.item_id) {
@@ -2333,8 +2341,9 @@ const Index = () => {
       });
     }
     
-    // otherSections 항목 추가 (travel_tips 제외)
+    // otherSections 항목 추가 (travel_tips는 체크박스가 없으므로 반드시 제외)
     otherSections.forEach(section => {
+      // 여행팁 섹션은 진행률 계산에서 제외
       if (section && section.items && section.section_id !== "travel_tips") {
         section.items.forEach(item => {
           if (item && item.item_id) {
@@ -2344,7 +2353,7 @@ const Index = () => {
       }
     });
     
-    // 커스텀 항목 추가
+    // 커스텀 항목 추가 (체크박스가 있는 항목만)
     customItems.forEach(item => {
       if (item && item.id) {
         itemIds.add(item.id);
@@ -2352,12 +2361,16 @@ const Index = () => {
     });
     
     return itemIds;
-  }, [essentialsSection, otherSections, customItems]);
+  }, [essentialsSection, otherSections, customItems, selectedCountry]);
 
-  // 동적 분모 설정: 현재 선택된 국가의 실제 항목 개수
-  const totalItems = allCheckableItemIds.size;
+  // 동적 분모 설정: 현재 선택된 국가의 실제 체크박스 항목 개수
+  // ⚠️ 여행팁(travel_tips)은 체크박스가 없으므로 제외됨
+  const totalItems = useMemo(() => {
+    return allCheckableItemIds.size;
+  }, [allCheckableItemIds]);
   
-  // 현재 국가의 항목 중 체크된 항목만 카운트
+  // 현재 국가의 체크박스 항목 중 체크된 항목만 카운트
+  // ⚠️ 여행팁(travel_tips)은 체크박스가 없으므로 제외됨
   const completedItems = useMemo(() => {
     let count = 0;
     allCheckableItemIds.forEach(itemId => {
@@ -2368,7 +2381,11 @@ const Index = () => {
     return count;
   }, [allCheckableItemIds, checkedItems]);
   
-  const overallProgress = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
+  // 진행률 계산: 현재 국가 기준으로만 계산
+  const overallProgress = useMemo(() => {
+    if (totalItems === 0) return 0;
+    return Math.round((completedItems / totalItems) * 100);
+  }, [completedItems, totalItems]);
 
   // 선택된 국가의 여행 팁 가져오기 (권역별 처리)
   const getTravelTipsKey = (country: string | null): string | null => {
@@ -2423,35 +2440,58 @@ const Index = () => {
     }
   };
 
-  // 모두 선택 함수
-  const selectAllItems = () => {
-    setCheckedItems(new Set(allCheckableItemIds));
-    toast({ title: "모든 항목을 선택했습니다", duration: 2000 });
-  };
+  // 사용자 액션 플래그 (체크박스 클릭 또는 모두 선택 버튼 클릭 시 true)
+  const userActionFlagRef = useRef<boolean>(false);
 
-  // 모두 해제 함수 (현재 국가의 항목만 해제)
-  const deselectAllItems = () => {
-    const newCheckedItems = new Set(checkedItems);
-    allCheckableItemIds.forEach(itemId => {
-      newCheckedItems.delete(itemId);
-    });
-    setCheckedItems(newCheckedItems);
-    toast({ title: "모든 항목을 해제했습니다", duration: 2000 });
-  };
+  // 100% 달성 축하 효과 실행 함수 (사용자 액션 기반 트리거)
+  const checkAndTriggerCelebration = useCallback(() => {
+    // 사용자 액션 플래그 설정
+    userActionFlagRef.current = true;
+  }, []);
 
-  // 100% 달성 감지 및 축하 효과 트리거
+  // 사용자 액션 후 축하 효과 체크 (useEffect로 상태 업데이트 후 실행)
   useEffect(() => {
-    // totalItems가 0이면 진행률 계산 불가
+    // 사용자 액션이 없으면 실행하지 않음
+    if (!userActionFlagRef.current) {
+      return;
+    }
+
+    // Zero 방지: totalItems가 0이면 실행하지 않음
     if (totalItems === 0) {
-      prevProgressRef.current = 0;
+      userActionFlagRef.current = false;
+      return;
+    }
+
+    // 초기 로딩 중에는 실행하지 않음 (일시적 100% 상태 무시)
+    if (!isInitializedRef.current) {
+      userActionFlagRef.current = false;
+      return;
+    }
+
+    // 이미 축하 효과가 실행된 경우 다시 실행하지 않음
+    if (isCelebratedRef.current) {
+      userActionFlagRef.current = false;
+      return;
+    }
+
+    // 엄격한 조건 검증: checkedCount === totalCount && totalCount > 0
+    const isComplete = completedItems === totalItems && totalItems > 0;
+    
+    if (!isComplete) {
+      userActionFlagRef.current = false;
+      prevProgressRef.current = overallProgress;
       return;
     }
 
     const prevProgress = prevProgressRef.current;
     const currentProgress = overallProgress;
 
-    // 0%에서 100%로 변경된 경우에만 축하 효과 실행 (중복 방지)
+    // 0%에서 100%로 변경된 경우에만 축하 효과 실행
     if (prevProgress < 100 && currentProgress === 100) {
+      // 축하 효과 실행 플래그 설정 (중복 실행 방지)
+      isCelebratedRef.current = true;
+      userActionFlagRef.current = false;
+
       // 중앙 버스트 폭죽 효과 (팝업과 동시에 실행)
       const colors = ['#3B82F6', '#60A5FA', '#FFFFFF', '#FCD34D', '#E5E7EB']; // 블루, 라이트 블루, 화이트, 골드, 실버
       
@@ -2472,22 +2512,67 @@ const Index = () => {
       setShowCelebrationModal(true);
 
       // 2.5초 후 자동으로 팝업 닫기 (0.5s fade-in + 1.5s 유지 + 0.5s fade-out)
-      const timer = setTimeout(() => {
+      setTimeout(() => {
         setIsClosingCelebrationModal(true);
         setTimeout(() => {
           setShowCelebrationModal(false);
           setIsClosingCelebrationModal(false);
         }, 500); // 페이드 아웃 애니메이션 시간 (0.5초)
       }, 2000); // 0.5s fade-in + 1.5s 유지 = 2초 후 fade-out 시작
-
-      return () => {
-        clearTimeout(timer);
-      };
     }
 
     // 현재 progress를 이전 progress로 저장
     prevProgressRef.current = currentProgress;
-  }, [overallProgress, totalItems]);
+    userActionFlagRef.current = false;
+  }, [completedItems, totalItems, overallProgress]);
+
+  // 모두 선택 함수 (사용자 액션 기반)
+  const selectAllItems = () => {
+    setCheckedItems(new Set(allCheckableItemIds));
+    toast({ title: "모든 항목을 선택했습니다", duration: 2000 });
+    // 사용자 액션 플래그 설정 (모두 선택 버튼 클릭)
+    checkAndTriggerCelebration();
+  };
+
+  // 모두 해제 함수 (현재 국가의 항목만 해제)
+  const deselectAllItems = () => {
+    const newCheckedItems = new Set(checkedItems);
+    allCheckableItemIds.forEach(itemId => {
+      newCheckedItems.delete(itemId);
+    });
+    setCheckedItems(newCheckedItems);
+    toast({ title: "모든 항목을 해제했습니다", duration: 2000 });
+  };
+
+  // 국가 전환 시 팝업 닫기 및 축하 상태 리셋
+  useEffect(() => {
+    if (selectedCountry !== null) {
+      // 팝업 닫기
+      setIsClosingCelebrationModal(true);
+      setTimeout(() => {
+        setShowCelebrationModal(false);
+        setIsClosingCelebrationModal(false);
+      }, 300);
+      // 축하 상태 리셋 (새 국가에서 다시 축하 효과를 받을 수 있도록)
+      isCelebratedRef.current = false;
+      prevProgressRef.current = 0;
+    }
+  }, [selectedCountry]);
+
+  // 초기 로딩 완료 감지 (데이터 세팅 완료 후에만 축하 효과 활성화)
+  useEffect(() => {
+    // selectedCountry가 설정되고 totalItems가 0이 아닐 때 초기화 완료로 간주
+    if (selectedCountry !== null && totalItems > 0) {
+      // 약간의 지연을 두어 데이터 세팅이 완전히 완료되도록 함
+      const timer = setTimeout(() => {
+        isInitializedRef.current = true;
+        prevProgressRef.current = overallProgress;
+      }, 500);
+      return () => clearTimeout(timer);
+    } else {
+      isInitializedRef.current = false;
+    }
+  }, [selectedCountry, totalItems, overallProgress]);
 
   return (
     <div className="min-h-screen bg-background pb-8">
