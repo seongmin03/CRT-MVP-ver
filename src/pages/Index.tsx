@@ -2083,7 +2083,8 @@ const Index = () => {
 
   // 커스텀 항목 추가
   const addCustomItem = () => {
-    const newId = `custom_${Date.now()}`;
+    // 고유 ID 생성: 타임스탬프 + 랜덤 문자열
+    const newId = `custom_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
     const newItem: CustomItem = {
       id: newId,
       title: '',
@@ -2105,16 +2106,34 @@ const Index = () => {
     ));
   };
 
+  // 삭제 중복 호출 방지를 위한 ref
+  const deletingItemIdRef = useRef<string | null>(null);
+
   // 커스텀 항목 삭제
-  const deleteCustomItem = (id: string) => {
-    setCustomItems(customItems.filter(item => item.id !== id));
+  const deleteCustomItem = useCallback((id: string) => {
+    // 이미 삭제 중인 항목이면 무시
+    if (deletingItemIdRef.current === id) {
+      return;
+    }
+    
+    deletingItemIdRef.current = id;
+    
+    setCustomItems(prev => {
+      const filtered = prev.filter(item => item.id !== id);
+      // 삭제 완료 후 ref 초기화
+      setTimeout(() => {
+        deletingItemIdRef.current = null;
+      }, 100);
+      return filtered;
+    });
+    
     // 체크 상태에서도 제거
     setCheckedItems(prev => {
       const newSet = new Set(prev);
       newSet.delete(id);
       return newSet;
     });
-  };
+  }, []);
 
   // 커스텀 항목 포커스 아웃 처리 (빈 항목 자동 삭제)
   const handleCustomItemBlur = (id: string, title: string) => {
@@ -2961,11 +2980,6 @@ const Index = () => {
                         <button
                           type="button"
                           onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            deleteCustomItem(item.id);
-                          }}
-                          onPointerDown={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
                             deleteCustomItem(item.id);
