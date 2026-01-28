@@ -135,7 +135,7 @@ const ChecklistSection = ({ section, checkedItems, onToggle, selectedDuration, o
                 </span>
               </div>
               <p className="text-[11px] text-white mt-1.5 ml-8">
-                해외 병원에서 이 카드를 제시하면 입력하신 정보를 통해 상황 전달을 도울 수 있어요.
+                병원에서 입력하신 정보를 통해 상황 전달을 도울 수 있어요.
               </p>
             </div>
             <button

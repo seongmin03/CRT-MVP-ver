@@ -2083,7 +2083,7 @@ const Index = () => {
 
   // 커스텀 항목 추가
   const addCustomItem = () => {
-    const newId = `custom_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const newId = `custom_${Date.now()}`;
     const newItem: CustomItem = {
       id: newId,
       title: '',
@@ -2579,38 +2579,38 @@ const Index = () => {
       <div className="max-w-2xl mx-auto px-4 sm:px-6 space-y-4">
         <Header />
 
-        {/* 링크 복사 버튼 및 완료 항목 숨김 토글 */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 animate-fade-in -mt-2 mb-1">
+        {/* 링크 버튼 및 완료 항목 숨김 토글 */}
+        <div className="flex flex-row items-center justify-center gap-1.5 sm:gap-3 animate-fade-in -mt-2 mb-1 overflow-x-auto">
           <button
             onClick={copyLink}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-all duration-200 text-sm text-gray-700 hover:text-gray-900 shadow-sm hover:shadow"
+            className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-all duration-200 text-[10px] sm:text-sm text-gray-700 hover:text-gray-900 shadow-sm hover:shadow whitespace-nowrap flex-shrink-0"
           >
-            <Link className="w-4 h-4" />
-            <span>링크 복사</span>
+            <Link className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span>링크</span>
           </button>
-          <div className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-white shadow-sm">
-            <label htmlFor="hide-completed-toggle" className="text-sm text-gray-700 cursor-pointer whitespace-nowrap">
+          <div className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-gray-200 bg-white shadow-sm flex-shrink-0 h-[28px] sm:h-auto">
+            <label htmlFor="hide-completed-toggle" className="text-[10px] sm:text-sm text-gray-700 cursor-pointer whitespace-nowrap">
               완료 항목 숨김
             </label>
             <Switch
               id="hide-completed-toggle"
               checked={hideCompletedItems}
               onCheckedChange={setHideCompletedItems}
-              className="data-[state=checked]:!bg-blue-500"
+              className="data-[state=checked]:!bg-blue-500 h-4 w-7 sm:h-6 sm:w-11 [&>span]:h-3 [&>span]:w-3 sm:[&>span]:h-5 sm:[&>span]:w-5 data-[state=checked]:[&>span]:translate-x-3 sm:data-[state=checked]:[&>span]:translate-x-5"
             />
           </div>
-          <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-gray-200 bg-white shadow-sm">
+          <div className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg border border-gray-200 bg-white shadow-sm flex-shrink-0">
             <button
               onClick={selectAllItems}
-              className="text-xs text-gray-600 hover:text-gray-900 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              className="text-[10px] sm:text-xs text-gray-600 hover:text-gray-900 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
               disabled={allCheckableItemIds.size === 0}
             >
               모두 선택
             </button>
-            <span className="text-xs text-gray-300">|</span>
+            <span className="text-[10px] sm:text-xs text-gray-300">|</span>
             <button
               onClick={deselectAllItems}
-              className="text-xs text-gray-600 hover:text-gray-900 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              className="text-[10px] sm:text-xs text-gray-600 hover:text-gray-900 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
               disabled={allCheckableItemIds.size === 0}
             >
               모두 해제
@@ -2872,7 +2872,7 @@ const Index = () => {
                     return (
                       <div 
                         key={item.id}
-                        className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl transition-all duration-200 group custom-item-container"
+                        className="relative flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl transition-all duration-200 group custom-item-container"
                       >
                         {/* 체크박스 영역: label로 감싸서 클릭 영역 확대 */}
                         <label
@@ -2977,7 +2977,7 @@ const Index = () => {
                           onTouchStart={(e) => {
                             e.stopPropagation();
                           }}
-                          className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center bg-red-50 hover:bg-red-100 active:bg-red-200 transition-all duration-200 custom-delete-button"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center bg-red-50 hover:bg-red-100 active:bg-red-200 transition-all duration-200 custom-delete-button"
                           aria-label="항목 제거"
                         >
                           <X className="w-3 h-3 text-red-600" strokeWidth={2} />

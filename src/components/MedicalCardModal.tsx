@@ -380,7 +380,7 @@ const MedicalCardModal = ({ isOpen, onClose, onSave }: MedicalCardModalProps) =>
     }
   };
 
-  // 입력 완료 버튼 클릭 핸들러
+  // 카드 만들기 버튼 클릭 핸들러
   const handleSubmit = () => {
     // 흡연 여부 확인
     if (formData.isSmoker === "yes") {
@@ -755,7 +755,7 @@ const MedicalCardModal = ({ isOpen, onClose, onSave }: MedicalCardModalProps) =>
             </p>
           </div>
 
-          {/* 입력 완료 버튼 - 폼의 마지막 요소 */}
+          {/* 카드 만들기 버튼 - 폼의 마지막 요소 */}
           <div className="pt-2 pb-4">
             <Button
               onClick={handleSubmit}
@@ -768,7 +768,7 @@ const MedicalCardModal = ({ isOpen, onClose, onSave }: MedicalCardModalProps) =>
                   안전 카드 생성 중...
                 </span>
               ) : (
-                "입력 완료"
+                "카드 만들기"
               )}
             </Button>
           </div>

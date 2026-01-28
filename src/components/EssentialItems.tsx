@@ -169,7 +169,7 @@ const EssentialItems = ({ checkedItems, selectedCountry, allSections = [] }: Ess
           📢 이건 꼭 챙기셔야 해요
         </h3>
         <span className="text-xs text-gray-600 ml-2">
-          아이콘을 클릭해서 정보를 확인하세요
+          <nav></nav>아이콘을 클릭해서 정보를 확인하세요
         </span>
       </div>
       

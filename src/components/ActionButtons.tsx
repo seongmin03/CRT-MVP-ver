@@ -537,7 +537,7 @@ const ActionButtons = ({ checklistRef }: ActionButtonsProps) => {
   const buttons = [
     { icon: Download, label: "PDF 다운로드", onClick: downloadAsPDF },
     { icon: Image, label: "이미지 저장", onClick: downloadAsImage },
-    { icon: Link, label: "링크 복사", onClick: copyLink },
+    { icon: Link, label: "링크", onClick: copyLink },
   ];
 
   return (
