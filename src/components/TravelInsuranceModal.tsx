@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 
 interface TravelInsuranceModalProps {
@@ -6,23 +7,53 @@ interface TravelInsuranceModalProps {
 }
 
 const TravelInsuranceModal = ({ isOpen, onClose }: TravelInsuranceModalProps) => {
-  if (!isOpen) return null;
+  const [isClosing, setIsClosing] = useState(false);
+  const [shouldRender, setShouldRender] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setShouldRender(true);
+      setIsClosing(false);
+    } else {
+      setIsClosing(true);
+      const timer = setTimeout(() => {
+        setShouldRender(false);
+        setIsClosing(false);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
+
+  if (!shouldRender) return null;
 
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
-      onClose();
+      handleClose();
     }
+  };
+
+  const handleClose = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      onClose();
+    }, 300);
   };
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/50 animate-fade-in"
+      className={`fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/50 transition-opacity duration-300 ${
+        isClosing ? 'opacity-0 ease-in' : 'opacity-100 ease-out'
+      }`}
       onClick={handleBackdropClick}
     >
-      <div className="relative w-full max-w-lg bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl animate-slide-up-fade max-h-[90vh] overflow-y-auto">
+      <div className={`relative w-full max-w-lg bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl max-h-[90vh] overflow-y-auto transition-all duration-300 ${
+        isClosing 
+          ? 'opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95 ease-in' 
+          : 'opacity-100 translate-y-0 scale-100 ease-out'
+      }`}>
         {/* 닫기 버튼 */}
         <button
-          onClick={onClose}
+          onClick={handleClose}
           className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors duration-200 z-10"
           aria-label="닫기"
         >

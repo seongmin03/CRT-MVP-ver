@@ -2709,6 +2709,7 @@ const Index = () => {
                     <CommandEmpty className="py-6 text-sm text-gray-500">찾으시는 국가가 없습니다</CommandEmpty>
                     <CommandGroup>
                       {sortedCountries.map((country) => {
+                        // 엄격한 선택 조건: 오직 selectedCountry와 정확히 일치할 때만 하이라이트
                         const isSelected = selectedCountry === country;
                         return (
                           <CommandItem
@@ -2719,14 +2720,14 @@ const Index = () => {
                               setOpen(false);
                             }}
                             className={cn(
-                              "cursor-pointer hover:bg-gray-50",
-                              isSelected && "bg-accent text-accent-foreground"
+                              "cursor-pointer transition-all data-[selected=true]:bg-transparent data-[selected=true]:text-foreground",
+                              isSelected && "!bg-[#45B1E5] !text-white"
                             )}
                           >
                             <Check
                               className={cn(
                                 "mr-2 h-4 w-4",
-                                isSelected ? "opacity-100" : "opacity-0"
+                                isSelected ? "opacity-100 text-white" : "opacity-0"
                               )}
                             />
                             {country}
