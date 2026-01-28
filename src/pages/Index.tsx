@@ -27,39 +27,20 @@ import {
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
 
-// [그룹 A: 상위 노출 (20개)] - 정렬하지 않고 아래 순서 그대로 맨 위에 고정
-const topCountries = [
-  "일본", "베트남", "태국", "필리핀", "중국", "대만", 
-  "미국", "홍콩", "인도네시아", "괌", "프랑스", "싱가포르", "호주", 
-  "영국", "스페인", "이탈리아", "말레이시아", "캐나다", "독일", "몽골"
+// 국가 선택 드롭다운에 표시할 국가 목록 (링크 연동이 완료된 국가만)
+const sortedCountries = [
+  "일본", 
+  "베트남", 
+  "태국", 
+  "필리핀", 
+  "중국", 
+  "대만", 
+  "미국", 
+  "홍콩", 
+  "인도네시아", 
+  "프랑스", 
+  "싱가포르"
 ];
-
-// [그룹 B: 나머지 국가 (100개)] - 가나다순 정렬
-const otherCountries = [
-  "가나", "과테말라", "그리스", "나미비아", "나이지리아", "남수단", 
-  "남아프리카공화국", "네덜란드", "네팔", "노르웨이", "뉴질랜드", 
-  "덴마크", "라오스", "라트비아", "러시아", "레바논", "레소토", 
-  "루마니아", "룩셈부르크", "리투아니아", "마다가스카르", "마카오", 
-  "말라위", "말타", "멕시코", "모로코", "모리셔스", "모잠비크", 
-  "몬테네그로", "몰도바", "몰디브", "몰타", "미얀마", "바레인", 
-  "바하마", "방글라데시", "벨라루스", "벨기에", "보츠와나", "볼리비아", 
-  "부탄", "북마리아나 제도", "불가리아", "브라질", "브루나이", 
-  "사우디아라비아", "세르비아", "세이셸", "스리랑카", "스웨덴", 
-  "스위스", "슬로베니아", "아르메니아", "아르헨티나", "아랍에미리트", 
-  "아제르바이잔", "아이슬란드", "아일랜드", "아프가니스탄", "알바니아", 
-  "앙골라", "에스토니아", "에콰도르", "에티오피아", "엘살바도르", 
-  "오만", "오스트리아", "온두라스", "요르단", "우간다", "우즈베키스탄", 
-  "우루과이", "우크라이나", "이라크", "이란", "이스라엘", "이집트", 
-  "인도", "잠비아", "조지아", "짐바브웨", "체코", "칠레", "카메룬", 
-  "카자흐스탄", "카타르", "캄보디아", "케냐", "코스타리카", "코트디부아르", 
-  "콜롬비아", "쿠바", "쿠웨이트", "크로아티아", "키르기스스탄", "타지키스탄", 
-  "탄자니아", "토고", "튀르키예", "파나마", "파라과이", "파키스탄", 
-  "팔라우", "페로 제도", "페루", "포르투갈", "폴란드", "프랑스령 폴리네시아", 
-  "피지", "핀란드", "헝가리"
-].sort((a, b) => a.localeCompare(b, 'ko'));
-
-// 그룹 A + 그룹 B 결합 (그룹 A는 순서 유지, 그룹 B는 가나다순)
-const sortedCountries = [...topCountries, ...otherCountries];
 
 // 동남아시아 국가 리스트
 const southeastAsiaCountries = [
@@ -2837,23 +2818,25 @@ const Index = () => {
 
         {/* 이건 꼭 챙기셔야 해요 섹션 */}
         <div className="mt-6">
-          <EssentialItems checkedItems={checkedItems} />
+          <EssentialItems 
+            checkedItems={checkedItems} 
+            selectedCountry={selectedCountry}
+            allSections={[
+              ...(essentialsSection ? [essentialsSection] : []),
+              ...(otherSections || [])
+            ]}
+          />
         </div>
 
         {/* 하단 혜택 버튼 섹션 */}
-        <div className="mt-6 animate-fade-in">
-          <div className="grid grid-cols-2 gap-2">
+        <div className="mt-6 mb-24 animate-fade-in">
+          <div className="grid grid-cols-2 gap-3">
             {/* 항공기 반입 물품 가이드 */}
             <button
               onClick={() => setIsFlightGuideOpen(true)}
-              className="rounded-xl text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 bg-sky-500/100 text-white flex flex-col items-center justify-start"
-              style={{
-                paddingTop: '16px',
-                paddingBottom: '29px',
-                minHeight: '65px'
-              }}
+              className="rounded-xl py-4 h-14 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 bg-sky-500/100 text-white flex items-center justify-center"
             >
-              <p className="text-sm font-semibold" style={{ marginTop: '0', marginBottom: '0' }}>
+              <p className="text-sm font-semibold">
                 항공기 반입 물품 가이드
               </p>
             </button>
@@ -2864,16 +2847,13 @@ const Index = () => {
                 href="https://www.myrealtrip.com/promotions/Japan_donki_coupon"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block rounded-xl text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 flex flex-col items-center justify-start"
+                className="block rounded-xl py-4 h-14 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center"
                 style={{ 
                   backgroundColor: "#FFDB58",
                   border: "1px solid rgba(0, 0, 0, 0.05)",
-                  paddingTop: '16px',
-                  paddingBottom: '29px',
-                  minHeight: '65px'
                 }}
               >
-                <p className="text-sm font-semibold text-foreground" style={{ marginTop: '0', marginBottom: '0' }}>
+                <p className="text-sm font-semibold text-foreground">
                   돈키호테 할인 쿠폰 증정!
                 </p>
               </a>
@@ -2882,16 +2862,13 @@ const Index = () => {
                 href="mrt://web?url=https%3A%2F%2Fgrab.onelink.me%2F2695613898%3Fpid%3DDB--MyRealTrip%26c%3DKR_CM0002_CLUSTERALL-CLUSTERALL_PAX_GT_ALL_031225_ACQ-MAIA-APPC_ASR__RG23GTPAT1KRTRAVQ1_DB--MyRealTrip_int_1170x1560_StdBnr_ADTK_ManualPlacement_pop-up-251202%26is_retargeting%3Dtrue%26af_dp%3DNA%26af_force_deeplink%3Dtrue%26af_sub5%3Ddisplay%26af_ad%3DKR_CM0002_CLUSTERALL-CLUSTERALL_PAX_GT_ALL_031225_ACQ-MAIA-APPC_ASR__RG23GTPAT1KRTRAVQ1_DB--MyRealTrip_int_1170x1560_StdBnr_ADTK_ManualPlacement_pop-up-251202%26af_adset%3DKR_CM0002_CLUSTERALL-CLUSTERALL_PAX_GT_ALL_031225_ACQ-MAIA-APPC_ASR__RG23GTPAT1KRTRAVQ1_DB--MyRealTrip_int_1170x1560_StdBnr_ADTK_ManualPlacement_pop-up-251202%26af_siteID%3DDB--MyRealTrip"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block rounded-xl text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 flex flex-col items-center justify-start"
+                className="block rounded-xl py-4 h-14 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center"
                 style={{ 
                   backgroundColor: "#D4EDDA",
                   border: "1px solid rgba(0, 0, 0, 0.05)",
-                  paddingTop: '16px',
-                  paddingBottom: '29px',
-                  minHeight: '65px'
                 }}
               >
-                <p className="text-sm font-semibold text-foreground" style={{ marginTop: '0', marginBottom: '0' }}>
+                <p className="text-sm font-semibold text-foreground">
                   Grab 프로모션 확인하기
                 </p>
               </a>
@@ -2900,20 +2877,32 @@ const Index = () => {
                 href="https://www.myrealtrip.com/promotions/benefit"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block rounded-xl text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 flex flex-col items-center justify-start"
+                className="block rounded-xl py-4 h-14 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center"
                 style={{ 
                   backgroundColor: "#E3F2FD",
                   border: "1px solid rgba(0, 0, 0, 0.05)",
-                  paddingTop: '16px',
-                  paddingBottom: '29px',
-                  minHeight: '65px'
                 }}
               >
-                <p className="text-sm font-semibold text-foreground" style={{ marginTop: '0', marginBottom: '0' }}>
+                <p className="text-sm font-semibold text-foreground">
                   마이리얼트립 혜택 보기
                 </p>
               </a>
             )}
+          </div>
+        </div>
+
+        {/* 감성 푸터 */}
+        <div className="mt-12 pb-32 animate-fade-in">
+          <div className="text-left space-y-3">
+            <p className="text-sm text-gray-500 leading-relaxed">
+              세상을 보고 무수한 장애물을 넘어<nav></nav>벽을 허물고 더 가까이 다가가<nav></nav>서로를 알아가고 느끼는 것.<nav></nav>그것이 바로 인생의 목적이다.
+            </p>
+            <p className="text-sm text-gray-500">
+              — <em>영화 '월터의 상상은 현실이 된다'</em>
+            </p>
+            <p className="text-sm text-gray-700 font-medium mt-4">
+              마이리얼트립은 여러분의 진정한 여행을 응원합니다!
+            </p>
           </div>
         </div>
       </div>

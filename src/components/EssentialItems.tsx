@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { 
   CreditCard, 
   Plane, 
@@ -9,93 +9,130 @@ import {
   AlertCircle
 } from "lucide-react";
 import TravelInsuranceModal from "./TravelInsuranceModal";
+import type { ChecklistItem } from "@/data/checklistData";
 
 interface EssentialItemsProps {
   checkedItems: Set<string>;
+  selectedCountry?: string | null;
+  allSections?: Array<{
+    section_id: string;
+    section_title: string;
+    items: ChecklistItem[];
+  }>;
 }
+
+// 카테고리별 매칭할 title 패턴
+const categoryTitlePatterns = {
+  passport: ["여권 준비"],
+  connectivity: ["유심 / eSIM / 로밍 준비", "유심", "eSIM", "로밍"],
+  payment_card: ["해외 결제 가능 카드 준비"],
+  cash: ["소액 현금 준비"],
+  flight_ticket: ["항공권 예약 정보 확인", "항공권"],
+  accommodation: ["숙소 예약 정보 정리", "숙소"],
+};
 
 const essentialItems = [
   { 
     id: "passport", 
     label: "여권", 
     icon: FileText,
-    checkItems: ["passport"] // passport 체크 시 완료
+    categoryPatterns: categoryTitlePatterns.passport
   },
   { 
     id: "sim", 
     label: "이심/유심/로밍", 
     icon: Wifi,
-    checkItems: ["connectivity"] // connectivity 체크 시 완료
+    categoryPatterns: categoryTitlePatterns.connectivity
   },
   { 
     id: "payment", 
     label: "현금/트래블 카드", 
     icon: CreditCard,
-    checkItems: ["payment_card", "cash"] // 둘 다 체크 시 완료
+    categoryPatterns: [...categoryTitlePatterns.payment_card, ...categoryTitlePatterns.cash]
   },
   { 
     id: "ticket", 
     label: "항공권 및 예약 확인서", 
     icon: Plane,
-    checkItems: ["flight_ticket", "accommodation"] // 둘 다 체크 시 완료
+    categoryPatterns: [...categoryTitlePatterns.flight_ticket, ...categoryTitlePatterns.accommodation]
   },
   { 
     id: "insurance", 
     label: "여행자 보험", 
     icon: Shield,
-    checkItems: [] // 별도 체크 항목 없음 (항상 미완료)
+    categoryPatterns: [] // 별도 체크 항목 없음 (항상 미완료)
   },
 ];
 
-const EssentialItems = ({ checkedItems }: EssentialItemsProps) => {
+const EssentialItems = ({ checkedItems, selectedCountry, allSections = [] }: EssentialItemsProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // 항목이 완료되었는지 확인
-  const isCompleted = (checkItems: string[]) => {
-    if (checkItems.length === 0) return false;
-    return checkItems.every(itemId => checkedItems.has(itemId));
+  // 카테고리에 해당하는 모든 항목 찾기 (공통 + 국가별 추가 항목 포함)
+  const getCategoryItems = (categoryPatterns: string[]): ChecklistItem[] => {
+    if (categoryPatterns.length === 0) return [];
+    
+    const foundItems: ChecklistItem[] = [];
+    
+    // 모든 섹션을 순회하며 title이 매칭되는 항목 찾기
+    allSections.forEach(section => {
+      if (!section || !section.items) return;
+      
+      section.items.forEach(item => {
+        if (!item || !item.title) return;
+        
+        // title이 패턴 중 하나와 일치하는지 확인
+        const matches = categoryPatterns.some(pattern => {
+          // 정확히 일치하거나 title이 pattern을 포함하는지 확인
+          return item.title === pattern || item.title.includes(pattern);
+        });
+        
+        if (matches) {
+          foundItems.push(item);
+        }
+      });
+    });
+    
+    return foundItems;
   };
 
-  // 항목 클릭 시 해당 체크박스로 스크롤 및 강조 (텍스트 기반 매칭)
-  const handleItemClick = (itemId: string, checkItems: string[]) => {
+  // 항목이 완료되었는지 확인 (카테고리의 모든 항목이 체크되었는지)
+  const isCompleted = (categoryPatterns: string[]) => {
+    if (categoryPatterns.length === 0) return false;
+    
+    const categoryItems = getCategoryItems(categoryPatterns);
+    if (categoryItems.length === 0) return false;
+    
+    // 카테고리의 모든 항목이 체크되었는지 확인
+    return categoryItems.every(item => checkedItems.has(item.item_id));
+  };
+
+  // 항목 클릭 시 해당 체크박스로 스크롤 및 강조 (동적 매칭 - 국가별 추가 항목 포함)
+  const handleItemClick = (itemId: string, categoryPatterns: string[]) => {
     // 여행자 보험 클릭 시 모달 열기
     if (itemId === 'insurance') {
       setIsModalOpen(true);
       return;
     }
     
-    if (checkItems.length === 0) return;
+    if (categoryPatterns.length === 0) return;
     
-    // 텍스트 기반 매칭을 위한 제목 매핑
-    const titleMapping: Record<string, string[]> = {
-      "passport": ["여권 준비"],
-      "connectivity": ["유심 / eSIM / 로밍 준비"],
-      "payment_card": ["해외 결제 가능 카드 준비"],
-      "cash": ["소액 현금 준비"],
-      "flight_ticket": ["항공권 예약 정보 확인"],
-      "accommodation": ["숙소 예약 정보 정리"]
-    };
+    // 카테고리에 해당하는 모든 항목 찾기 (공통 + 국가별 추가 항목 포함)
+    const categoryItems = getCategoryItems(categoryPatterns);
     
-    // 모든 연결된 항목의 제목 찾기
-    const targetTitles: string[] = [];
-    checkItems.forEach(itemId => {
-      const titles = titleMapping[itemId];
-      if (titles) {
-        targetTitles.push(...titles);
-      }
-    });
+    if (categoryItems.length === 0) return;
     
-    if (targetTitles.length === 0) return;
-    
-    // 제목 텍스트로 항목 찾기
-    const targetElements = targetTitles
-      .map(title => {
+    // 모든 항목의 title로 DOM 요소 찾기
+    const targetElements = categoryItems
+      .map(item => {
         // data-item-title 속성으로 찾기
-        const element = document.querySelector(`[data-item-title="${title}"]`);
+        const element = document.querySelector(`[data-item-title="${item.title}"]`);
         if (element) return element;
         // 없으면 텍스트 내용으로 찾기
         const allItems = document.querySelectorAll('[data-item-title]');
-        return Array.from(allItems).find(el => el.textContent?.trim() === title) || null;
+        return Array.from(allItems).find(el => {
+          const text = el.textContent?.trim();
+          return text === item.title || text?.includes(item.title);
+        }) || null;
       })
       .filter(el => el !== null) as HTMLElement[];
     
@@ -138,17 +175,17 @@ const EssentialItems = ({ checkedItems }: EssentialItemsProps) => {
       
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
         {essentialItems.map((item) => {
-          const completed = isCompleted(item.checkItems);
+          const completed = isCompleted(item.categoryPatterns);
           const isInsurance = item.id === 'insurance';
           
           return (
             <div
               key={item.id}
-              onClick={() => handleItemClick(item.id, item.checkItems)}
+              onClick={() => handleItemClick(item.id, item.categoryPatterns)}
               className={`
                 flex flex-col items-center gap-2 p-3 bg-white/70 rounded-xl transition-all duration-300
                 ${completed ? 'opacity-50' : 'hover:bg-white hover:shadow-sm'}
-                ${item.checkItems.length > 0 || isInsurance ? 'cursor-pointer' : ''}
+                ${item.categoryPatterns.length > 0 || isInsurance ? 'cursor-pointer' : ''}
               `}
             >
               <div className="relative">
