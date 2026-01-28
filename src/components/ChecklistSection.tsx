@@ -43,7 +43,7 @@ const ChecklistSection = ({ section, checkedItems, onToggle, selectedDuration, o
   // 표시할 항목 (필터링 적용)
   let validItems = originalValidItems;
   
-  // 완료 항목 숨기기가 켜져있으면 체크되지 않은 항목만 표시
+  // 완료 항목 숨김가 켜져있으면 체크되지 않은 항목만 표시
   if (hideCompletedItems) {
     validItems = validItems.filter(item => !checkedItems.has(item.item_id));
   }

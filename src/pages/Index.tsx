@@ -163,7 +163,7 @@ const Index = () => {
   const [isMedicalCardOpen, setIsMedicalCardOpen] = useState(false);
   // 응급 의료 카드 데이터 (흡연 여부는 별도 저장)
   const [medicalCardData, setMedicalCardData] = useState<MedicalCardData | null>(null);
-  // 완료 항목 숨기기 토글 상태
+  // 완료 항목 숨김 토글 상태
   const [hideCompletedItems, setHideCompletedItems] = useState(false);
   // 축하 팝업 상태
   const [showCelebrationModal, setShowCelebrationModal] = useState(false);
@@ -2189,68 +2189,6 @@ const Index = () => {
     }
   }, []);
 
-  const totalItems = useMemo(() => {
-    try {
-      const isJapan = selectedCountry === "일본";
-      const isVietnam = selectedCountry === "베트남";
-      const isThailand = selectedCountry === "태국";
-      
-      return checklistData.sections.reduce((acc, section) => {
-        if (!section || !section.items) return acc;
-        
-        try {
-          // 여행팁 섹션은 체크박스가 없으므로 진행률 계산에서 제외
-          if (section.section_id === "travel_tips") {
-            return acc;
-          }
-          // packing 섹션 처리
-          if (section.section_id === "packing") {
-            const japanItems = isJapan ? (japanSpecificItems["packing"] || []) : [];
-            const vietnamItems = isVietnam ? (vietnamSpecificItems["packing"] || []) : [];
-            const thailandItems = isThailand ? (thailandSpecificItems["packing"] || []) : [];
-            let finalItems = [...(section.items || [])];
-            
-            // 기간이 선택되었으면 underwear 제거하고 durationItems 추가
-            if (selectedDuration) {
-              const baseItems = finalItems.filter(item => item && item.item_id !== "underwear");
-              const clothingIndex = baseItems.findIndex(item => item && item.item_id === "clothing");
-              if (clothingIndex !== -1) {
-                finalItems = [
-                  ...baseItems.slice(0, clothingIndex + 1),
-                  ...(durationItems || []),
-                  ...baseItems.slice(clothingIndex + 1)
-                ];
-              } else {
-                finalItems = [...(durationItems || []), ...baseItems];
-              }
-            }
-            
-            const merged = mergeItems(finalItems, mergeItems(mergeItems(japanItems, vietnamItems), thailandItems));
-            return acc + (merged?.length || 0);
-          }
-          // 기타 섹션: 기본 항목과 국가 전용 항목 병합 결과
-          const japanItems = isJapan ? (japanSpecificItems[section.section_id] || []) : [];
-          const vietnamItems = isVietnam ? (vietnamSpecificItems[section.section_id] || []) : [];
-          const thailandItems = isThailand ? (thailandSpecificItems[section.section_id] || []) : [];
-          const merged = mergeItems(section.items || [], mergeItems(mergeItems(japanItems, vietnamItems), thailandItems));
-          return acc + (merged?.length || 0);
-        } catch (error) {
-          console.error(`Error processing section ${section.section_id}:`, error);
-          return acc + (section.items?.length || 0);
-        }
-      }, 0) + (customItems?.length || 0);
-    } catch (error) {
-      console.error('Error calculating totalItems:', error);
-      // 에러 발생 시 기본값 반환 (여행팁 섹션 제외)
-      return checklistData.sections.reduce((acc, section) => {
-        if (section?.section_id === "travel_tips") return acc;
-        return acc + (section?.items?.length || 0);
-      }, 0) + (customItems?.length || 0);
-    }
-  }, [travelTipItems, selectedDuration, durationItems, customItems.length, selectedCountry, mergeItems]);
-  const completedItems = checkedItems.size;
-  const overallProgress = Math.round((completedItems / totalItems) * 100);
-
   // 체크리스트 섹션 분리: essentials는 마지막에, 나머지는 먼저 (useMemo로 최적화)
   const essentialsSection = useMemo(() => {
     try {
@@ -2382,6 +2320,56 @@ const Index = () => {
     }
   }, [travelTipItems, selectedDuration, durationItems, selectedCountry, mergeItems]);
 
+  // 현재 선택된 국가의 모든 체크 가능한 항목 ID 수집 (useMemo로 최적화)
+  const allCheckableItemIds = useMemo(() => {
+    const itemIds = new Set<string>();
+    
+    // essentials 섹션 항목 추가
+    if (essentialsSection?.items) {
+      essentialsSection.items.forEach(item => {
+        if (item && item.item_id) {
+          itemIds.add(item.item_id);
+        }
+      });
+    }
+    
+    // otherSections 항목 추가 (travel_tips 제외)
+    otherSections.forEach(section => {
+      if (section && section.items && section.section_id !== "travel_tips") {
+        section.items.forEach(item => {
+          if (item && item.item_id) {
+            itemIds.add(item.item_id);
+          }
+        });
+      }
+    });
+    
+    // 커스텀 항목 추가
+    customItems.forEach(item => {
+      if (item && item.id) {
+        itemIds.add(item.id);
+      }
+    });
+    
+    return itemIds;
+  }, [essentialsSection, otherSections, customItems]);
+
+  // 동적 분모 설정: 현재 선택된 국가의 실제 항목 개수
+  const totalItems = allCheckableItemIds.size;
+  
+  // 현재 국가의 항목 중 체크된 항목만 카운트
+  const completedItems = useMemo(() => {
+    let count = 0;
+    allCheckableItemIds.forEach(itemId => {
+      if (checkedItems.has(itemId)) {
+        count++;
+      }
+    });
+    return count;
+  }, [allCheckableItemIds, checkedItems]);
+  
+  const overallProgress = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
+
   // 선택된 국가의 여행 팁 가져오기 (권역별 처리)
   const getTravelTipsKey = (country: string | null): string | null => {
     if (!country) return null;
@@ -2435,49 +2423,19 @@ const Index = () => {
     }
   };
 
-  // 현재 선택된 국가의 모든 체크 가능한 항목 ID 수집 (useMemo로 최적화)
-  const allCheckableItemIds = useMemo(() => {
-    const itemIds = new Set<string>();
-    
-    // essentials 섹션 항목 추가
-    if (essentialsSection?.items) {
-      essentialsSection.items.forEach(item => {
-        if (item && item.item_id) {
-          itemIds.add(item.item_id);
-        }
-      });
-    }
-    
-    // otherSections 항목 추가 (travel_tips 제외)
-    otherSections.forEach(section => {
-      if (section && section.items && section.section_id !== "travel_tips") {
-        section.items.forEach(item => {
-          if (item && item.item_id) {
-            itemIds.add(item.item_id);
-          }
-        });
-      }
-    });
-    
-    // 커스텀 항목 추가
-    customItems.forEach(item => {
-      if (item && item.id) {
-        itemIds.add(item.id);
-      }
-    });
-    
-    return itemIds;
-  }, [essentialsSection, otherSections, customItems]);
-
   // 모두 선택 함수
   const selectAllItems = () => {
     setCheckedItems(new Set(allCheckableItemIds));
     toast({ title: "모든 항목을 선택했습니다", duration: 2000 });
   };
 
-  // 모두 해제 함수
+  // 모두 해제 함수 (현재 국가의 항목만 해제)
   const deselectAllItems = () => {
-    setCheckedItems(new Set<string>());
+    const newCheckedItems = new Set(checkedItems);
+    allCheckableItemIds.forEach(itemId => {
+      newCheckedItems.delete(itemId);
+    });
+    setCheckedItems(newCheckedItems);
     toast({ title: "모든 항목을 해제했습니다", duration: 2000 });
   };
 
@@ -2536,7 +2494,7 @@ const Index = () => {
       <div className="max-w-2xl mx-auto px-4 sm:px-6 space-y-4">
         <Header />
 
-        {/* 링크 복사 버튼 및 완료 항목 숨기기 토글 */}
+        {/* 링크 복사 버튼 및 완료 항목 숨김 토글 */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 animate-fade-in -mt-2 mb-1">
           <button
             onClick={copyLink}
@@ -2547,7 +2505,7 @@ const Index = () => {
           </button>
           <div className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-white shadow-sm">
             <label htmlFor="hide-completed-toggle" className="text-sm text-gray-700 cursor-pointer whitespace-nowrap">
-              완료 항목 숨기기
+              완료 항목 숨김
             </label>
             <Switch
               id="hide-completed-toggle"
@@ -2816,7 +2774,7 @@ const Index = () => {
                 <div className="space-y-1">
                   {customItems
                     .filter((item) => {
-                      // 완료 항목 숨기기가 켜져있으면 체크되지 않은 항목만 표시
+                      // 완료 항목 숨김가 켜져있으면 체크되지 않은 항목만 표시
                       if (hideCompletedItems) {
                         return !checkedItems.has(item.id);
                       }
