@@ -12,6 +12,8 @@ import { Lightbulb, Check, ChevronDown, Search, Link, X, Plus } from "lucide-rea
 import { parseTextWithLinks } from "@/lib/linkUtils";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import confetti from "canvas-confetti";
 import {
   Popover,
   PopoverContent,
@@ -161,6 +163,13 @@ const Index = () => {
   const [isMedicalCardOpen, setIsMedicalCardOpen] = useState(false);
   // 응급 의료 카드 데이터 (흡연 여부는 별도 저장)
   const [medicalCardData, setMedicalCardData] = useState<MedicalCardData | null>(null);
+  // 완료 항목 숨기기 토글 상태
+  const [hideCompletedItems, setHideCompletedItems] = useState(false);
+  // 축하 팝업 상태
+  const [showCelebrationModal, setShowCelebrationModal] = useState(false);
+  const [isClosingCelebrationModal, setIsClosingCelebrationModal] = useState(false);
+  // 이전 progress 추적 (100% 달성 감지용)
+  const prevProgressRef = useRef<number>(0);
 
   // 일본 전용 추가 데이터 정의
   const japanSpecificItems: Record<string, typeof checklistData.sections[0]['items']> = {
@@ -2426,13 +2435,109 @@ const Index = () => {
     }
   };
 
+  // 현재 선택된 국가의 모든 체크 가능한 항목 ID 수집 (useMemo로 최적화)
+  const allCheckableItemIds = useMemo(() => {
+    const itemIds = new Set<string>();
+    
+    // essentials 섹션 항목 추가
+    if (essentialsSection?.items) {
+      essentialsSection.items.forEach(item => {
+        if (item && item.item_id) {
+          itemIds.add(item.item_id);
+        }
+      });
+    }
+    
+    // otherSections 항목 추가 (travel_tips 제외)
+    otherSections.forEach(section => {
+      if (section && section.items && section.section_id !== "travel_tips") {
+        section.items.forEach(item => {
+          if (item && item.item_id) {
+            itemIds.add(item.item_id);
+          }
+        });
+      }
+    });
+    
+    // 커스텀 항목 추가
+    customItems.forEach(item => {
+      if (item && item.id) {
+        itemIds.add(item.id);
+      }
+    });
+    
+    return itemIds;
+  }, [essentialsSection, otherSections, customItems]);
+
+  // 모두 선택 함수
+  const selectAllItems = () => {
+    setCheckedItems(new Set(allCheckableItemIds));
+    toast({ title: "모든 항목을 선택했습니다", duration: 2000 });
+  };
+
+  // 모두 해제 함수
+  const deselectAllItems = () => {
+    setCheckedItems(new Set<string>());
+    toast({ title: "모든 항목을 해제했습니다", duration: 2000 });
+  };
+
+  // 100% 달성 감지 및 축하 효과 트리거
+  useEffect(() => {
+    // totalItems가 0이면 진행률 계산 불가
+    if (totalItems === 0) {
+      prevProgressRef.current = 0;
+      return;
+    }
+
+    const prevProgress = prevProgressRef.current;
+    const currentProgress = overallProgress;
+
+    // 0%에서 100%로 변경된 경우에만 축하 효과 실행 (중복 방지)
+    if (prevProgress < 100 && currentProgress === 100) {
+      // 중앙 버스트 폭죽 효과 (팝업과 동시에 실행)
+      const colors = ['#3B82F6', '#60A5FA', '#FFFFFF', '#FCD34D', '#E5E7EB']; // 블루, 라이트 블루, 화이트, 골드, 실버
+      
+      // 중앙에서 한 번에 터지는 버스트 효과
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { x: 0.5, y: 0.5 },
+        colors: colors,
+        startVelocity: 45,
+        gravity: 0.8,
+        ticks: 100,
+        zIndex: 1000
+      });
+
+      // 축하 팝업 표시
+      setIsClosingCelebrationModal(false);
+      setShowCelebrationModal(true);
+
+      // 2.5초 후 자동으로 팝업 닫기 (0.5s fade-in + 1.5s 유지 + 0.5s fade-out)
+      const timer = setTimeout(() => {
+        setIsClosingCelebrationModal(true);
+        setTimeout(() => {
+          setShowCelebrationModal(false);
+          setIsClosingCelebrationModal(false);
+        }, 500); // 페이드 아웃 애니메이션 시간 (0.5초)
+      }, 2000); // 0.5s fade-in + 1.5s 유지 = 2초 후 fade-out 시작
+
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+
+    // 현재 progress를 이전 progress로 저장
+    prevProgressRef.current = currentProgress;
+  }, [overallProgress, totalItems]);
+
   return (
     <div className="min-h-screen bg-background pb-8">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 space-y-4">
         <Header />
 
-        {/* 링크 복사 버튼 및 안내 문구 */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 animate-fade-in -mt-2 mb-1">
+        {/* 링크 복사 버튼 및 완료 항목 숨기기 토글 */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 animate-fade-in -mt-2 mb-1">
           <button
             onClick={copyLink}
             className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-all duration-200 text-sm text-gray-700 hover:text-gray-900 shadow-sm hover:shadow"
@@ -2440,6 +2545,34 @@ const Index = () => {
             <Link className="w-4 h-4" />
             <span>링크 복사</span>
           </button>
+          <div className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-white shadow-sm">
+            <label htmlFor="hide-completed-toggle" className="text-sm text-gray-700 cursor-pointer whitespace-nowrap">
+              완료 항목 숨기기
+            </label>
+            <Switch
+              id="hide-completed-toggle"
+              checked={hideCompletedItems}
+              onCheckedChange={setHideCompletedItems}
+              className="data-[state=checked]:!bg-blue-500"
+            />
+          </div>
+          <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-gray-200 bg-white shadow-sm">
+            <button
+              onClick={selectAllItems}
+              className="text-xs text-gray-600 hover:text-gray-900 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={allCheckableItemIds.size === 0}
+            >
+              모두 선택
+            </button>
+            <span className="text-xs text-gray-300">|</span>
+            <button
+              onClick={deselectAllItems}
+              className="text-xs text-gray-600 hover:text-gray-900 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={allCheckableItemIds.size === 0}
+            >
+              모두 해제
+            </button>
+          </div>
         </div>
 
         {/* 1. 최상단: 여행 국가 선택 영역 (검색 가능한 드롭다운) */}
@@ -2631,6 +2764,7 @@ const Index = () => {
                 selectedDuration={selectedDuration}
                 onDurationChange={setSelectedDuration}
                 selectedCountry={selectedCountry}
+                hideCompletedItems={hideCompletedItems}
               />
             </div>
           )}
@@ -2655,6 +2789,7 @@ const Index = () => {
                       onDurationChange={setSelectedDuration}
                       onMedicalCardClick={section.section_id === "health" ? () => setIsMedicalCardOpen(true) : undefined}
                       selectedCountry={selectedCountry}
+                      hideCompletedItems={hideCompletedItems}
                     />
                   </div>
                 );
@@ -2679,7 +2814,15 @@ const Index = () => {
                   </span>
                 </div>
                 <div className="space-y-1">
-                  {customItems.map((item) => {
+                  {customItems
+                    .filter((item) => {
+                      // 완료 항목 숨기기가 켜져있으면 체크되지 않은 항목만 표시
+                      if (hideCompletedItems) {
+                        return !checkedItems.has(item.id);
+                      }
+                      return true;
+                    })
+                    .map((item) => {
                     const isChecked = checkedItems.has(item.id);
                     const checkboxId = `custom-item-check-${item.id}`;
                     const textInputId = `custom-item-text-${item.id}`;
@@ -2933,6 +3076,79 @@ const Index = () => {
           // TODO: 메디컬 카드 이미지 템플릿에 데이터 매핑
         }}
       />
+
+      {/* 100% 달성 축하 팝업 */}
+      {showCelebrationModal && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm"
+          style={{
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            animation: isClosingCelebrationModal ? 'fadeOut 0.5s ease-in-out' : 'fadeIn 0.5s ease-in-out',
+            opacity: isClosingCelebrationModal ? 0 : 1
+          }}
+          onClick={() => {
+            setIsClosingCelebrationModal(true);
+            setTimeout(() => {
+              setShowCelebrationModal(false);
+              setIsClosingCelebrationModal(false);
+            }, 500);
+          }}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-2xl px-8 py-6 mx-4 text-center"
+            style={{
+              animation: isClosingCelebrationModal ? 'fadeOutScale 0.5s ease-in' : 'fadeInScale 0.5s ease-out',
+              opacity: isClosingCelebrationModal ? 0 : 1,
+              transform: isClosingCelebrationModal ? 'scale(0.9)' : 'scale(1)'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <p className="text-2xl font-bold text-gray-800">
+              모든 준비를 마쳤어요! 🎉
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* 애니메이션 스타일 */}
+      <style>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        @keyframes fadeOut {
+          from {
+            opacity: 1;
+          }
+          to {
+            opacity: 0;
+          }
+        }
+        @keyframes fadeInScale {
+          from {
+            opacity: 0;
+            transform: scale(0.9);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        @keyframes fadeOutScale {
+          from {
+            opacity: 1;
+            transform: scale(1);
+          }
+          to {
+            opacity: 0;
+            transform: scale(0.9);
+          }
+        }
+      `}</style>
     </div>
   );
 };

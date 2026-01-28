@@ -11,7 +11,7 @@ const Header = () => {
       </div>
       <div className="text-muted-foreground text-sm max-w-md mx-auto space-y-0.5">
         <p>마이리얼트립이 준비한 체크리스트</p>
-        <p>해외여행 준비 빠짐없이 확인하세요!</p>
+  
       </div>
     </header>
   );

@@ -11,6 +11,7 @@ interface ChecklistSectionProps {
   onDurationChange?: (duration: DurationType | null) => void;
   onMedicalCardClick?: () => void;
   selectedCountry?: string | null;
+  hideCompletedItems?: boolean;
 }
 
 const sectionIcons: Record<string, string> = {
@@ -22,7 +23,7 @@ const sectionIcons: Record<string, string> = {
   travel_tips: "💡",
 };
 
-const ChecklistSection = ({ section, checkedItems, onToggle, selectedDuration, onDurationChange, onMedicalCardClick, selectedCountry }: ChecklistSectionProps) => {
+const ChecklistSection = ({ section, checkedItems, onToggle, selectedDuration, onDurationChange, onMedicalCardClick, selectedCountry, hideCompletedItems = false }: ChecklistSectionProps) => {
   // 안전성 체크: section과 items가 유효한지 확인
   if (!section || !section.items || !Array.isArray(section.items)) {
     return (
@@ -36,12 +37,22 @@ const ChecklistSection = ({ section, checkedItems, onToggle, selectedDuration, o
     );
   }
 
-  const validItems = section.items.filter(item => item && item.item_id);
+  // 원본 항목 (진행률 계산용)
+  const originalValidItems = section.items.filter(item => item && item.item_id);
+  
+  // 표시할 항목 (필터링 적용)
+  let validItems = originalValidItems;
+  
+  // 완료 항목 숨기기가 켜져있으면 체크되지 않은 항목만 표시
+  if (hideCompletedItems) {
+    validItems = validItems.filter(item => !checkedItems.has(item.item_id));
+  }
+  
   const isTravelTips = section.section_id === "travel_tips";
   
-  // 여행팁 섹션이 아닌 경우에만 진행률 계산
-  const completedCount = isTravelTips ? 0 : validItems.filter(item => checkedItems.has(item.item_id)).length;
-  const totalCount = isTravelTips ? 0 : validItems.length;
+  // 여행팁 섹션이 아닌 경우에만 진행률 계산 (원본 항목 기준)
+  const completedCount = isTravelTips ? 0 : originalValidItems.filter(item => checkedItems.has(item.item_id)).length;
+  const totalCount = isTravelTips ? 0 : originalValidItems.length;
   const progress = !isTravelTips && totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
 
   // 안내 문구가 필요한 섹션 ID 목록
@@ -194,7 +205,12 @@ const ChecklistSection = ({ section, checkedItems, onToggle, selectedDuration, o
         ) : (
           <div className="flex items-center justify-center py-8 px-4">
             <p className="text-sm text-muted-foreground text-center text-slate-900 dark:text-white">
-              선택하신 국가의 맞춤 여행팁이 준비 중입니다.
+              {hideCompletedItems && 
+               originalValidItems.length > 0 && 
+               !isTravelTips &&
+               originalValidItems.every(item => checkedItems.has(item.item_id))
+                ? "모든 준비를 마쳤어요! 🎉"
+                : "선택하신 국가의 맞춤 여행팁이 준비 중입니다."}
             </p>
           </div>
         )}
