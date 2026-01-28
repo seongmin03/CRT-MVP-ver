@@ -51,15 +51,34 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry }: Checklist
           }}
           data-item-title={item.title}
         >
-          <span 
-            className={isChecked ? 'strikethrough-line' : ''}
-            style={{
-              position: 'relative',
-              display: 'inline-block',
-            }}
-          >
-            {item.title}
-          </span>
+          {item.link_url && item.cta_type === "link" ? (
+            <a
+              href={item.link_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className={`
+                ${isChecked ? 'strikethrough-line' : ''}
+                text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline decoration-2 underline-offset-2 transition-colors
+              `}
+              style={{
+                position: 'relative',
+                display: 'inline-block',
+              }}
+            >
+              {item.title}
+            </a>
+          ) : (
+            <span 
+              className={isChecked ? 'strikethrough-line' : ''}
+              style={{
+                position: 'relative',
+                display: 'inline-block',
+              }}
+            >
+              {parseTextWithLinks(item.title, selectedCountry, true)}
+            </span>
+          )}
         </h4>
         <p 
           className={`

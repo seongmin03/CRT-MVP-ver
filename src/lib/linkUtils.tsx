@@ -1,6 +1,6 @@
 import React from 'react';
 
-// 국가별 키워드-링크 매핑
+// 국가별 키워드-링크 매핑 (description용)
 const linkMappings: Record<string, Record<string, string>> = {
   "일본": {
     "비짓재팬": "https://services.digital.go.jp/ko/visit-japan-web/",
@@ -29,24 +29,95 @@ const linkMappings: Record<string, Record<string, string>> = {
     "밴드": "https://link.coupang.com/a/dALeAK",
     "기피제": "https://link.coupang.com/a/dAKqb7",
   },
+  "중국": {
+    // description에만 적용되는 항목은 없음 (모두 title용)
+  },
+  "대만": {
+    "TWAC": "https://twac.immigration.gov.tw/",
+    "우양산": "https://link.coupang.com/a/dA8f7X",
+  },
+  "미국": {
+    "멀티 어댑터": "https://link.coupang.com/a/dA8mSm",
+    "보조배터리": "https://link.coupang.com/a/dA8tql",
+    "프리볼트": "https://link.coupang.com/a/dAJUYQ",
+  },
+  "홍콩": {
+    // description에만 적용되는 항목은 없음 (모두 title용)
+  },
+  "인도네시아": {
+    "eVOA": "https://evisa.imigrasi.go.id/",
+    "기피제": "https://link.coupang.com/a/dA9BhR",
+  },
+  "프랑스": {
+    "필터": "https://link.coupang.com/a/dA9KuX",
+    "스프레이": "https://link.coupang.com/a/dA9Mv7",
+  },
+  "싱가포르": {
+    "멀티 어댑터": "https://link.coupang.com/a/dAJOua",
+    "개인용 물티슈": "https://link.coupang.com/a/dA8anh",
+    "우양산": "https://link.coupang.com/a/dA8f7X",
+  },
+};
+
+// 국가별 키워드-링크 매핑 (title용 - "title"이라고 명시된 항목만)
+const titleLinkMappings: Record<string, Record<string, string>> = {
+  "중국": {
+    "보조배터리 3C 인증": "https://link.coupang.com/a/dA7eeJ",
+    "Arrival Card": "https://s.nia.gov.cn/ArrivalCardFillingPC/entry-registation-home",
+    "휴대용 티슈": "https://link.coupang.com/a/dA78I2",
+    "물티슈": "https://link.coupang.com/a/dA8anh",
+  },
+  "대만": {
+    "휴대용 티슈": "https://link.coupang.com/a/dA78I2",
+    "물티슈": "https://link.coupang.com/a/dA8anh",
+  },
+  "미국": {
+    "ESTA": "https://esta.cbp.dhs.gov/",
+  },
+  "홍콩": {
+    "보조배터리": "https://link.coupang.com/a/dA8tql",
+    "방수 밴드": "https://link.coupang.com/a/dA9mzC",
+    "크로스백": "https://link.coupang.com/a/dA9qgh",
+  },
+  "인도네시아": {
+    "올 인도네시아": "https://allindonesia.imigrasi.go.id/",
+    "멀티 어댑터": "https://link.coupang.com/a/dAJOua",
+    "휴대용 티슈": "https://link.coupang.com/a/dA78I2",
+    "물티슈": "https://link.coupang.com/a/dA8anh",
+    "방수팩": "https://link.coupang.com/a/dAKmB5",
+  },
+  "프랑스": {
+    "멀티 어댑터": "https://link.coupang.com/a/dAJOua",
+    "귀마개": "https://link.coupang.com/a/dA9Q7U",
+  },
+  "싱가포르": {
+    "SG Arrival Card": "https://eservices.ica.gov.sg/sgarrivalcard/",
+    "모기 퇴치제": "https://link.coupang.com/a/dA9BhR",
+  },
 };
 
 /**
  * 텍스트에서 키워드를 찾아 링크로 변환하는 함수
  * @param text 원본 텍스트
  * @param country 현재 선택된 국가
+ * @param isTitle title인지 여부 (true면 title용 맵 사용, false면 description용 맵 사용)
  * @returns React 요소 배열 (텍스트와 링크가 혼합된 형태)
  */
 export const parseTextWithLinks = (
   text: string,
-  country: string | null
+  country: string | null,
+  isTitle: boolean = false
 ): React.ReactNode[] => {
   if (!text || !country) {
     return [text];
   }
 
-  const mappings = linkMappings[country];
-  if (!mappings) {
+  // title인지 description인지에 따라 다른 맵 사용
+  const mappings = isTitle 
+    ? (titleLinkMappings[country] || {})
+    : (linkMappings[country] || {});
+  
+  if (!mappings || Object.keys(mappings).length === 0) {
     return [text];
   }
 

@@ -152,7 +152,18 @@ const ChecklistSection = ({ section, checkedItems, onToggle, selectedDuration, o
                       style={{ lineHeight: '1.5' }}
                       data-item-title={item.title}
                     >
-                      {item.title}
+                      {item.link_url && item.cta_type === "link" ? (
+                        <a
+                          href={item.link_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline decoration-2 underline-offset-2 transition-colors"
+                        >
+                          {item.title}
+                        </a>
+                      ) : (
+                        parseTextWithLinks(item.title, selectedCountry, true)
+                      )}
                     </h4>
                     {item.description && (
                       <p 

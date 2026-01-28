@@ -444,8 +444,9 @@ const Index = () => {
         item_id: "vietnam_laundry_pouch",
         title: "빨래용 소형 파우치",
         description: "땀에 젖은 옷과 깨끗한 옷을 분리 보관하기 좋아 장기 여행 시 유용해요.",
-        cta_type: "none",
-        cta_label: ""
+        cta_type: "link",
+        cta_label: "빨래용 소형 파우치",
+        link_url: "https://link.coupang.com/a/dAKu76"
       }
     ],
     travel_tips: [
@@ -616,8 +617,9 @@ const Index = () => {
         item_id: "thailand_laundry_pouch",
         title: "빨래용 소형 파우치",
         description: "장기 여행 시 젖은 옷과 깨끗한 옷을 분리하여 쾌적하게 보관하세요.",
-        cta_type: "none",
-        cta_label: ""
+        cta_type: "link",
+        cta_label: "빨래용 소형 파우치",
+        link_url: "https://link.coupang.com/a/dAKu76"
       }
     ],
     travel_tips: [
@@ -687,8 +689,9 @@ const Index = () => {
         item_id: "philippines_etravel",
         title: "eTravel 작성",
         description: "필리핀 온라인 입국 수속 서비스입니다. 무료로 등록하고 QR코드를 미리 저장하여 빠르게 입국하세요!",
-        cta_type: "none",
-        cta_label: ""
+        cta_type: "link",
+        cta_label: "eTravel",
+        link_url: "https://etravel.gov.ph/kr"
       },
       {
         item_id: "philippines_immigration",
@@ -1392,13 +1395,7 @@ const Index = () => {
         cta_type: "none",
         cta_label: ""
       },
-      {
-        item_id: "hongkong_rain_preparation",
-        title: "우기 대비",
-        description: "갑작스러운 비에 대비해 가벼운 휴대용 우산이나 우비를 준비하세요.",
-        cta_type: "none",
-        cta_label: ""
-      }
+      
     ],
     travel_tips: [
       {
@@ -1573,6 +1570,13 @@ const Index = () => {
         description: "공공 화장실에 화장지가 없는 경우가 빈번하므로 항상 휴대하세요.",
         cta_type: "none",
         cta_label: ""
+      },
+      {
+        item_id: "indonesia_bali_belly",
+        title: "발리 밸리(Bali Belly) 주의",
+        description: "수돗물이나 오염된 음식으로 인한 배탈에 대비해 지사제와 소화제를 꼭 준비하세요.",
+        cta_type: "none",
+        cta_label: ""
       }
     ],
     packing: [
@@ -1604,13 +1608,7 @@ const Index = () => {
         cta_type: "none",
         cta_label: ""
       },
-      {
-        item_id: "indonesia_bali_belly",
-        title: "발리 밸리(Bali Belly) 주의",
-        description: "수돗물이나 오염된 음식으로 인한 배탈에 대비해 지사제와 소화제를 꼭 준비하세요.",
-        cta_type: "none",
-        cta_label: ""
-      }
+ 
     ],
     travel_tips: [
       {
