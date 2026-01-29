@@ -44,6 +44,21 @@ const sortedCountries = [
   "싱가포르"
 ];
 
+// 국가명을 영문명으로 변환하는 매핑 (GTM 추적용)
+const countryNameToEnglish: Record<string, string> = {
+  "일본": "japan",
+  "베트남": "vietnam",
+  "태국": "thailand",
+  "필리핀": "philippines",
+  "중국": "china",
+  "대만": "taiwan",
+  "미국": "usa",
+  "홍콩": "hongkong",
+  "인도네시아": "indonesia",
+  "프랑스": "france",
+  "싱가포르": "singapore"
+};
+
 // 동남아시아 국가 리스트
 const southeastAsiaCountries = [
   "베트남", "태국", "필리핀", "인도네시아", "싱가포르", 
@@ -2702,10 +2717,13 @@ const Index = () => {
                       {sortedCountries.map((country) => {
                         // 엄격한 선택 조건: 오직 selectedCountry와 정확히 일치할 때만 하이라이트
                         const isSelected = selectedCountry === country;
+                        const countryEnglishName = countryNameToEnglish[country] || country.toLowerCase().replace(/\s+/g, '-');
                         return (
                           <CommandItem
                             key={country}
                             value={country}
+                            id={`country-chip-${countryEnglishName}`}
+                            data-gtm-country={countryEnglishName}
                             onSelect={() => {
                               setSelectedCountry(country);
                               setOpen(false);
