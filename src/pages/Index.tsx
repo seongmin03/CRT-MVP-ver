@@ -2640,6 +2640,7 @@ const Index = () => {
                   role="combobox"
                   aria-expanded={open}
                   className="w-full sm:w-[200px] justify-between h-9"
+                  data-gtm="destination_dropdown"
                 >
                   {selectedCountry || "국가 선택"}
                   <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
