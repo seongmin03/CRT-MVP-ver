@@ -89,9 +89,16 @@ const FlightLuggageGuideModal = ({ isOpen, onClose }: FlightLuggageGuideModalPro
         <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4">
           {/* 핵심 주의사항 */}
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-sm font-semibold text-red-800">
-              🚨 보조배터리는 직접 들고 타세요! (위탁 수하물 금지)
-            </p>
+            <div className="flex items-start gap-2">
+              <span className="text-base">🚨</span>
+              <div>
+                <p className="text-sm font-semibold text-red-800">
+                  보조배터리 규정은 직접 확인하세요!
+                </p>
+                <p className="text-xs text-black mt-1">
+                참고용 안내이며, 해당 항공사에서 규정을 직접 확인하세요.                </p>
+              </div>
+            </div>
           </div>
 
           {/* 섹션별 가이드 */}

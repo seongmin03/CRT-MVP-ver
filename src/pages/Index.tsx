@@ -170,8 +170,6 @@ const Index = () => {
   const [isClosingCelebrationModal, setIsClosingCelebrationModal] = useState(false);
   // 이전 progress 추적 (100% 달성 감지용)
   const prevProgressRef = useRef<number>(0);
-  // 현재 국가에서 축하 효과가 이미 실행되었는지 추적 (중복 실행 방지)
-  const isCelebratedRef = useRef<boolean>(false);
   // 초기 로딩 완료 여부 (초기 로딩 중 일시적 100% 상태 무시)
   const isInitializedRef = useRef<boolean>(false);
 
@@ -202,7 +200,7 @@ const Index = () => {
       {
         item_id: "japan_immigration",
         title: "입국 심사 준비",
-        description: "\"관광입니다(칸코데스)\", \"쇼핑입니다(카이모노데스)\" \"호텔(호테루)\", \"여권(파스포토)\"",
+        description: "\"관광입니다(칸코데스)\" \"쇼핑입니다(카이모노데스)\" \"호텔(호테루)\" \"여권(파스포토)\"",
         cta_type: "none",
         cta_label: ""
       },
@@ -508,6 +506,13 @@ const Index = () => {
   // 태국 전용 추가 데이터 정의
   const thailandSpecificItems: Record<string, typeof checklistData.sections[0]['items']> = {
     essentials: [
+      {
+        item_id: "thailand_passport",
+        title: "여권 준비",
+        description: "유효기간이 6개월 이상 남은 여권을 요구해요!",
+        cta_type: "none",
+        cta_label: ""
+      },
       {
         item_id: "thailand_tdac",
         title: "태국 디지털 입국 카드",
@@ -2487,28 +2492,14 @@ const Index = () => {
       return;
     }
 
-    // 이미 축하 효과가 실행된 경우 다시 실행하지 않음
-    if (isCelebratedRef.current) {
-      userActionFlagRef.current = false;
-      return;
-    }
-
     // 엄격한 조건 검증: checkedCount === totalCount && totalCount > 0
     const isComplete = completedItems === totalItems && totalItems > 0;
     
-    if (!isComplete) {
-      userActionFlagRef.current = false;
-      prevProgressRef.current = overallProgress;
-      return;
-    }
-
     const prevProgress = prevProgressRef.current;
     const currentProgress = overallProgress;
 
-    // 0%에서 100%로 변경된 경우에만 축하 효과 실행
-    if (prevProgress < 100 && currentProgress === 100) {
-      // 축하 효과 실행 플래그 설정 (중복 실행 방지)
-      isCelebratedRef.current = true;
+    // 진행률이 100% 미만으로 떨어졌다가 다시 100%가 될 때마다 축하 효과 실행
+    if (prevProgress < 100 && currentProgress === 100 && isComplete) {
       userActionFlagRef.current = false;
 
       // 중앙 버스트 폭죽 효과 (팝업과 동시에 실행)
@@ -2540,7 +2531,7 @@ const Index = () => {
       }, 2000); // 0.5s fade-in + 1.5s 유지 = 2초 후 fade-out 시작
     }
 
-    // 현재 progress를 이전 progress로 저장
+    // 현재 progress를 이전 progress로 저장 (100% 미만으로 떨어졌을 때도 업데이트하여 재실행 가능하도록)
     prevProgressRef.current = currentProgress;
     userActionFlagRef.current = false;
   }, [completedItems, totalItems, overallProgress]);
@@ -2572,8 +2563,7 @@ const Index = () => {
         setShowCelebrationModal(false);
         setIsClosingCelebrationModal(false);
       }, 300);
-      // 축하 상태 리셋 (새 국가에서 다시 축하 효과를 받을 수 있도록)
-      isCelebratedRef.current = false;
+      // 진행률 추적 리셋 (새 국가에서 다시 축하 효과를 받을 수 있도록)
       prevProgressRef.current = 0;
     }
   }, [selectedCountry]);
@@ -3058,21 +3048,6 @@ const Index = () => {
                   돈키호테 할인 쿠폰 증정!
                 </p>
               </a>
-            ) : selectedCountry === "베트남" || selectedCountry === "태국" ? (
-              <a
-                href="mrt://web?url=https%3A%2F%2Fgrab.onelink.me%2F2695613898%3Fpid%3DDB--MyRealTrip%26c%3DKR_CM0002_CLUSTERALL-CLUSTERALL_PAX_GT_ALL_031225_ACQ-MAIA-APPC_ASR__RG23GTPAT1KRTRAVQ1_DB--MyRealTrip_int_1170x1560_StdBnr_ADTK_ManualPlacement_pop-up-251202%26is_retargeting%3Dtrue%26af_dp%3DNA%26af_force_deeplink%3Dtrue%26af_sub5%3Ddisplay%26af_ad%3DKR_CM0002_CLUSTERALL-CLUSTERALL_PAX_GT_ALL_031225_ACQ-MAIA-APPC_ASR__RG23GTPAT1KRTRAVQ1_DB--MyRealTrip_int_1170x1560_StdBnr_ADTK_ManualPlacement_pop-up-251202%26af_adset%3DKR_CM0002_CLUSTERALL-CLUSTERALL_PAX_GT_ALL_031225_ACQ-MAIA-APPC_ASR__RG23GTPAT1KRTRAVQ1_DB--MyRealTrip_int_1170x1560_StdBnr_ADTK_ManualPlacement_pop-up-251202%26af_siteID%3DDB--MyRealTrip"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block rounded-xl py-4 h-14 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center"
-                style={{ 
-                  backgroundColor: "#D4EDDA",
-                  border: "1px solid rgba(0, 0, 0, 0.05)",
-                }}
-              >
-                <p className="text-sm font-semibold text-foreground">
-                  Grab 프로모션 확인하기
-                </p>
-              </a>
             ) : (
               <a
                 href="https://www.myrealtrip.com/promotions/benefit"
@@ -3096,7 +3071,7 @@ const Index = () => {
         <div className="mt-12 pb-32 animate-fade-in">
           <div className="text-left space-y-3">
             <p className="text-sm text-gray-500 leading-relaxed">
-              세상을 보고 무수한 장애물을 넘어<nav></nav>벽을 허물고 더 가까이 다가가<nav></nav>서로를 알아가고 느끼는 것.<nav></nav>그것이 바로 인생의 목적이다.
+              세상을 보고 무수한 장애물을 넘어<nav></nav>벽을 허물고 더 가까이 다가가<nav></nav>서로를 알아가고 느끼는 것.<nav></nav>그것이 바로 삶의 목적이다.
             </p>
             <p className="text-sm text-gray-500">
               — <em>영화 '월터의 상상은 현실이 된다'</em>
