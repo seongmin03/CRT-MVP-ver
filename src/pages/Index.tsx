@@ -2907,12 +2907,13 @@ const Index = () => {
                         <label
                           htmlFor={checkboxId}
                           className={`
-                            flex-shrink-0 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-200 mt-0.5 cursor-pointer touch-manipulation custom-checkbox-label
+                            flex-shrink-0 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-200 mt-0.5 cursor-pointer touch-manipulation custom-checkbox-label gtm-engaged-check
                             ${isChecked 
                               ? 'bg-accent border-accent animate-check-bounce shadow-sm' 
                               : 'border-muted-foreground/30'
                             }
                           `}
+                          data-gtm-label="checkbox-interaction"
                           onPointerDown={(e) => {
                             e.preventDefault();
                             e.stopPropagation();

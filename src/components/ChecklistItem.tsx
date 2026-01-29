@@ -25,7 +25,7 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry }: Checklist
     >
       <div 
         className={`
-          flex-shrink-0 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-200 mt-0.5
+          flex-shrink-0 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-200 mt-0.5 gtm-engaged-check
           ${isChecked 
             ? 'bg-accent border-accent animate-check-bounce shadow-sm' 
             : 'border-muted-foreground/30 group-hover:border-accent/50'
@@ -33,6 +33,7 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry }: Checklist
         `}
         data-checked={isChecked}
         data-item-id={item.item_id}
+        data-gtm-label="checkbox-interaction"
       >
         {isChecked && (
           <Check className="w-4 h-4 text-accent-foreground" strokeWidth={3} data-check-icon="true" />
