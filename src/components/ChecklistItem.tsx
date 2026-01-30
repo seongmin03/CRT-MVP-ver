@@ -34,6 +34,7 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry }: Checklist
         data-checked={isChecked}
         data-item-id={item.item_id}
         data-gtm-label="checkbox-interaction"
+        data-gtm="checklist_checkbox"
       >
         {isChecked && (
           <Check className="w-4 h-4 text-accent-foreground" strokeWidth={3} data-check-icon="true" />
@@ -66,6 +67,7 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry }: Checklist
                 position: 'relative',
                 display: 'inline-block',
               }}
+              {...(item.link_url.includes('coupang.com') || item.link_url.includes('link.coupang.com') ? { 'data-gtm': 'outbound_coupang' } : {})}
             >
               {item.title}
             </a>
@@ -105,6 +107,7 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry }: Checklist
             onClick={(e) => e.stopPropagation()}
             className="flex-shrink-0 transition-all duration-300 hover:brightness-110 hover:shadow-lg hover:scale-110 active:scale-95 cursor-pointer"
             style={{ width: "40px", height: "40px" }}
+            {...(item.link_url.includes('coupang.com') || item.link_url.includes('link.coupang.com') ? { 'data-gtm': 'outbound_coupang' } : {})}
           >
             <img
               src={item.image_url}

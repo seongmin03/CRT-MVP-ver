@@ -2914,6 +2914,7 @@ const Index = () => {
                             }
                           `}
                           data-gtm-label="checkbox-interaction"
+                          data-gtm="checklist_checkbox"
                           onPointerDown={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
@@ -3063,6 +3064,8 @@ const Index = () => {
                   backgroundColor: "#FFDB58",
                   border: "1px solid rgba(0, 0, 0, 0.05)",
                 }}
+                data-gtm="outbound_link"
+                data-gtm-label="japan_donki_coupon"
               >
                 <p className="text-sm font-semibold text-foreground">
                   돈키호테 할인 쿠폰 증정!

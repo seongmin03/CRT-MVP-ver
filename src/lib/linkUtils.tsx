@@ -1,5 +1,10 @@
 import React from 'react';
 
+// 쿠팡 링크인지 확인하는 헬퍼 함수
+const isCoupangLink = (url: string): boolean => {
+  return url.includes('coupang.com') || url.includes('link.coupang.com');
+};
+
 // 국가별 키워드-링크 매핑 (description용)
 const linkMappings: Record<string, Record<string, string>> = {
   "일본": {
@@ -191,6 +196,7 @@ export const parseTextWithLinks = (
     }
     
     // 링크 추가
+    const isMyRealTripDonkiLink = match.url === "https://www.myrealtrip.com/promotions/Japan_donki_coupon";
     result.push(
       <a
         key={`link-${match.start}-${i}`}
@@ -199,6 +205,8 @@ export const parseTextWithLinks = (
         rel="noopener noreferrer"
         className="underline text-blue-600 hover:text-blue-800 transition-colors"
         onClick={(e) => e.stopPropagation()}
+        {...(isCoupangLink(match.url) ? { 'data-gtm': 'outbound_coupang' } : {})}
+        {...(isMyRealTripDonkiLink ? { 'data-gtm': 'outbound_link', 'data-gtm-label': 'japan_donki_coupon' } : {})}
       >
         {match.keyword}
       </a>

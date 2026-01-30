@@ -85,6 +85,7 @@ const TravelFlightGuide = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="underline text-blue-600 hover:text-blue-800 transition-colors duration-200"
+                      {...(item.link.includes('coupang.com') || item.link.includes('link.coupang.com') ? { 'data-gtm': 'outbound_coupang' } : {})}
                     >
                       {item.text}
                     </a>

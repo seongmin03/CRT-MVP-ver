@@ -141,6 +141,8 @@ const ChecklistSection = ({ section, checkedItems, onToggle, selectedDuration, o
             <button
               onClick={onMedicalCardClick}
               className="px-4 py-2 bg-red-400 hover:bg-red-500 rounded-lg text-sm font-medium text-white transition-all duration-200 shadow-sm ml-3 flex-shrink-0"
+              data-gtm="cta_click"
+              data-gtm-label="emergency_medical_card_info_input"
             >
               정보입력
             </button>
