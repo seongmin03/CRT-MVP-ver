@@ -3199,6 +3199,7 @@ const Index = () => {
           <div className="grid grid-cols-2 gap-3">
             {/* 항공기 반입 물품 가이드 */}
             <button
+              id="gtm-airline-items-guide"
               onClick={() => setIsFlightGuideOpen(true)}
               className="rounded-xl py-4 h-14 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 bg-sky-500/100 text-white flex items-center justify-center"
             >
@@ -3227,6 +3228,7 @@ const Index = () => {
               </a>
             ) : (
               <a
+                id="gtm-mrt-benefits-link"
                 href="https://www.myrealtrip.com/promotions/benefit"
                 target="_blank"
                 rel="noopener noreferrer"

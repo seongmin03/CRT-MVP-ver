@@ -706,6 +706,7 @@ const MedicalCardModal = ({ isOpen, onClose, onSave }: MedicalCardModalProps) =>
           {/* 카드 만들기 버튼 - 폼의 마지막 요소 */}
           <div className="pt-2 pb-4">
             <Button
+              id="gtm-emergency-card-submit"
               onClick={handleSubmit}
               disabled={isGenerating}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white py-6 text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
