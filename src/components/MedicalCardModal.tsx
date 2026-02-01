@@ -57,6 +57,8 @@ const MedicalCardModal = ({ isOpen, onClose, onSave }: MedicalCardModalProps) =>
   // 로딩 상태
   const [isGenerating, setIsGenerating] = useState(false);
   const rendererRef = useRef<HTMLDivElement>(null);
+  // 생성된 카드 이미지 URL 상태
+  const [generatedCardImageUrl, setGeneratedCardImageUrl] = useState<string | null>(null);
   
   const [formData, setFormData] = useState<MedicalCardData>({
     englishName: "",
@@ -274,14 +276,8 @@ const MedicalCardModal = ({ isOpen, onClose, onSave }: MedicalCardModalProps) =>
         allowTaint: false,
       });
       
-      // 이미지로 변환 및 다운로드
+      // 이미지로 변환 (다운로드하지 않음)
       const imageUrl = canvas.toDataURL("image/png", 1.0);
-      const link = document.createElement("a");
-      link.href = imageUrl;
-      link.download = "SOS_Medical_Card.png";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
       
       // 렌더링 컨테이너 제거
       document.body.removeChild(renderContainer);
@@ -289,16 +285,8 @@ const MedicalCardModal = ({ isOpen, onClose, onSave }: MedicalCardModalProps) =>
       // 로딩 종료
       setIsGenerating(false);
       
-      // 토스트 메시지 표시
-      toast({
-        title: "저장 완료",
-        description: "저장이 완료되었습니다. 파일에서 확인하세요!",
-      });
-      
-      // 팝업 자동 닫기
-      setTimeout(() => {
-        onClose();
-      }, 500);
+      // 생성된 이미지 URL을 상태에 저장하여 팝업으로 표시
+      setGeneratedCardImageUrl(imageUrl);
       
     } catch (error) {
       console.error("이미지 생성 중 오류 발생:", error);
@@ -326,6 +314,54 @@ const MedicalCardModal = ({ isOpen, onClose, onSave }: MedicalCardModalProps) =>
     const numericValue = value.replace(/[^0-9]/g, "").slice(0, 2);
     setBirthDay(numericValue);
   };
+
+  // 카드 이미지 팝업 닫기
+  const handleCardPopupClose = () => {
+    setGeneratedCardImageUrl(null);
+    onClose();
+  };
+
+  // 카드 이미지가 생성된 경우 팝업으로 표시
+  if (generatedCardImageUrl) {
+    return (
+      <Dialog open={true} onOpenChange={handleCardPopupClose}>
+        <DialogContent className="max-w-2xl max-h-[95vh] flex flex-col p-0 sm:rounded-lg overflow-hidden">
+          <DialogHeader className="flex-shrink-0 bg-white dark:bg-slate-900 z-10 border-b px-4 sm:px-6 py-4 shadow-sm relative">
+            <DialogTitle className="text-base sm:text-lg font-semibold text-center text-slate-900 dark:text-white pr-8">
+              응급 의료 카드
+            </DialogTitle>
+            <button
+              onClick={handleCardPopupClose}
+              className="absolute right-4 top-4 rounded-sm opacity-70 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-opacity"
+              aria-label="닫기"
+            >
+              <X className="h-5 w-5 text-slate-900 dark:text-white" />
+            </button>
+          </DialogHeader>
+          
+          {/* 카드 이미지 표시 영역 */}
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6 flex items-center justify-center bg-gray-50 dark:bg-slate-800">
+            <div className="w-full max-w-full flex justify-center">
+              <img
+                src={generatedCardImageUrl}
+                alt="응급 의료 카드"
+                className="max-w-full h-auto rounded-lg shadow-lg object-contain"
+                style={{ maxHeight: 'calc(95vh - 200px)' }}
+              />
+            </div>
+          </div>
+
+          {/* 캡쳐 안내 문구 - 최하단 */}
+          <div className="bg-yellow-50 dark:bg-yellow-900/20 border-t border-yellow-200 dark:border-yellow-800 px-4 sm:px-6 py-3">
+            <p className="text-center text-sm sm:text-base font-bold text-yellow-800 dark:text-yellow-200 flex items-center justify-center gap-2">
+              <span className="text-lg">⚠️</span>
+              <span>이 화면을 캡쳐하세요.</span>
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
