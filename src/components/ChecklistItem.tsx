@@ -111,7 +111,7 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry }: Checklist
           >
             <img
               src={item.image_url}
-              alt={item.title}
+              alt={`해외여행 준비물 - ${item.title}`}
               className="w-full h-full object-cover rounded-lg shadow-md"
               style={{ width: "40px", height: "40px" }}
             />
@@ -123,7 +123,7 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry }: Checklist
           >
             <img
               src={item.image_url}
-              alt={item.title}
+              alt={`해외여행 준비물 - ${item.title}`}
               className="w-full h-full object-cover rounded-lg shadow-md"
               style={{ width: "40px", height: "40px" }}
             />

@@ -2799,9 +2799,9 @@ const Index = () => {
         {/* 1. 최상단: 여행 국가 선택 영역 (검색 가능한 드롭다운) */}
         <div className="animate-fade-in">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3 p-3 bg-card rounded-xl border border-border shadow-sm">
-            <span className="text-sm font-semibold text-foreground">
+            <h2 className="text-sm font-semibold text-foreground">
               여행지를 선택하고 맞춤 정보를 확인하하세요!
-            </span>
+            </h2>
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
                 <Button
@@ -2980,6 +2980,18 @@ const Index = () => {
 
         {/* 체크리스트 영역만 Export 대상 */}
         <div ref={checklistRef} id="checklist-root" className="space-y-4 bg-background rounded-xl pb-24">
+          {/* 국가별 준비물 섹션 헤더 */}
+          {selectedCountry && (
+            <h2 className="text-2xl font-bold text-foreground mb-2 animate-fade-in">
+              {selectedCountry} 여행 준비물
+            </h2>
+          )}
+          {!selectedCountry && (
+            <h2 className="text-2xl font-bold text-foreground mb-2 animate-fade-in">
+              필수 준비물 리스트
+            </h2>
+          )}
+          
           {/* 필수 서류 및 신분증 섹션 (essentials) - 먼저 표시 */}
           {essentialsSection && (
             <div className="animate-fade-in">
