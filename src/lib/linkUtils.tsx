@@ -13,6 +13,7 @@ const linkMappings: Record<string, Record<string, string>> = {
     "프리볼트": "https://link.coupang.com/a/dAJUYQ",
     "손수건 휴대": "https://link.coupang.com/a/dAJZ0D",
     "할인 쿠폰": "https://www.myrealtrip.com/promotions/Japan_donki_coupon",
+    "케이블": "https://link.coupang.com/a/dDNICf",
   },
   "베트남": {
     "멀티 어댑터": "https://link.coupang.com/a/dAJOua",
@@ -21,11 +22,18 @@ const linkMappings: Record<string, Record<string, string>> = {
     "휴대용 샤워기 필터": "https://link.coupang.com/a/dAKn7a",
     "기피제": "https://link.coupang.com/a/dAKqb7",
     "빨래용 소형 파우치": "https://link.coupang.com/a/dAKu76",
+    "케이블": "https://link.coupang.com/a/dDNICf",
   },
   "태국": {
     "공식 사이트": "http://tdac.immigration.go.th",
     "방수팩": "https://link.coupang.com/a/dAKmB5",
     "빨래용 소형 파우치": "https://link.coupang.com/a/dAKu76",
+    "어댑터": "https://link.coupang.com/a/dAJOua",
+    "케이블": "https://link.coupang.com/a/dDNICf",
+    "손 소독제": "https://link.coupang.com/a/dDNVzP",
+    "밴드": "https://link.coupang.com/a/dDNMl3",
+    "필터": "https://link.coupang.com/a/dDNNxO",
+    "기피제": "https://link.coupang.com/a/dDNZMC",
   },
   "필리핀": {
     "eTravel": "https://etravel.gov.ph/kr",
@@ -33,69 +41,120 @@ const linkMappings: Record<string, Record<string, string>> = {
     "휴대용 샤워기 필터": "https://link.coupang.com/a/dAKn7a",
     "밴드": "https://link.coupang.com/a/dALeAK",
     "기피제": "https://link.coupang.com/a/dAKqb7",
+    "케이블": "https://link.coupang.com/a/dDNICf",
+    "멀티탭": "https://link.coupang.com/a/dDN4jW",
+    "손 소독제": "https://link.coupang.com/a/dDNVzP",
   },
   "중국": {
-    // description에만 적용되는 항목은 없음 (모두 title용)
+    "어댑터": "https://link.coupang.com/a/dAJOua",
+    "케이블": "https://link.coupang.com/a/dDNICf",
+    "손 소독제": "https://link.coupang.com/a/dDNVzP",
   },
   "대만": {
     "TWAC": "https://twac.immigration.gov.tw/",
     "우양산": "https://link.coupang.com/a/dA8f7X",
+    "어댑터": "https://link.coupang.com/a/dAJOua",
+    "케이블": "https://link.coupang.com/a/dDNICf",
+    "손 소독제": "https://link.coupang.com/a/dDNVzP",
   },
   "미국": {
     "멀티 어댑터": "https://link.coupang.com/a/dA8mSm",
     "보조배터리": "https://link.coupang.com/a/dA8tql",
     "프리볼트": "https://link.coupang.com/a/dAJUYQ",
+    "케이블": "https://link.coupang.com/a/dDNICf",
+    "손 소독제": "https://link.coupang.com/a/dDNVzP",
   },
   "홍콩": {
-    // description에만 적용되는 항목은 없음 (모두 title용)
+    "어댑터": "https://link.coupang.com/a/dAJOua",
+    "케이블": "https://link.coupang.com/a/dDNICf",
+    "손 소독제": "https://link.coupang.com/a/dDNVzP",
   },
   "인도네시아": {
     "eVOA": "https://evisa.imigrasi.go.id/",
     "기피제": "https://link.coupang.com/a/dA9BhR",
+    "케이블": "https://link.coupang.com/a/dDNICf",
+    "손 소독제": "https://link.coupang.com/a/dDNVzP",
+    "편한 가방": "https://link.coupang.com/a/dDOt24",
   },
   "프랑스": {
     "필터": "https://link.coupang.com/a/dA9KuX",
     "스프레이": "https://link.coupang.com/a/dA9Mv7",
+    "케이블": "https://link.coupang.com/a/dDNICf",
+    "손 소독제": "https://link.coupang.com/a/dDNVzP",
   },
   "싱가포르": {
     "멀티 어댑터": "https://link.coupang.com/a/dAJOua",
     "개인용 물티슈": "https://link.coupang.com/a/dA8anh",
     "우양산": "https://link.coupang.com/a/dA8f7X",
+    "케이블": "https://link.coupang.com/a/dDNICf",
+    "손 소독제": "https://link.coupang.com/a/dDNVzP",
   },
 };
 
 // 국가별 키워드-링크 매핑 (title용 - "title"이라고 명시된 항목만)
+// 모든 국가에 공통으로 적용되는 키워드
+const commonTitleLinkMappings: Record<string, string> = {
+  "수납용 파우치": "https://link.coupang.com/a/dDOBAg",
+  "보조배터리": "https://link.coupang.com/a/dDNGwG",
+  "우비": "https://link.coupang.com/a/dDOgfU",
+};
+
 const titleLinkMappings: Record<string, Record<string, string>> = {
+  "일본": {
+    ...commonTitleLinkMappings,
+  },
+  "베트남": {
+    ...commonTitleLinkMappings,
+    "방수 밴드": "https://link.coupang.com/a/dDNMl3",
+    "휴대용 샤워기 필터": "https://link.coupang.com/a/dDNNxO",
+  },
+  "태국": {
+    ...commonTitleLinkMappings,
+  },
+  "필리핀": {
+    ...commonTitleLinkMappings,
+    "방수팩": "https://link.coupang.com/a/dDN10Z",
+  },
   "중국": {
+    ...commonTitleLinkMappings,
     "보조배터리 3C 인증": "https://link.coupang.com/a/dA7eeJ",
     "Arrival Card": "https://s.nia.gov.cn/ArrivalCardFillingPC/entry-registation-home",
     "휴대용 티슈": "https://link.coupang.com/a/dA78I2",
     "물티슈": "https://link.coupang.com/a/dA8anh",
   },
   "대만": {
+    ...commonTitleLinkMappings,
     "휴대용 티슈": "https://link.coupang.com/a/dA78I2",
     "물티슈": "https://link.coupang.com/a/dA8anh",
   },
   "미국": {
+    ...commonTitleLinkMappings,
     "ESTA": "https://esta.cbp.dhs.gov/",
+    "선크림": "https://link.coupang.com/a/dDOcXm",
   },
   "홍콩": {
+    ...commonTitleLinkMappings,
     "보조배터리": "https://link.coupang.com/a/dA8tql",
     "방수 밴드": "https://link.coupang.com/a/dA9mzC",
     "크로스백": "https://link.coupang.com/a/dA9qgh",
   },
   "인도네시아": {
+    ...commonTitleLinkMappings,
     "올 인도네시아": "https://allindonesia.imigrasi.go.id/",
     "멀티 어댑터": "https://link.coupang.com/a/dAJOua",
     "휴대용 티슈": "https://link.coupang.com/a/dA78I2",
     "물티슈": "https://link.coupang.com/a/dA8anh",
     "방수팩": "https://link.coupang.com/a/dAKmB5",
+    "여행자 보험": "https://www.myrealtrip.com/event/flight_insurance",
   },
   "프랑스": {
+    ...commonTitleLinkMappings,
     "멀티 어댑터": "https://link.coupang.com/a/dAJOua",
     "귀마개": "https://link.coupang.com/a/dA9Q7U",
+    "물티슈": "https://link.coupang.com/a/dDOyl0",
   },
   "싱가포르": {
+    ...commonTitleLinkMappings,
     "SG Arrival Card": "https://eservices.ica.gov.sg/sgarrivalcard/",
     "모기 퇴치제": "https://link.coupang.com/a/dA9BhR",
   },

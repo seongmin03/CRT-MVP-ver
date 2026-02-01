@@ -66,6 +66,39 @@ export const checklistData: ChecklistData = {
       ]
     },
     {
+      section_id: "health",
+      section_title: "상비약 및 위생 용품",
+      items: [
+        {
+          item_id: "medicine_basic",
+          title: "기본 상비약 준비",
+          description: "해열제, 소화제 등 개인에게 필요한 기본 약품을 준비하세요.",
+          cta_type: "none",
+          cta_label: "",
+          image_url: "/image/capsule.png",
+          link_url: "https://link.coupang.com/a/dvpa8d"
+        },
+        {
+          item_id: "medicine_personal",
+          title: "개인 복용 약 확인",
+          description: "처방약의 경우 필요 시 설명 자료를 함께 준비하는 것이 좋아요.",
+          cta_type: "none",
+          cta_label: "",
+          image_url: "/image/script.png",
+          link_url: "https://www.innovation.go.kr/ucms/bbs/B0000058/view.do?nttId=18556&menuNo=300239&searchType=3&pageIndex=1"
+        },
+        {
+          item_id: "hygiene",
+          title: "위생 용품 준비",
+          description: "휴대용 티슈, 물티슈, 손 소독제 등은 이동 중 유용해요.",
+          cta_type: "none",
+          cta_label: "",
+          image_url: "/image/towel.png",
+          link_url: "https://link.coupang.com/a/drYLaK"
+        }
+      ]
+    },
+    {
       section_id: "finance",
       section_title: "금융 및 결제 수단",
       items: [
@@ -115,7 +148,7 @@ export const checklistData: ChecklistData = {
           cta_type: "none",
           cta_label: "",
           image_url: "/image/battery.png",
-          link_url: "https://link.coupang.com/a/drYIG0"
+          link_url: "https://link.coupang.com/a/dDNGwG"
         },
         {
           item_id: "charging_cable",
@@ -134,39 +167,6 @@ export const checklistData: ChecklistData = {
           cta_label: "",
           image_url: "/image/sim.png",
           link_url: "https://www.myrealtrip.com/search?q=%EC%9C%A0%EC%8B%AC&tab=sim&extra= "
-        }
-      ]
-    },
-    {
-      section_id: "health",
-      section_title: "상비약 및 위생 용품",
-      items: [
-        {
-          item_id: "medicine_basic",
-          title: "기본 상비약 준비",
-          description: "해열제, 소화제 등 개인에게 필요한 기본 약품을 준비하세요.",
-          cta_type: "none",
-          cta_label: "",
-          image_url: "/image/capsule.png",
-          link_url: "https://link.coupang.com/a/dvpa8d"
-        },
-        {
-          item_id: "medicine_personal",
-          title: "개인 복용 약 확인",
-          description: "처방약의 경우 필요 시 설명 자료를 함께 준비하는 것이 좋아요.",
-          cta_type: "none",
-          cta_label: "",
-          image_url: "/image/script.png",
-          link_url: "https://www.innovation.go.kr/ucms/bbs/B0000058/view.do?nttId=18556&menuNo=300239&searchType=3&pageIndex=1"
-        },
-        {
-          item_id: "hygiene",
-          title: "위생 용품 준비",
-          description: "휴대용 티슈, 물티슈, 손 소독제 등은 이동 중 유용해요.",
-          cta_type: "none",
-          cta_label: "",
-          image_url: "/image/towel.png",
-          link_url: "https://link.coupang.com/a/drYLaK"
         }
       ]
     },
@@ -198,7 +198,7 @@ export const checklistData: ChecklistData = {
           cta_type: "none",
           cta_label: "",
           image_url: "/image/pouch.png",
-          link_url: "https://link.coupang.com/a/drYLM5"
+          link_url: "https://link.coupang.com/a/dDOBAg"
         },
         {
           item_id: "umbrella",
@@ -207,7 +207,7 @@ export const checklistData: ChecklistData = {
           cta_type: "none",
           cta_label: "",
           image_url: "/image/umbrella.png",
-          link_url: "https://link.coupang.com/a/drY6ST"
+          link_url: "https://link.coupang.com/a/dDOgfU"
         }
       ]
     },

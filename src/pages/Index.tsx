@@ -94,9 +94,13 @@ const europeCountries = [
   ...eastEuropeCountries
 ];
 
-// localStorage 키
+// localStorage 키 (레거시 - 마이그레이션용)
 const STORAGE_KEY = 'travel_checklist_status';
 const CUSTOM_ITEMS_KEY = 'travel_checklist_custom_items';
+const GTM_USER_ID_KEY = 'gtm_user_id';
+
+// TTL 설정 (72시간)
+const TTL_MS = 72 * 60 * 60 * 1000;
 
 // 커스텀 항목 타입 정의
 interface CustomItem {
@@ -104,65 +108,186 @@ interface CustomItem {
   title: string;
 }
 
-// localStorage에서 체크 상태 불러오기
-const loadCheckedItemsFromStorage = (): Set<string> => {
+// 국가별 데이터 구조
+interface CountryData {
+  checked: string[];
+  customItems: CustomItem[];
+  updatedAt: number;
+}
+
+// 전체 저장 데이터 구조
+interface StorageData {
+  countries: Record<string, CountryData>;
+}
+
+// 고유 사용자 ID 발급 및 관리
+const getOrCreateUserId = (): string => {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      if (Array.isArray(parsed)) {
-        return new Set(parsed);
-      }
+    let userId = localStorage.getItem(GTM_USER_ID_KEY);
+    if (!userId) {
+      userId = crypto.randomUUID();
+      localStorage.setItem(GTM_USER_ID_KEY, userId);
     }
+    return userId;
   } catch (error) {
-    console.error('Failed to load checklist status from localStorage:', error);
-  }
-  return new Set<string>();
-};
-
-// localStorage에 체크 상태 저장하기
-const saveCheckedItemsToStorage = (checkedItems: Set<string>) => {
-  try {
-    const array = Array.from(checkedItems);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(array));
-  } catch (error) {
-    console.error('Failed to save checklist status to localStorage:', error);
+    console.error('Failed to get or create user ID:', error);
+    // Fallback: 세션 기반 ID 생성
+    return `fallback_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
   }
 };
 
-// localStorage에서 커스텀 항목 불러오기
-const loadCustomItemsFromStorage = (): CustomItem[] => {
+// 저장소 키 생성
+const getStorageKey = (userId: string): string => {
+  return `checkrealtrip_${userId}`;
+};
+
+// 전체 데이터 로드
+const loadStorageData = (userId: string): StorageData => {
   try {
-    const stored = localStorage.getItem(CUSTOM_ITEMS_KEY);
+    const storageKey = getStorageKey(userId);
+    const stored = localStorage.getItem(storageKey);
     if (stored) {
-      const parsed = JSON.parse(stored);
-      if (Array.isArray(parsed)) {
+      const parsed = JSON.parse(stored) as StorageData;
+      if (parsed && typeof parsed === 'object' && parsed.countries) {
         return parsed;
       }
     }
   } catch (error) {
-    console.error('Failed to load custom items from localStorage:', error);
+    console.error('Failed to load storage data:', error);
   }
-  return [];
+  return { countries: {} };
 };
 
-// localStorage에 커스텀 항목 저장하기
-const saveCustomItemsToStorage = (customItems: CustomItem[]) => {
+// 전체 데이터 저장
+const saveStorageData = (userId: string, data: StorageData): void => {
   try {
-    localStorage.setItem(CUSTOM_ITEMS_KEY, JSON.stringify(customItems));
+    const storageKey = getStorageKey(userId);
+    localStorage.setItem(storageKey, JSON.stringify(data));
   } catch (error) {
-    console.error('Failed to save custom items to localStorage:', error);
+    console.error('Failed to save storage data:', error);
   }
+};
+
+// 국가별 데이터 로드 (TTL 검증 포함)
+const loadCountryData = (userId: string, countryCode: string): { checked: Set<string>; customItems: CustomItem[] } => {
+  try {
+    const storageData = loadStorageData(userId);
+    const countryData = storageData.countries[countryCode];
+    
+    if (countryData) {
+      // TTL 검증 (72시간)
+      const now = Date.now();
+      const timeDiff = now - countryData.updatedAt;
+      
+      if (timeDiff > TTL_MS) {
+        // 만료된 데이터는 삭제
+        delete storageData.countries[countryCode];
+        saveStorageData(userId, storageData);
+        return { checked: new Set<string>(), customItems: [] };
+      }
+      
+      return {
+        checked: new Set(countryData.checked || []),
+        customItems: countryData.customItems || []
+      };
+    }
+  } catch (error) {
+    console.error('Failed to load country data:', error);
+  }
+  return { checked: new Set<string>(), customItems: [] };
+};
+
+// 국가별 데이터 저장
+const saveCountryData = (
+  userId: string,
+  countryCode: string,
+  checkedItems: Set<string>,
+  customItems: CustomItem[]
+): void => {
+  try {
+    const storageData = loadStorageData(userId);
+    storageData.countries[countryCode] = {
+      checked: Array.from(checkedItems),
+      customItems: customItems,
+      updatedAt: Date.now()
+    };
+    saveStorageData(userId, storageData);
+  } catch (error) {
+    console.error('Failed to save country data:', error);
+  }
+};
+
+// 레거시 데이터 마이그레이션
+const migrateLegacyData = (userId: string, countryCode: string): boolean => {
+  try {
+    // 이미 마이그레이션이 완료되었는지 확인
+    const storageData = loadStorageData(userId);
+    if (storageData.countries[countryCode]) {
+      return false; // 이미 마이그레이션됨
+    }
+
+    // 레거시 데이터 로드
+    let legacyChecked: string[] = [];
+    let legacyCustomItems: CustomItem[] = [];
+
+    try {
+      const storedChecked = localStorage.getItem(STORAGE_KEY);
+      if (storedChecked) {
+        const parsed = JSON.parse(storedChecked);
+        if (Array.isArray(parsed)) {
+          legacyChecked = parsed;
+        }
+      }
+    } catch (error) {
+      console.error('Failed to load legacy checked items:', error);
+    }
+
+    try {
+      const storedCustom = localStorage.getItem(CUSTOM_ITEMS_KEY);
+      if (storedCustom) {
+        const parsed = JSON.parse(storedCustom);
+        if (Array.isArray(parsed)) {
+          legacyCustomItems = parsed;
+        }
+      }
+    } catch (error) {
+      console.error('Failed to load legacy custom items:', error);
+    }
+
+    // 레거시 데이터가 있으면 마이그레이션
+    if (legacyChecked.length > 0 || legacyCustomItems.length > 0) {
+      storageData.countries[countryCode] = {
+        checked: legacyChecked,
+        customItems: legacyCustomItems,
+        updatedAt: Date.now()
+      };
+      saveStorageData(userId, storageData);
+
+      // 레거시 데이터 삭제
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(CUSTOM_ITEMS_KEY);
+
+      return true;
+    }
+  } catch (error) {
+    console.error('Failed to migrate legacy data:', error);
+  }
+  return false;
 };
 
 const Index = () => {
-  // 초기 상태를 localStorage에서 불러오기
-  const [checkedItems, setCheckedItems] = useState<Set<string>>(() => 
-    loadCheckedItemsFromStorage()
-  );
-  const [customItems, setCustomItems] = useState<CustomItem[]>(() => 
-    loadCustomItemsFromStorage()
-  );
+  // 고유 사용자 ID 발급 및 관리
+  const userIdRef = useRef<string>(getOrCreateUserId());
+  const userId = userIdRef.current;
+
+  // 국가 코드 변환 함수
+  const getCountryCode = (countryName: string): string => {
+    return countryNameToEnglish[countryName] || countryName.toLowerCase().replace(/\s+/g, '_');
+  };
+
+  // 초기 상태 (빈 상태로 시작, 국가 선택 후 로드)
+  const [checkedItems, setCheckedItems] = useState<Set<string>>(new Set<string>());
+  const [customItems, setCustomItems] = useState<CustomItem[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<string>("");
   const [open, setOpen] = useState(false);
   const [isSearchActive, setIsSearchActive] = useState(false);
@@ -1601,13 +1726,7 @@ const Index = () => {
         cta_type: "none",
         cta_label: ""
       },
-      {
-        item_id: "indonesia_rain_preparation",
-        title: "우기 대비 용품",
-        description: "갑작스러운 폭우에 대비해 가벼운 우산이나 우비를 상비하세요.",
-        cta_type: "none",
-        cta_label: ""
-      },
+    
       {
         item_id: "indonesia_waterproof_pack",
         title: "방수팩 준비",
@@ -2014,24 +2133,35 @@ const Index = () => {
   const commandInputRef = useRef<HTMLInputElement>(null);
   const customInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
 
-  // 국가 변경 시 체크 상태 초기화 및 아코디언 접기
+  // 국가 변경 시 해당 국가의 데이터 로드 및 마이그레이션
   useEffect(() => {
     if (selectedCountry) {
-      setCheckedItems(new Set<string>());
-      localStorage.removeItem(STORAGE_KEY);
+      const countryCode = getCountryCode(selectedCountry);
+      
+      // 레거시 데이터 마이그레이션 (최초 1회만)
+      migrateLegacyData(userId, countryCode);
+      
+      // 국가별 데이터 로드
+      const countryData = loadCountryData(userId, countryCode);
+      setCheckedItems(countryData.checked);
+      setCustomItems(countryData.customItems);
+      
+      // 여행팁 아코디언 접기
       setIsTravelTipsExpanded(false);
+    } else {
+      // 국가가 선택되지 않았을 때는 빈 상태
+      setCheckedItems(new Set<string>());
+      setCustomItems([]);
     }
-  }, [selectedCountry]);
+  }, [selectedCountry, userId]);
 
-  // 체크 상태가 변경될 때마다 localStorage에 저장
+  // 체크 상태 및 커스텀 항목이 변경될 때마다 국가별로 저장
   useEffect(() => {
-    saveCheckedItemsToStorage(checkedItems);
-  }, [checkedItems]);
-
-  // 커스텀 항목이 변경될 때마다 localStorage에 저장
-  useEffect(() => {
-    saveCustomItemsToStorage(customItems);
-  }, [customItems]);
+    if (selectedCountry) {
+      const countryCode = getCountryCode(selectedCountry);
+      saveCountryData(userId, countryCode, checkedItems, customItems);
+    }
+  }, [checkedItems, customItems, selectedCountry, userId]);
 
 
   // Popover가 열릴 때 검색창 자동 포커스 방지 및 검색 활성화 상태 리셋
@@ -2083,22 +2213,46 @@ const Index = () => {
   const handleToggle = (itemId: string) => {
     setCheckedItems((prev) => {
       const newSet = new Set(prev);
-      if (newSet.has(itemId)) {
+      const wasChecked = newSet.has(itemId);
+      
+      if (wasChecked) {
         newSet.delete(itemId);
       } else {
         newSet.add(itemId);
       }
+      
+      // GTM dataLayer 이벤트 전송
+      if (selectedCountry && typeof window !== 'undefined' && (window as any).dataLayer) {
+        const countryCode = getCountryCode(selectedCountry);
+        (window as any).dataLayer.push({
+          event: 'checklist_checkbox_click',
+          user_id: userId,
+          selected_country: countryCode,
+          item_id: itemId,
+          checked: !wasChecked
+        });
+      }
+      
       return newSet;
     });
     // 사용자 액션 플래그 설정 (체크박스 클릭)
     checkAndTriggerCelebration();
   };
 
-  // 체크리스트 초기화 함수
+  // 체크리스트 초기화 함수 (현재 국가의 데이터만 초기화)
   const resetChecklist = () => {
-    setCheckedItems(new Set<string>());
-    localStorage.removeItem(STORAGE_KEY);
-    toast({ title: "체크리스트가 초기화되었습니다", duration: 2000 });
+    if (selectedCountry) {
+      const countryCode = getCountryCode(selectedCountry);
+      setCheckedItems(new Set<string>());
+      setCustomItems([]);
+      // 저장소에서 해당 국가 데이터 삭제
+      const storageData = loadStorageData(userId);
+      delete storageData.countries[countryCode];
+      saveStorageData(userId, storageData);
+      toast({ title: "체크리스트가 초기화되었습니다", duration: 2000 });
+    } else {
+      toast({ title: "국가를 먼저 선택해주세요", duration: 2000 });
+    }
   };
 
   // 커스텀 항목 추가

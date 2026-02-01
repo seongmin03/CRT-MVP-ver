@@ -6,6 +6,21 @@ interface TravelInsuranceModalProps {
   onClose: () => void;
 }
 
+// 고유 사용자 ID 가져오기
+const getUserId = (): string => {
+  try {
+    const userId = localStorage.getItem('gtm_user_id');
+    if (userId) {
+      return userId;
+    }
+    // 없으면 fallback ID 생성
+    return `fallback_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
+  } catch (error) {
+    console.error('Failed to get user ID:', error);
+    return `fallback_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
+  }
+};
+
 const TravelInsuranceModal = ({ isOpen, onClose }: TravelInsuranceModalProps) => {
   const [isClosing, setIsClosing] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
@@ -37,6 +52,17 @@ const TravelInsuranceModal = ({ isOpen, onClose }: TravelInsuranceModalProps) =>
     setTimeout(() => {
       onClose();
     }, 300);
+  };
+
+  const handleInsuranceButtonClick = () => {
+    // GTM dataLayer 이벤트 전송
+    if (typeof window !== 'undefined' && (window as any).dataLayer) {
+      const userId = getUserId();
+      (window as any).dataLayer.push({
+        event: 'insurance_link_click',
+        user_id: userId
+      });
+    }
   };
 
   return (
@@ -107,6 +133,22 @@ const TravelInsuranceModal = ({ isOpen, onClose }: TravelInsuranceModalProps) =>
                 해외의 비싼 병원비와 예기치 못한 도난 사고를 대비할 수 있는 안전한 방법이기 때문이에요.
               </p>
             </div>
+          </div>
+
+          {/* 하단 액션 버튼 */}
+          <div className="mt-8 pt-6 border-t border-gray-200">
+            <a
+              href="https://www.myrealtrip.com/event/flight_insurance"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={handleInsuranceButtonClick}
+              id="gtm-insurance-btn-click"
+              data-gtm-category="conversion"
+              data-gtm-label="insurance_popup_button"
+              className="block w-full bg-[#51ABF3] hover:bg-[#3A9AE5] text-white font-bold text-center py-4 px-6 rounded-xl transition-colors duration-200"
+            >
+              여행자 보험 확인하기
+            </a>
           </div>
         </div>
       </div>
