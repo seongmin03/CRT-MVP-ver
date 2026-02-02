@@ -69,7 +69,7 @@ const TravelDurationGuide = ({ onDurationChange }: TravelDurationGuideProps) => 
                   }
                 `}
               >
-                {duration.label}
+                <span className="pointer-events-none">{duration.label}</span>
               </button>
             ))}
           </div>

@@ -115,7 +115,7 @@ const ChecklistSection = ({ section, checkedItems, onToggle, selectedDuration, o
                     }
                   `}
                 >
-                  {duration.label}
+                  <span className="pointer-events-none">{duration.label}</span>
                 </button>
               ))}
             </div>
@@ -144,7 +144,7 @@ const ChecklistSection = ({ section, checkedItems, onToggle, selectedDuration, o
               data-gtm="cta_click"
               data-gtm-label="emergency_medical_card_info_input"
             >
-              정보입력
+              <span className="pointer-events-none">정보입력</span>
             </button>
           </div>
         )}

@@ -2770,8 +2770,8 @@ const Index = ({ initialCountry, showHeader = true }: IndexProps = {}) => {
             onClick={copyLink}
             className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-all duration-200 text-[10px] sm:text-sm text-gray-700 hover:text-gray-900 shadow-sm hover:shadow whitespace-nowrap flex-shrink-0"
           >
-            <Link className="w-3 h-3 sm:w-4 sm:h-4" />
-            <span>링크</span>
+            <Link className="w-3 h-3 sm:w-4 sm:h-4 pointer-events-none" />
+            <span className="pointer-events-none">링크</span>
           </button>
           <div className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-gray-200 bg-white shadow-sm flex-shrink-0 h-[28px] sm:h-auto">
             <label htmlFor="hide-completed-toggle" className="text-[10px] sm:text-sm text-gray-700 cursor-pointer whitespace-nowrap">
@@ -2790,7 +2790,7 @@ const Index = ({ initialCountry, showHeader = true }: IndexProps = {}) => {
               className="text-[10px] sm:text-xs text-gray-600 hover:text-gray-900 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
               disabled={allCheckableItemIds.size === 0}
             >
-              모두 선택
+              <span className="pointer-events-none">모두 선택</span>
             </button>
             <span className="text-[10px] sm:text-xs text-gray-300">|</span>
             <button
@@ -2798,7 +2798,7 @@ const Index = ({ initialCountry, showHeader = true }: IndexProps = {}) => {
               className="text-[10px] sm:text-xs text-gray-600 hover:text-gray-900 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
               disabled={allCheckableItemIds.size === 0}
             >
-              모두 해제
+              <span className="pointer-events-none">모두 해제</span>
             </button>
           </div>
         </div>
@@ -2930,12 +2930,12 @@ const Index = ({ initialCountry, showHeader = true }: IndexProps = {}) => {
                     "bg-blue-400 hover:bg-blue-500 text-white"
                   )}
                 >
-                  <span className="text-sm font-medium text-white">
+                  <span className="text-sm font-medium text-white pointer-events-none">
                     💡 {selectedCountry} 여행팁 펼쳐보기
                   </span>
                   <ChevronDown 
                     className={cn(
-                      "w-4 h-4 text-white transition-transform duration-200",
+                      "w-4 h-4 text-white transition-transform duration-200 pointer-events-none",
                       isTravelTipsExpanded && "transform rotate-180"
                     )}
                   />
@@ -3197,8 +3197,8 @@ const Index = ({ initialCountry, showHeader = true }: IndexProps = {}) => {
               onClick={addCustomItem}
               className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 border-dashed border-muted-foreground/30 hover:border-accent/50 hover:bg-accent/5 transition-all duration-200 text-sm font-medium text-muted-foreground hover:text-accent"
             >
-              <Plus className="w-4 h-4" />
-              <span>추가하기</span>
+              <Plus className="w-4 h-4 pointer-events-none" />
+              <span className="pointer-events-none">추가하기</span>
             </button>
           </div>
         </div>
@@ -3224,7 +3224,7 @@ const Index = ({ initialCountry, showHeader = true }: IndexProps = {}) => {
               onClick={() => setIsFlightGuideOpen(true)}
               className="rounded-xl py-4 h-14 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 bg-sky-500/100 text-white flex items-center justify-center"
             >
-              <p className="text-sm font-semibold">
+              <p className="text-sm font-semibold pointer-events-none">
                 항공기 반입 물품 가이드
               </p>
             </button>
@@ -3243,7 +3243,7 @@ const Index = ({ initialCountry, showHeader = true }: IndexProps = {}) => {
                 data-gtm="outbound_link"
                 data-gtm-label="japan_donki_coupon"
               >
-                <p className="text-sm font-semibold text-foreground">
+                <p className="text-sm font-semibold text-foreground pointer-events-none">
                   돈키호테 할인 쿠폰 증정!
                 </p>
               </a>
@@ -3259,7 +3259,7 @@ const Index = ({ initialCountry, showHeader = true }: IndexProps = {}) => {
                   border: "1px solid rgba(0, 0, 0, 0.05)",
                 }}
               >
-                <p className="text-sm font-semibold text-foreground">
+                <p className="text-sm font-semibold text-foreground pointer-events-none">
                   마이리얼트립 혜택 보기
                 </p>
               </a>

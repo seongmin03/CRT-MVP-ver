@@ -63,7 +63,7 @@ const TravelCompanionGuide = () => {
                   }
                 `}
               >
-                {companion.label}
+                <span className="pointer-events-none">{companion.label}</span>
               </button>
             ))}
           </div>

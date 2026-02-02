@@ -10,6 +10,12 @@ interface ChecklistItemProps {
 }
 
 const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry }: ChecklistItemProps) => {
+  // 쿠팡 링크가 있는지 확인
+  const hasCoupangLink = item.link_url && (
+    item.link_url.includes('coupang.com') || 
+    item.link_url.includes('link.coupang.com')
+  );
+
   const handleItemClick = (e: React.MouseEvent) => {
     // 이미지나 링크 클릭 시에는 체크박스 토글이 아닌 링크로 이동
     if ((e.target as HTMLElement).closest('a, img')) {
@@ -18,31 +24,39 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry }: Checklist
     onToggle(item.item_id);
   };
 
+  const handleCheckboxClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onToggle(item.item_id);
+  };
+
   return (
     <div 
-      className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl cursor-pointer transition-all duration-200 hover:bg-muted/50 group"
-      onClick={handleItemClick}
-      data-gtm="checklist_checkbox"
+      className={`flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl transition-all duration-200 hover:bg-muted/50 group ${hasCoupangLink ? '' : 'cursor-pointer'}`}
+      onClick={hasCoupangLink ? undefined : handleItemClick}
+      {...(hasCoupangLink ? {} : { 'data-gtm': 'checklist_checkbox' })}
       data-item-id={item.item_id}
     >
       <div 
         className={`
-          flex-shrink-0 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-200 mt-0.5 gtm-engaged-check pointer-events-none
+          flex-shrink-0 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-200 mt-0.5 gtm-engaged-check
           ${isChecked 
             ? 'bg-accent border-accent animate-check-bounce shadow-sm' 
             : 'border-muted-foreground/30 group-hover:border-accent/50'
           }
+          ${hasCoupangLink ? 'cursor-pointer' : 'pointer-events-none'}
         `}
+        onClick={hasCoupangLink ? handleCheckboxClick : undefined}
         data-checked={isChecked}
         data-item-id={item.item_id}
         data-gtm-label="checkbox-interaction"
+        {...(hasCoupangLink ? { 'data-gtm': 'checklist_checkbox' } : {})}
       >
         {isChecked && (
           <Check className="w-4 h-4 text-accent-foreground pointer-events-none" strokeWidth={3} data-check-icon="true" />
         )}
       </div>
       
-      <div className="flex-1 min-w-0">
+      <div className={`flex-1 min-w-0 ${hasCoupangLink ? '' : 'cursor-pointer'}`} onClick={hasCoupangLink ? undefined : handleItemClick}>
         <h4 
           className={`
             font-semibold text-sm sm:text-base transition-all duration-300
@@ -51,7 +65,7 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry }: Checklist
           style={{ 
             lineHeight: '1.5',
             opacity: isChecked ? 0.7 : 1,
-            pointerEvents: 'none'
+            pointerEvents: hasCoupangLink ? 'auto' : 'none'
           }}
           data-item-title={item.title}
         >
@@ -71,8 +85,12 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry }: Checklist
                 pointerEvents: 'auto'
               }}
               {...(item.link_url.includes('coupang.com') || item.link_url.includes('link.coupang.com') ? { 'data-gtm': 'outbound_coupang' } : {})}
+              {...(item.link_url.includes('Japan_donki_coupon') ? { 
+                'data-gtm': 'outbound_link', 
+                'data-gtm-label': 'japan_donki_coupon' 
+              } : {})}
             >
-              {item.title}
+              <span className="pointer-events-none">{item.title}</span>
             </a>
           ) : (
             <span 
@@ -95,7 +113,7 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry }: Checklist
           style={{ 
             lineHeight: '1.5',
             opacity: isChecked ? 0.7 : 1,
-            pointerEvents: 'none'
+            pointerEvents: hasCoupangLink ? 'auto' : 'none'
           }}
         >
           {parseTextWithLinks(item.description || '', selectedCountry)}
@@ -113,11 +131,15 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry }: Checklist
             className="flex-shrink-0 transition-all duration-300 hover:brightness-110 hover:shadow-lg hover:scale-110 active:scale-95 cursor-pointer"
             style={{ width: "40px", height: "40px" }}
             {...(item.link_url.includes('coupang.com') || item.link_url.includes('link.coupang.com') ? { 'data-gtm': 'outbound_coupang' } : {})}
+            {...(item.link_url.includes('Japan_donki_coupon') ? { 
+              'data-gtm': 'outbound_link', 
+              'data-gtm-label': 'japan_donki_coupon' 
+            } : {})}
           >
             <img
               src={item.image_url}
               alt={`해외여행 준비물 - ${item.title}`}
-              className="w-full h-full object-cover rounded-lg shadow-md"
+              className="w-full h-full object-cover rounded-lg shadow-md pointer-events-none"
               style={{ width: "40px", height: "40px" }}
             />
           </a>

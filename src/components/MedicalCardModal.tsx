@@ -468,7 +468,7 @@ const MedicalCardModal = ({ isOpen, onClose, onSave }: MedicalCardModalProps) =>
                     }
                   `}
                 >
-                  {type}
+                  <span className="pointer-events-none">{type}</span>
                 </button>
               ))}
             </div>
@@ -513,7 +513,7 @@ const MedicalCardModal = ({ isOpen, onClose, onSave }: MedicalCardModalProps) =>
                   `}
                   disabled={lang === "한국어"}
                 >
-                  {lang}
+                  <span className="pointer-events-none">{lang}</span>
                 </button>
               ))}
             </div>
@@ -640,7 +640,7 @@ const MedicalCardModal = ({ isOpen, onClose, onSave }: MedicalCardModalProps) =>
                   }
                 `}
               >
-                예
+                <span className="pointer-events-none">예</span>
               </button>
               <button
                 type="button"
@@ -654,7 +654,7 @@ const MedicalCardModal = ({ isOpen, onClose, onSave }: MedicalCardModalProps) =>
                   }
                 `}
               >
-                아니오
+                <span className="pointer-events-none">아니오</span>
               </button>
             </div>
           </div>
@@ -677,7 +677,7 @@ const MedicalCardModal = ({ isOpen, onClose, onSave }: MedicalCardModalProps) =>
                   }
                 `}
               >
-                예
+                <span className="pointer-events-none">예</span>
               </button>
               <button
                 type="button"
@@ -691,7 +691,7 @@ const MedicalCardModal = ({ isOpen, onClose, onSave }: MedicalCardModalProps) =>
                   }
                 `}
               >
-                아니오
+                <span className="pointer-events-none">아니오</span>
               </button>
             </div>
           </div>
@@ -712,12 +712,12 @@ const MedicalCardModal = ({ isOpen, onClose, onSave }: MedicalCardModalProps) =>
               className="w-full bg-blue-600 hover:bg-blue-700 text-white py-6 text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isGenerating ? (
-                <span className="flex items-center justify-center gap-3">
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                <span className="flex items-center justify-center gap-3 pointer-events-none">
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white pointer-events-none"></div>
                   안전 카드 생성 중...
                 </span>
               ) : (
-                "카드 만들기"
+                <span className="pointer-events-none">카드 만들기</span>
               )}
             </Button>
           </div>

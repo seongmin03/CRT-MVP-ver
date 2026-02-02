@@ -266,9 +266,12 @@ export const parseTextWithLinks = (
         style={{ pointerEvents: 'auto' }}
         onClick={(e) => e.stopPropagation()}
         {...(isCoupangLink(match.url) ? { 'data-gtm': 'outbound_coupang' } : {})}
-        {...(isMyRealTripDonkiLink ? { 'data-gtm': 'outbound_link', 'data-gtm-label': 'japan_donki_coupon' } : {})}
+        {...(isMyRealTripDonkiLink ? { 
+          'data-gtm': 'outbound_link', 
+          'data-gtm-label': 'japan_donki_coupon' 
+        } : {})}
       >
-        {match.keyword}
+        <span className="pointer-events-none">{match.keyword}</span>
       </a>
     );
     

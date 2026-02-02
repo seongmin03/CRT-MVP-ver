@@ -147,7 +147,7 @@ const TravelInsuranceModal = ({ isOpen, onClose }: TravelInsuranceModalProps) =>
               data-gtm-label="insurance_popup_button"
               className="block w-full bg-[#51ABF3] hover:bg-[#3A9AE5] text-white font-bold text-center py-4 px-6 rounded-xl transition-colors duration-200"
             >
-              여행자 보험 확인하기
+              <span className="pointer-events-none">여행자 보험 확인하기</span>
             </a>
           </div>
         </div>

@@ -67,7 +67,7 @@ const TravelFlightGuide = () => {
                   }
                 `}
               >
-                {flight.label}
+                <span className="pointer-events-none">{flight.label}</span>
               </button>
             ))}
           </div>

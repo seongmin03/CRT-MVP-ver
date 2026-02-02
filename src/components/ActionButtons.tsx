@@ -551,8 +551,8 @@ const ActionButtons = ({ checklistRef }: ActionButtonsProps) => {
               className="flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5"
               style={{ backgroundColor: "#34495E", color: "#ffffff" }}
             >
-              <button.icon className="w-5 h-5" />
-              <span className="text-xs font-medium">{button.label}</span>
+              <button.icon className="w-5 h-5 pointer-events-none" />
+              <span className="text-xs font-medium pointer-events-none">{button.label}</span>
             </button>
           ))}
         </div>
