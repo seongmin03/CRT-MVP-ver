@@ -22,6 +22,8 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry }: Checklist
     <div 
       className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl cursor-pointer transition-all duration-200 hover:bg-muted/50 group"
       onClick={handleItemClick}
+      data-gtm="checklist_checkbox"
+      data-item-id={item.item_id}
     >
       <div 
         className={`
@@ -34,7 +36,6 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry }: Checklist
         data-checked={isChecked}
         data-item-id={item.item_id}
         data-gtm-label="checkbox-interaction"
-        data-gtm="checklist_checkbox"
       >
         {isChecked && (
           <Check className="w-4 h-4 text-accent-foreground" strokeWidth={3} data-check-icon="true" />

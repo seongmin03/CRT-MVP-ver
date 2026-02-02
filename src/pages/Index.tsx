@@ -3088,6 +3088,8 @@ const Index = ({ initialCountry, showHeader = true }: IndexProps = {}) => {
                           `}
                           data-gtm-label="checkbox-interaction"
                           data-gtm="checklist_checkbox"
+                          data-item-id={item.id}
+                          data-checked={isChecked}
                           onPointerDown={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
