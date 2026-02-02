@@ -27,7 +27,7 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry }: Checklist
     >
       <div 
         className={`
-          flex-shrink-0 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-200 mt-0.5 gtm-engaged-check
+          flex-shrink-0 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-200 mt-0.5 gtm-engaged-check pointer-events-none
           ${isChecked 
             ? 'bg-accent border-accent animate-check-bounce shadow-sm' 
             : 'border-muted-foreground/30 group-hover:border-accent/50'
@@ -38,7 +38,7 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry }: Checklist
         data-gtm-label="checkbox-interaction"
       >
         {isChecked && (
-          <Check className="w-4 h-4 text-accent-foreground" strokeWidth={3} data-check-icon="true" />
+          <Check className="w-4 h-4 text-accent-foreground pointer-events-none" strokeWidth={3} data-check-icon="true" />
         )}
       </div>
       
@@ -50,7 +50,8 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry }: Checklist
           `}
           style={{ 
             lineHeight: '1.5',
-            opacity: isChecked ? 0.7 : 1
+            opacity: isChecked ? 0.7 : 1,
+            pointerEvents: 'none'
           }}
           data-item-title={item.title}
         >
@@ -67,6 +68,7 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry }: Checklist
               style={{
                 position: 'relative',
                 display: 'inline-block',
+                pointerEvents: 'auto'
               }}
               {...(item.link_url.includes('coupang.com') || item.link_url.includes('link.coupang.com') ? { 'data-gtm': 'outbound_coupang' } : {})}
             >
@@ -78,6 +80,7 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry }: Checklist
               style={{
                 position: 'relative',
                 display: 'inline-block',
+                pointerEvents: 'none'
               }}
             >
               {parseTextWithLinks(item.title, selectedCountry, true)}
@@ -91,7 +94,8 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry }: Checklist
           `}
           style={{ 
             lineHeight: '1.5',
-            opacity: isChecked ? 0.7 : 1
+            opacity: isChecked ? 0.7 : 1,
+            pointerEvents: 'none'
           }}
         >
           {parseTextWithLinks(item.description || '', selectedCountry)}

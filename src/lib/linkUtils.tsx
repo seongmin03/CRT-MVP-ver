@@ -263,6 +263,7 @@ export const parseTextWithLinks = (
         target="_blank"
         rel="noopener noreferrer"
         className="underline text-blue-600 hover:text-blue-800 transition-colors"
+        style={{ pointerEvents: 'auto' }}
         onClick={(e) => e.stopPropagation()}
         {...(isCoupangLink(match.url) ? { 'data-gtm': 'outbound_coupang' } : {})}
         {...(isMyRealTripDonkiLink ? { 'data-gtm': 'outbound_link', 'data-gtm-label': 'japan_donki_coupon' } : {})}

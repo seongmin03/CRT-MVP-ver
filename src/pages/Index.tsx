@@ -3126,7 +3126,7 @@ const Index = ({ initialCountry, showHeader = true }: IndexProps = {}) => {
                               e.stopPropagation();
                             }}
                             readOnly
-                            className="sr-only"
+                            className="sr-only pointer-events-none"
                             tabIndex={-1}
                           />
                           {isChecked && (
