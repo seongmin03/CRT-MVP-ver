@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
+import { Link as RouterLink } from "react-router-dom";
 import Header from "@/components/Header";
 import BottomProgressSheet from "@/components/BottomProgressSheet";
 import { type DurationType } from "@/components/TravelDurationGuide";
@@ -14,6 +15,7 @@ import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import confetti from "canvas-confetti";
+import { countryNameToUrlCode } from "@/lib/countryUtils";
 import {
   Popover,
   PopoverContent,
@@ -30,7 +32,7 @@ import {
 import { cn } from "@/lib/utils";
 
 // 국가 선택 드롭다운에 표시할 국가 목록 (링크 연동이 완료된 국가만)
-const sortedCountries = [
+export const sortedCountries = [
   "일본", 
   "베트남", 
   "태국", 
@@ -275,7 +277,12 @@ const migrateLegacyData = (userId: string, countryCode: string): boolean => {
   return false;
 };
 
-const Index = () => {
+interface IndexProps {
+  initialCountry?: string;
+  showHeader?: boolean;
+}
+
+const Index = ({ initialCountry, showHeader = true }: IndexProps = {}) => {
   // 고유 사용자 ID 발급 및 관리
   const userIdRef = useRef<string>(getOrCreateUserId());
   const userId = userIdRef.current;
@@ -288,7 +295,7 @@ const Index = () => {
   // 초기 상태 (빈 상태로 시작, 국가 선택 후 로드)
   const [checkedItems, setCheckedItems] = useState<Set<string>>(new Set<string>());
   const [customItems, setCustomItems] = useState<CustomItem[]>([]);
-  const [selectedCountry, setSelectedCountry] = useState<string>("");
+  const [selectedCountry, setSelectedCountry] = useState<string>(initialCountry || "");
   const [open, setOpen] = useState(false);
   const [isSearchActive, setIsSearchActive] = useState(false);
   // 여행팁 체크리스트 아이템 상태 (selectedCountry에 따라 나중에 동적으로 매핑 가능)
@@ -2755,7 +2762,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background pb-8">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 space-y-4">
-        <Header />
+        {showHeader && <Header />}
 
         {/* 링크 버튼 및 완료 항목 숨김 토글 */}
         <div className="flex flex-row items-center justify-center gap-1.5 sm:gap-3 animate-fade-in -mt-2 mb-1 overflow-x-auto">
@@ -2980,14 +2987,14 @@ const Index = () => {
 
         {/* 체크리스트 영역만 Export 대상 */}
         <div ref={checklistRef} id="checklist-root" className="space-y-4 bg-background rounded-xl pb-24">
-          {/* 국가별 준비물 섹션 헤더 */}
+          {/* SEO용 숨김 헤더 (화면에는 보이지 않지만 검색 엔진은 읽음) */}
           {selectedCountry && (
-            <h2 className="text-2xl font-bold text-foreground mb-2 animate-fade-in">
+            <h2 className="sr-only">
               {selectedCountry} 여행 준비물
             </h2>
           )}
           {!selectedCountry && (
-            <h2 className="text-2xl font-bold text-foreground mb-2 animate-fade-in">
+            <h2 className="sr-only">
               필수 준비물 리스트
             </h2>
           )}
