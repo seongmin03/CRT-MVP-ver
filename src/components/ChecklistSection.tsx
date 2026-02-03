@@ -12,6 +12,8 @@ interface ChecklistSectionProps {
   onMedicalCardClick?: () => void;
   selectedCountry?: string | null;
   hideCompletedItems?: boolean;
+  smokingStatus?: "yes" | "no" | null;
+  onSmokingSelect?: (value: "yes" | "no") => void;
 }
 
 const sectionIcons: Record<string, string> = {
@@ -23,7 +25,7 @@ const sectionIcons: Record<string, string> = {
   travel_tips: "💡",
 };
 
-const ChecklistSection = ({ section, checkedItems, onToggle, selectedDuration, onDurationChange, onMedicalCardClick, selectedCountry, hideCompletedItems = false }: ChecklistSectionProps) => {
+const ChecklistSection = ({ section, checkedItems, onToggle, selectedDuration, onDurationChange, onMedicalCardClick, selectedCountry, hideCompletedItems = false, smokingStatus, onSmokingSelect }: ChecklistSectionProps) => {
   // 안전성 체크: section과 items가 유효한지 확인
   if (!section || !section.items || !Array.isArray(section.items)) {
     return (
@@ -200,6 +202,8 @@ const ChecklistSection = ({ section, checkedItems, onToggle, selectedDuration, o
                   isChecked={checkedItems.has(item.item_id)}
                   onToggle={onToggle}
                   selectedCountry={selectedCountry}
+                  smokingStatus={smokingStatus}
+                  onSmokingSelect={onSmokingSelect}
                 />
               );
             })

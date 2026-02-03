@@ -7,6 +7,7 @@ import EssentialItems from "@/components/EssentialItems";
 import ChecklistSection from "@/components/ChecklistSection";
 import FlightLuggageGuideModal from "@/components/FlightLuggageGuideModal";
 import MedicalCardModal, { type MedicalCardData } from "@/components/MedicalCardModal";
+import IqosPartnershipModal from "@/components/IqosPartnershipModal";
 import { checklistData } from "@/data/checklistData";
 import { travelTips } from "@/data/travleTips";
 import { Lightbulb, Check, ChevronDown, Search, Link, X, Plus } from "lucide-react";
@@ -315,6 +316,10 @@ const Index = ({ initialCountry, showHeader = true }: IndexProps = {}) => {
   // 축하 팝업 상태
   const [showCelebrationModal, setShowCelebrationModal] = useState(false);
   const [isClosingCelebrationModal, setIsClosingCelebrationModal] = useState(false);
+  // 아이코스 제휴 팝업 상태
+  const [isIqosModalOpen, setIsIqosModalOpen] = useState(false);
+  // 흡연 여부 상태 ("yes" | "no" | null)
+  const [smokingStatus, setSmokingStatus] = useState<"yes" | "no" | null>(null);
   // 이전 progress 추적 (100% 달성 감지용)
   const prevProgressRef = useRef<number>(0);
   // 초기 로딩 완료 여부 (초기 로딩 중 일시적 100% 상태 무시)
@@ -2218,6 +2223,11 @@ const Index = ({ initialCountry, showHeader = true }: IndexProps = {}) => {
   };
 
   const handleToggle = (itemId: string) => {
+    // 흡연 항목은 handleToggle에서 처리하지 않음 (별도 핸들러 사용)
+    if (itemId === "smoking" || itemId.includes("smoking") || itemId.includes("흡연")) {
+      return;
+    }
+
     setCheckedItems((prev) => {
       const newSet = new Set(prev);
       const wasChecked = newSet.has(itemId);
@@ -2244,6 +2254,27 @@ const Index = ({ initialCountry, showHeader = true }: IndexProps = {}) => {
     });
     // 사용자 액션 플래그 설정 (체크박스 클릭)
     checkAndTriggerCelebration();
+  };
+
+  // 흡연 여부 선택 핸들러
+  const handleSmokingSelect = (value: "yes" | "no") => {
+    setSmokingStatus(value);
+    
+    // "예" 선택 시 아이코스 제휴 팝업 노출
+    if (value === "yes") {
+      setIsIqosModalOpen(true);
+    }
+    
+    // GTM dataLayer 이벤트 전송
+    if (selectedCountry && typeof window !== 'undefined' && (window as any).dataLayer) {
+      const countryCode = getCountryCode(selectedCountry);
+      (window as any).dataLayer.push({
+        event: 'smoking_selection',
+        user_id: userId,
+        selected_country: countryCode,
+        smoking_status: value
+      });
+    }
   };
 
   // 체크리스트 초기화 함수 (현재 국가의 데이터만 초기화)
@@ -2505,6 +2536,24 @@ const Index = ({ initialCountry, showHeader = true }: IndexProps = {}) => {
               return {
                 ...section,
                 items: mergedItems || finalItems || []
+              };
+            }
+            
+            // health 섹션 처리: 흡연 항목을 항상 가장 하단에 배치
+            if (section.section_id === "health") {
+              // 기본 항목과 국가 전용 항목 병합
+              const mergedItems = mergeItems(section.items || [], mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(mergeItems(japanItems, vietnamItems), thailandItems), philippinesItems), chinaItems), taiwanItems), usaItems), hongkongItems), indonesiaItems), franceItems), singaporeItems));
+              
+              // 흡연 항목 분리
+              const smokingItem = mergedItems.find(item => item && (item.item_id === "smoking" || item.item_id.includes("smoking") || item.item_id.includes("흡연")));
+              const otherItems = mergedItems.filter(item => item && item.item_id !== "smoking" && !item.item_id.includes("smoking") && !item.item_id.includes("흡연"));
+              
+              // 흡연 항목을 가장 하단에 배치
+              const finalItems = smokingItem ? [...otherItems, smokingItem] : otherItems;
+              
+              return {
+                ...section,
+                items: finalItems || section.items || []
               };
             }
             
@@ -3010,6 +3059,8 @@ const Index = ({ initialCountry, showHeader = true }: IndexProps = {}) => {
                 onDurationChange={setSelectedDuration}
                 selectedCountry={selectedCountry}
                 hideCompletedItems={hideCompletedItems}
+                smokingStatus={smokingStatus}
+                onSmokingSelect={handleSmokingSelect}
               />
             </div>
           )}
@@ -3035,6 +3086,8 @@ const Index = ({ initialCountry, showHeader = true }: IndexProps = {}) => {
                       onMedicalCardClick={section.section_id === "health" ? () => setIsMedicalCardOpen(true) : undefined}
                       selectedCountry={selectedCountry}
                       hideCompletedItems={hideCompletedItems}
+                      smokingStatus={smokingStatus}
+                      onSmokingSelect={handleSmokingSelect}
                     />
                   </div>
                 );
@@ -3314,6 +3367,17 @@ const Index = ({ initialCountry, showHeader = true }: IndexProps = {}) => {
           console.log("Medical Card Data:", data);
           console.log("Is Smoker:", data.isSmoker);
           // TODO: 메디컬 카드 이미지 템플릿에 데이터 매핑
+        }}
+      />
+
+      {/* 아이코스 제휴 팝업 */}
+      <IqosPartnershipModal
+        isOpen={isIqosModalOpen}
+        onClose={() => setIsIqosModalOpen(false)}
+        onConfirm={() => {
+          // 동의 완료 후 처리 로직 (필요시 추가)
+          toast({ title: "다운로드 파일을 확인하세요", duration: 2000 });
+          // TODO: 아이코스 가이드 페이지로 이동 또는 링크 열기
         }}
       />
 
