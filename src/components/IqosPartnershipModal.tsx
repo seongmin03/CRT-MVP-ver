@@ -85,7 +85,7 @@ const IqosPartnershipModal = ({ isOpen, onClose, onConfirm }: IqosPartnershipMod
 
   // Google Spreadsheet API URL (환경변수 지원)
   const GOOGLE_SPREADSHEET_API_URL = import.meta.env.VITE_IQOS_API_URL || 
-    "https://script.google.com/a/macros/myrealtrip.com/s/AKfycbydRYEFnnUWfofBRKeS5Eg07Qyvc2iBWaaiUb-IQJxAZf87bXphAEU-fSwtgukOfCS0/exec";
+    "https://script.google.com/a/macros/myrealtrip.com/s/AKfycbxfsL6_3us6nNiGoKLpcW54dd2ZwZFegOQbYRUCfmmaVTEbdXbNH5A2dcA8wyBtyBQN/exec";
 
   // 데이터 가공 함수
   const formatDataForSpreadsheet = () => {
