@@ -126,8 +126,8 @@ const ChecklistSection = ({ section, checkedItems, onToggle, selectedDuration, o
       )}
 
       <div className="space-y-1">
-        {/* health 섹션일 때 응급 의료 카드 섹션을 최상단에 추가 */}
-        {section.section_id === "health" && onMedicalCardClick && (
+        {/* essentials 섹션일 때 응급 의료 카드 섹션을 최상단에 추가 */}
+        {section.section_id === "essentials" && onMedicalCardClick && (
           <div className="mb-3 p-4 bg-red-300 rounded-xl border border-red-200 flex items-center justify-between">
             <div className="flex-1">
               <div className="flex items-center gap-2">

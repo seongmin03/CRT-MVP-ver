@@ -3063,6 +3063,7 @@ const Index = ({ initialCountry, showHeader = true }: IndexProps = {}) => {
                 onToggle={handleToggle}
                 selectedDuration={selectedDuration}
                 onDurationChange={setSelectedDuration}
+                onMedicalCardClick={() => setIsMedicalCardOpen(true)}
                 selectedCountry={selectedCountry}
                 hideCompletedItems={hideCompletedItems}
                 smokingStatus={smokingStatus}
@@ -3089,7 +3090,6 @@ const Index = ({ initialCountry, showHeader = true }: IndexProps = {}) => {
                       onToggle={handleToggle}
                       selectedDuration={selectedDuration}
                       onDurationChange={setSelectedDuration}
-                      onMedicalCardClick={section.section_id === "health" ? () => setIsMedicalCardOpen(true) : undefined}
                       selectedCountry={selectedCountry}
                       hideCompletedItems={hideCompletedItems}
                       smokingStatus={smokingStatus}
