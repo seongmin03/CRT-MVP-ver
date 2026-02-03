@@ -51,35 +51,28 @@ const IqosPartnershipModal = ({ isOpen, onClose, onConfirm }: IqosPartnershipMod
     isSmoker: "yes", // 흡연 항목 체크 시 뜨는 팝업이므로 항상 'yes'
   });
 
-  // 한국어만 입력 가능한 유효성 검사
-  const handleNameChange = (value: string) => {
-    // 한글, 공백만 허용
-    const koreanOnly = value.replace(/[^가-힣\s]/g, "");
-    setFormData(prev => ({ ...prev, name: koreanOnly }));
-  };
-
-  // 연락처 중간 4자리 입력
+  // 연락처 중간 4자리 입력 (제한 없음)
   const handlePhoneMiddleChange = (value: string) => {
-    const numericValue = value.replace(/[^0-9]/g, "").slice(0, 4);
+    const limitedValue = value.slice(0, 4);
     setFormData(prev => ({
       ...prev,
-      phone: { ...prev.phone, middle: numericValue }
+      phone: { ...prev.phone, middle: limitedValue }
     }));
   };
 
-  // 연락처 마지막 4자리 입력
+  // 연락처 마지막 4자리 입력 (제한 없음)
   const handlePhoneLastChange = (value: string) => {
-    const numericValue = value.replace(/[^0-9]/g, "").slice(0, 4);
+    const limitedValue = value.slice(0, 4);
     setFormData(prev => ({
       ...prev,
-      phone: { ...prev.phone, last: numericValue }
+      phone: { ...prev.phone, last: limitedValue }
     }));
   };
 
-  // 생년월일 입력 (8자리 숫자)
+  // 생년월일 입력 (8자리 제한만)
   const handleBirthDateChange = (value: string) => {
-    const numericValue = value.replace(/[^0-9]/g, "").slice(0, 8);
-    setFormData(prev => ({ ...prev, birthDate: numericValue }));
+    const limitedValue = value.slice(0, 8);
+    setFormData(prev => ({ ...prev, birthDate: limitedValue }));
   };
 
   // 생년월일 포맷팅 (YYYYMMDD -> YYYY-MM-DD)
@@ -88,6 +81,74 @@ const IqosPartnershipModal = ({ isOpen, onClose, onConfirm }: IqosPartnershipMod
       return `${value.slice(0, 4)}-${value.slice(4, 6)}-${value.slice(6, 8)}`;
     }
     return value;
+  };
+
+  // Google Spreadsheet API URL (환경변수 지원)
+  const GOOGLE_SPREADSHEET_API_URL = import.meta.env.VITE_IQOS_API_URL || 
+    "https://script.google.com/a/macros/myrealtrip.com/s/AKfycbydRYEFnnUWfofBRKeS5Eg07Qyvc2iBWaaiUb-IQJxAZf87bXphAEU-fSwtgukOfCS0/exec";
+
+  // 데이터 가공 함수
+  const formatDataForSpreadsheet = () => {
+    // 전화번호: 010-중간4자리-끝4자리
+    const number = `${formData.phone.first}-${formData.phone.middle}-${formData.phone.last}`;
+    
+    // 이메일: 아이디@도메인
+    const email = `${formData.email.id}@${formData.email.domain}`;
+    
+    // 생년월일: YYYYMMDD (8자리)
+    const DOB = formData.birthDate;
+    
+    return {
+      name: formData.name.trim(),
+      number: number,
+      email: email,
+      DOB: DOB,
+      info: 1, // 정상 제출
+      smoking: 1 // 항상 1
+    };
+  };
+
+  // 유효성 검사 (숫자 검증 포함)
+  const validateFormData = (): boolean => {
+    // 기본 필드 검사
+    if (!isFormValid) {
+      return false;
+    }
+    
+    // 전화번호 중간/끝이 숫자인지 확인
+    const phoneMiddleIsNumeric = /^\d+$/.test(formData.phone.middle);
+    const phoneLastIsNumeric = /^\d+$/.test(formData.phone.last);
+    
+    // 생년월일이 숫자인지 확인
+    const birthDateIsNumeric = /^\d+$/.test(formData.birthDate);
+    
+    return phoneMiddleIsNumeric && phoneLastIsNumeric && birthDateIsNumeric;
+  };
+
+  // Google Spreadsheet에 데이터 전송
+  const sendDataToSpreadsheet = async (): Promise<boolean> => {
+    try {
+      const payload = formatDataForSpreadsheet();
+      
+      // Google Apps Script는 form 데이터나 URL-encoded 형식을 선호
+      const formData = new FormData();
+      Object.keys(payload).forEach(key => {
+        formData.append(key, String(payload[key as keyof typeof payload]));
+      });
+      
+      // fetch 요청 (no-cors 모드 사용)
+      const response = await fetch(GOOGLE_SPREADSHEET_API_URL, {
+        method: 'POST',
+        mode: 'no-cors', // Google Apps Script의 CORS 제한 우회
+        body: formData
+      });
+      
+      // no-cors 모드에서는 response를 읽을 수 없지만, 요청은 전송됨
+      return true;
+    } catch (error) {
+      console.error("Google Spreadsheet 데이터 전송 실패:", error);
+      return false;
+    }
   };
 
   // PDF 다운로드 함수
@@ -110,12 +171,25 @@ const IqosPartnershipModal = ({ isOpen, onClose, onConfirm }: IqosPartnershipMod
     }
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (isFormValid && agreePersonalInfo && agreeThirdParty) {
+      // 유효성 검사 (숫자 검증 포함)
+      if (!validateFormData()) {
+        console.error("유효성 검사 실패: 전화번호 또는 생년월일이 숫자가 아닙니다.");
+        return;
+      }
+      
+      // Google Spreadsheet에 데이터 전송 (비동기, 에러가 나도 계속 진행)
+      sendDataToSpreadsheet().catch(error => {
+        console.error("데이터 전송 중 오류:", error);
+      });
+      
       // PDF 다운로드
       downloadPdf();
+      
       // 폼 데이터 전송 (필요시 onConfirm에 데이터 전달)
       onConfirm();
+      
       // 팝업 닫기 및 상태 초기화
       handleClose();
     }
@@ -186,9 +260,9 @@ const IqosPartnershipModal = ({ isOpen, onClose, onConfirm }: IqosPartnershipMod
               <Input
                 id="name"
                 value={formData.name}
-                onChange={(e) => handleNameChange(e.target.value)}
+                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                 placeholder="홍길동"
-                className="h-9 text-sm border-slate-300"
+                className="h-9 text-sm border-slate-300 placeholder:text-gray-300"
               />
             </div>
 
@@ -208,14 +282,14 @@ const IqosPartnershipModal = ({ isOpen, onClose, onConfirm }: IqosPartnershipMod
                   onChange={(e) => handlePhoneMiddleChange(e.target.value)}
                   placeholder="1234"
                   maxLength={4}
-                  className="flex-1 h-9 text-sm border-slate-300 text-center"
+                  className="flex-1 h-9 text-sm border-slate-300 text-center placeholder:text-gray-300"
                 />
                 <Input
                   value={formData.phone.last}
                   onChange={(e) => handlePhoneLastChange(e.target.value)}
                   placeholder="5678"
                   maxLength={4}
-                  className="flex-1 h-9 text-sm border-slate-300 text-center"
+                  className="flex-1 h-9 text-sm border-slate-300 text-center placeholder:text-gray-300"
                 />
               </div>
             </div>
@@ -232,7 +306,7 @@ const IqosPartnershipModal = ({ isOpen, onClose, onConfirm }: IqosPartnershipMod
                     ...prev,
                     email: { ...prev.email, id: e.target.value }
                   }))}
-                  className="flex-1 h-9 text-sm border-slate-300"
+                  className="flex-1 h-9 text-sm border-slate-300 placeholder:text-gray-300"
                 />
                 <span className="text-slate-500 font-medium text-sm">@</span>
                 <Input
@@ -241,7 +315,7 @@ const IqosPartnershipModal = ({ isOpen, onClose, onConfirm }: IqosPartnershipMod
                     ...prev,
                     email: { ...prev.email, domain: e.target.value }
                   }))}
-                  className="flex-1 h-9 text-sm border-slate-300"
+                  className="flex-1 h-9 text-sm border-slate-300 placeholder:text-gray-300"
                 />
               </div>
             </div>
@@ -258,7 +332,7 @@ const IqosPartnershipModal = ({ isOpen, onClose, onConfirm }: IqosPartnershipMod
                 onChange={(e) => handleBirthDateChange(e.target.value)}
                 placeholder="19890101"
                 maxLength={8}
-                className="h-9 text-sm border-slate-300"
+                className="h-9 text-sm border-slate-300 placeholder:text-gray-300"
               />
               {formData.birthDate.length === 8 && (
                 <p className="text-[10px] text-slate-500">

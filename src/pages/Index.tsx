@@ -2578,13 +2578,19 @@ const Index = ({ initialCountry, showHeader = true }: IndexProps = {}) => {
   // 현재 선택된 국가의 모든 체크 가능한 항목 ID 수집 (useMemo로 최적화)
   // 실제 화면에 렌더링되는 체크박스 항목만 수집하여 동적 카운팅의 기준으로 사용
   // ⚠️ 여행팁(travel_tips) 섹션은 체크박스가 없는 정보성 섹션이므로 제외
+  // ⚠️ 흡연 항목(smoking)은 체크박스가 아닌 예/아니오 버튼이므로 제외
   const allCheckableItemIds = useMemo(() => {
     const itemIds = new Set<string>();
+    
+    // 흡연 항목인지 확인하는 함수
+    const isSmokingItem = (itemId: string) => {
+      return itemId === "smoking" || itemId.includes("smoking") || itemId.includes("흡연");
+    };
     
     // essentials 섹션 항목 추가 (체크박스가 있는 항목만)
     if (essentialsSection?.items) {
       essentialsSection.items.forEach(item => {
-        if (item && item.item_id) {
+        if (item && item.item_id && !isSmokingItem(item.item_id)) {
           itemIds.add(item.item_id);
         }
       });
@@ -2595,7 +2601,7 @@ const Index = ({ initialCountry, showHeader = true }: IndexProps = {}) => {
       // 여행팁 섹션은 진행률 계산에서 제외
       if (section && section.items && section.section_id !== "travel_tips") {
         section.items.forEach(item => {
-          if (item && item.item_id) {
+          if (item && item.item_id && !isSmokingItem(item.item_id)) {
             itemIds.add(item.item_id);
           }
         });
@@ -2604,7 +2610,7 @@ const Index = ({ initialCountry, showHeader = true }: IndexProps = {}) => {
     
     // 커스텀 항목 추가 (체크박스가 있는 항목만)
     customItems.forEach(item => {
-      if (item && item.id) {
+      if (item && item.id && !isSmokingItem(item.id)) {
         itemIds.add(item.id);
       }
     });
@@ -3208,16 +3214,15 @@ const Index = ({ initialCountry, showHeader = true }: IndexProps = {}) => {
                           maxLength={30}
                           placeholder="항목을 입력하세요"
                           className={`
-                            flex-1 bg-transparent border-none outline-none text-sm sm:text-base font-semibold
+                            flex-1 min-w-0 bg-transparent border-none outline-none text-sm sm:text-base font-semibold
                             ${isChecked ? 'text-gray-400' : 'text-foreground'}
                             focus:ring-2 focus:ring-accent/50 focus:rounded-md focus:px-2 focus:py-1
                             transition-all duration-300
                             ${isChecked ? 'strikethrough-line' : ''}
+                            pr-11
                           `}
                           style={{ 
                             opacity: isChecked ? 0.7 : 1,
-                            position: isChecked ? 'relative' : 'static',
-                            display: isChecked ? 'inline-block' : 'block',
                             pointerEvents: 'auto'
                           }}
                           onClick={(e) => e.stopPropagation()}
