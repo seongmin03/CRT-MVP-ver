@@ -3074,13 +3074,21 @@ const Index = ({ initialCountry, showHeader = true }: IndexProps = {}) => {
                     return (
                       <div 
                         key={item.id}
-                        className="relative flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl transition-all duration-200 group custom-item-container"
+                        className="relative flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl transition-all duration-200 group custom-item-container cursor-pointer"
+                        onClick={(e) => {
+                          // 체크박스 label, 입력창, 삭제 버튼 클릭 시에는 토글하지 않음
+                          if ((e.target as HTMLElement).closest('label, input, button')) {
+                            return;
+                          }
+                          handleToggle(item.id);
+                        }}
+                        data-item-id={item.id}
                       >
                         {/* 체크박스 영역: label로 감싸서 클릭 영역 확대 */}
                         <label
                           htmlFor={checkboxId}
                           className={`
-                            flex-shrink-0 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-200 mt-0.5 cursor-pointer touch-manipulation custom-checkbox-label gtm-engaged-check
+                            flex-shrink-0 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-200 mt-0.5 cursor-pointer touch-manipulation custom-checkbox-label gtm-engaged-check pointer-events-auto
                             ${isChecked 
                               ? 'bg-accent border-accent animate-check-bounce shadow-sm' 
                               : 'border-muted-foreground/30'
@@ -3090,25 +3098,23 @@ const Index = ({ initialCountry, showHeader = true }: IndexProps = {}) => {
                           data-gtm="checklist_checkbox"
                           data-item-id={item.id}
                           data-checked={isChecked}
-                          onPointerDown={(e) => {
-                            e.preventDefault();
+                          onClick={(e) => {
                             e.stopPropagation();
-                            // onPointerDown에서만 토글 실행
+                            e.preventDefault();
+                            // 입력창 포커스 방지
+                            const textInput = customInputRefs.current[item.id];
+                            if (textInput && document.activeElement === textInput) {
+                              textInput.blur();
+                            }
                             handleToggle(item.id);
                           }}
-                          onClick={(e) => {
-                            // onClick은 label의 기본 동작만 막기
-                            e.preventDefault();
-                            e.stopPropagation();
-                            // onClick에서는 토글하지 않음 (onPointerDown에서 이미 처리됨)
-                          }}
                           onMouseDown={(e) => {
-                            e.preventDefault();
                             e.stopPropagation();
+                            e.preventDefault();
                           }}
                           onTouchStart={(e) => {
-                            e.preventDefault();
                             e.stopPropagation();
+                            e.preventDefault();
                           }}
                         >
                           <input
@@ -3145,6 +3151,7 @@ const Index = ({ initialCountry, showHeader = true }: IndexProps = {}) => {
                               e.currentTarget.blur();
                             }
                           }}
+                          onFocus={(e) => e.stopPropagation()}
                           maxLength={30}
                           placeholder="항목을 입력하세요"
                           className={`
@@ -3157,7 +3164,8 @@ const Index = ({ initialCountry, showHeader = true }: IndexProps = {}) => {
                           style={{ 
                             opacity: isChecked ? 0.7 : 1,
                             position: isChecked ? 'relative' : 'static',
-                            display: isChecked ? 'inline-block' : 'block'
+                            display: isChecked ? 'inline-block' : 'block',
+                            pointerEvents: 'auto'
                           }}
                           onClick={(e) => e.stopPropagation()}
                           onPointerDown={(e) => e.stopPropagation()}
@@ -3178,7 +3186,7 @@ const Index = ({ initialCountry, showHeader = true }: IndexProps = {}) => {
                           onTouchStart={(e) => {
                             e.stopPropagation();
                           }}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center bg-red-50 hover:bg-red-100 active:bg-red-200 transition-all duration-200 custom-delete-button"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center bg-red-50 hover:bg-red-100 active:bg-red-200 transition-all duration-200 custom-delete-button pointer-events-auto"
                           aria-label="항목 제거"
                         >
                           <X className="w-3 h-3 text-red-600" strokeWidth={2} />
