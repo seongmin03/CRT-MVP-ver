@@ -85,12 +85,24 @@ const IqosPartnershipModal = ({ isOpen, onClose, onConfirm }: IqosPartnershipMod
 
   // Google Spreadsheet API URL (환경변수 지원)
   const GOOGLE_SPREADSHEET_API_URL = import.meta.env.VITE_IQOS_API_URL || 
-    "https://script.google.com/a/macros/myrealtrip.com/s/AKfycbxfsL6_3us6nNiGoKLpcW54dd2ZwZFegOQbYRUCfmmaVTEbdXbNH5A2dcA8wyBtyBQN/exec";
+    "https://script.google.com/macros/s/AKfycbwJBQkD1ypEwHCD6kyD3OTyj63XM3ykQFyW8R1QIdS15slBpayYB-Pb6yQp9dyUE-fDkQ/exec";
 
-  // 데이터 가공 함수
+  // 현재 시간을 YYYY-MM-DD HH:mm:ss 형식으로 반환
+  const getCurrentTimestamp = (): string => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  };
+
+  // 데이터 가공 함수 (통합 DB 시트 규격: 12개 항목)
   const formatDataForSpreadsheet = () => {
     // 전화번호: 010-중간4자리-끝4자리
-    const number = `${formData.phone.first}-${formData.phone.middle}-${formData.phone.last}`;
+    const num = `${formData.phone.first}-${formData.phone.middle}-${formData.phone.last}`;
     
     // 이메일: 아이디@도메인
     const email = `${formData.email.id}@${formData.email.domain}`;
@@ -98,13 +110,20 @@ const IqosPartnershipModal = ({ isOpen, onClose, onConfirm }: IqosPartnershipMod
     // 생년월일: YYYYMMDD (8자리)
     const DOB = formData.birthDate;
     
+    // 통합 DB 시트 규격에 맞춘 12개 항목
     return {
-      name: formData.name.trim(),
-      number: number,
-      email: email,
-      DOB: DOB,
-      info: 1, // 정상 제출
-      smoking: 1 // 항상 1
+      timestamp: getCurrentTimestamp(), // 1. 현재 날짜와 시간
+      name_en: "0", // 2. 입력받지 않음
+      name_kr: formData.name.trim(), // 3. 한국어 성명
+      DOB: DOB, // 4. 생년월일 (YYYYMMDD)
+      nation: "0", // 5. 입력받지 않음
+      language: "0", // 6. 입력받지 않음
+      bloodtype: "0", // 7. 입력받지 않음
+      num: num, // 8. 전화번호 (010-XXXX-XXXX)
+      email: email, // 9. 이메일 (user@domain.com)
+      emergency: "0", // 10. 입력받지 않음
+      all: "0", // 11. 입력받지 않음
+      smoking: "1" // 12. 정상 제출 시 1
     };
   };
 
