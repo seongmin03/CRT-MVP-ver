@@ -31,14 +31,16 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry, smokingStat
     // GTM이 버튼을 직접 감지할 수 있도록 명시적으로 클릭 이벤트 전송
     // React 합성 이벤트로 인해 GTM이 부모 요소를 감지하는 문제 해결
     const buttonElement = e.currentTarget as HTMLElement;
+    const buttonId = buttonElement.id; // id를 1순위로 사용
     const gtmValue = buttonElement.getAttribute('data-gtm');
     
-    if (typeof window !== 'undefined' && (window as any).dataLayer && gtmValue) {
+    if (typeof window !== 'undefined' && (window as any).dataLayer) {
       // GTM이 버튼 요소를 직접 감지할 수 있도록 명시적 이벤트 전송
+      // id를 1순위로 설정 (id가 있으면 id 사용, 없으면 data-gtm 사용)
       (window as any).dataLayer.push({
         event: 'gtm.click',
         'gtm.element': buttonElement,
-        'gtm.elementId': gtmValue,
+        'gtm.elementId': buttonId || gtmValue || '',
         'gtm.elementClasses': buttonElement.className,
       });
     }
@@ -56,8 +58,8 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry, smokingStat
       className={`flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl transition-all duration-200 group ${
         isSmokingItem ? '' : 'hover:bg-muted/50 cursor-pointer'
       }`}
-      onClick={handleItemClick}
-      data-gtm="checklist_checkbox"
+      onClick={isSmokingItem ? undefined : handleItemClick}
+      {...(isSmokingItem ? {} : { 'data-gtm': 'checklist_checkbox' })}
       data-item-id={item.item_id}
     >
       {!isSmokingItem && (
