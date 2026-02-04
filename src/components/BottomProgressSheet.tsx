@@ -1,3 +1,5 @@
+import { Plane } from "lucide-react";
+
 interface BottomProgressSheetProps {
   progress: number;
   completedItems: number;
@@ -54,14 +56,27 @@ const BottomProgressSheet = ({ progress, completedItems, totalItems, isInline = 
           </div>
           
           {/* 하단: 프로그레스 바 */}
-          <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+          <div className="h-1.5 bg-muted rounded-full overflow-visible relative">
             <div
-              className="h-full rounded-full transition-all duration-300 ease-out"
+              className="h-full rounded-full transition-all duration-300 ease-out relative"
               style={{
                 width: `${Math.max(progress, 3)}%`,
                 background: "linear-gradient(90deg, #ADD8E6 0%, #007BFF 100%)",
               }}
-            />
+            >
+              {/* 비행기 아이콘 - 진행률 바 끝에 연동되어 움직임 */}
+              <div
+                className="absolute -right-3 top-1/2 -translate-y-1/2 transition-all duration-300 ease-out"
+                style={{ filter: "drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2))" }}
+              >
+                <Plane 
+                  className="w-4 h-4" 
+                  fill="white" 
+                  stroke="black" 
+                  strokeWidth={1.5}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
