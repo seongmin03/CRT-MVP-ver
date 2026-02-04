@@ -129,6 +129,7 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry, smokingStat
         <div className="flex-shrink-0 flex items-center gap-2">
           <button
             onClick={(e) => handleSmokingSelect("yes", e)}
+            data-gtm="smoking_status_yes"
             className={`
               px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
               ${smokingStatus === "yes"
@@ -141,6 +142,7 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry, smokingStat
           </button>
           <button
             onClick={(e) => handleSmokingSelect("no", e)}
+            data-gtm="smoking_status_no"
             className={`
               px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
               ${smokingStatus === "no"
