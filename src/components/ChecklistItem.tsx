@@ -28,7 +28,10 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry, smokingStat
   };
 
   const handleSmokingSelect = (value: "yes" | "no", e: React.MouseEvent) => {
-    e.stopPropagation();
+    // GTM이 클릭 이벤트를 감지할 수 있도록 stopPropagation 제거
+    // handleItemClick에서 이미 button 클릭을 무시하므로 안전
+    // e.stopPropagation() 제거로 GTM 클릭 트리거가 정상 작동
+    
     if (onSmokingSelect) {
       onSmokingSelect(value);
     }
