@@ -28,9 +28,23 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry, smokingStat
   };
 
   const handleSmokingSelect = (value: "yes" | "no", e: React.MouseEvent) => {
-    // GTM이 클릭 이벤트를 감지할 수 있도록 stopPropagation 제거
-    // handleItemClick에서 이미 button 클릭을 무시하므로 안전
-    // e.stopPropagation() 제거로 GTM 클릭 트리거가 정상 작동
+    // GTM이 버튼을 직접 감지할 수 있도록 명시적으로 클릭 이벤트 전송
+    // React 합성 이벤트로 인해 GTM이 부모 요소를 감지하는 문제 해결
+    const buttonElement = e.currentTarget as HTMLElement;
+    const gtmValue = buttonElement.getAttribute('data-gtm');
+    
+    if (typeof window !== 'undefined' && (window as any).dataLayer && gtmValue) {
+      // GTM이 버튼 요소를 직접 감지할 수 있도록 명시적 이벤트 전송
+      (window as any).dataLayer.push({
+        event: 'gtm.click',
+        'gtm.element': buttonElement,
+        'gtm.elementId': gtmValue,
+        'gtm.elementClasses': buttonElement.className,
+      });
+    }
+    
+    // 부모 div의 클릭 핸들러가 실행되지 않도록 stopPropagation
+    e.stopPropagation();
     
     if (onSmokingSelect) {
       onSmokingSelect(value);
@@ -131,7 +145,12 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry, smokingStat
       {isSmokingItem ? (
         <div className="flex-shrink-0 flex items-center gap-2">
           <button
+            id={`smoking-status-yes-${item.item_id}`}
             onClick={(e) => handleSmokingSelect("yes", e)}
+            onMouseDown={(e) => {
+              // GTM이 버튼을 먼저 감지할 수 있도록 마우스 다운에서만 stopPropagation
+              // onClick에서는 이벤트가 버블링되어 GTM이 감지 가능
+            }}
             data-gtm="smoking_status_yes"
             className={`
               px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
@@ -144,7 +163,12 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry, smokingStat
             예
           </button>
           <button
+            id={`smoking-status-no-${item.item_id}`}
             onClick={(e) => handleSmokingSelect("no", e)}
+            onMouseDown={(e) => {
+              // GTM이 버튼을 먼저 감지할 수 있도록 마우스 다운에서만 stopPropagation
+              // onClick에서는 이벤트가 버블링되어 GTM이 감지 가능
+            }}
             data-gtm="smoking_status_no"
             className={`
               px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
