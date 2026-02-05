@@ -14,6 +14,9 @@ interface ChecklistItemProps {
 const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry, smokingStatus, onSmokingSelect }: ChecklistItemProps) => {
   const isSmokingItem = item.item_id === "smoking" || item.item_id.includes("smoking") || item.item_id.includes("흡연");
   
+  // 흡연 항목은 체크박스가 아니므로 isChecked를 무시하고 항상 false로 처리
+  const effectiveIsChecked = isSmokingItem ? false : isChecked;
+  
   // 전체 영역 클릭 핸들러 - 링크나 이미지 클릭 시에는 토글하지 않음
   const handleItemClick = (e: React.MouseEvent) => {
     // 흡연 항목은 클릭 핸들러 사용 안 함 (버튼으로 처리)
@@ -85,11 +88,11 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry, smokingStat
         <h4 
           className={`
             font-semibold text-sm sm:text-base transition-all duration-300 pointer-events-none
-            ${isChecked ? 'text-gray-400' : 'text-slate-900 dark:text-white'}
+            ${effectiveIsChecked ? 'text-gray-400' : 'text-slate-900 dark:text-white'}
           `}
           style={{ 
             lineHeight: '1.5',
-            opacity: isChecked ? 0.7 : 1,
+            opacity: effectiveIsChecked ? 0.7 : 1,
           }}
           data-item-title={item.title}
         >
@@ -100,7 +103,7 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry, smokingStat
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
               className={`
-                ${isChecked ? 'strikethrough-line' : ''}
+                ${effectiveIsChecked ? 'strikethrough-line' : ''}
                 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline decoration-2 underline-offset-2 transition-colors
               `}
               style={{
@@ -118,7 +121,7 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry, smokingStat
             </a>
           ) : (
             <span 
-              className={isChecked ? 'strikethrough-line' : ''}
+              className={effectiveIsChecked ? 'strikethrough-line' : ''}
               style={{
                 position: 'relative',
                 display: 'inline-block',
@@ -132,11 +135,11 @@ const ChecklistItem = ({ item, isChecked, onToggle, selectedCountry, smokingStat
         <p 
           className={`
             mt-1 text-xs sm:text-sm leading-relaxed transition-all duration-300 pointer-events-none
-            ${isChecked ? 'text-gray-400' : 'text-slate-700 dark:text-gray-300'}
+            ${effectiveIsChecked ? 'text-gray-400' : 'text-slate-700 dark:text-gray-300'}
           `}
           style={{ 
             lineHeight: '1.5',
-            opacity: isChecked ? 0.7 : 1,
+            opacity: effectiveIsChecked ? 0.7 : 1,
           }}
         >
           {parseTextWithLinks(item.description || '', selectedCountry)}

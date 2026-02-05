@@ -39,11 +39,16 @@ const ChecklistSection = ({ section, checkedItems, onToggle, selectedDuration, o
     );
   }
 
-  // 원본 항목 (진행률 계산용)
-  const originalValidItems = section.items.filter(item => item && item.item_id);
+  // 흡연 항목인지 확인하는 함수
+  const isSmokingItem = (itemId: string) => {
+    return itemId === "smoking" || itemId.includes("smoking") || itemId.includes("흡연");
+  };
+
+  // 원본 항목 (진행률 계산용) - 흡연 항목 제외
+  const originalValidItems = section.items.filter(item => item && item.item_id && !isSmokingItem(item.item_id));
   
-  // 표시할 항목 (필터링 적용)
-  let validItems = originalValidItems;
+  // 표시할 항목 (필터링 적용) - 흡연 항목 포함 (표시는 하지만 진행률 계산에는 제외)
+  let validItems = section.items.filter(item => item && item.item_id);
   
   // 완료 항목 숨김가 켜져있으면 체크되지 않은 항목만 표시
   if (hideCompletedItems) {
@@ -52,7 +57,7 @@ const ChecklistSection = ({ section, checkedItems, onToggle, selectedDuration, o
   
   const isTravelTips = section.section_id === "travel_tips";
   
-  // 여행팁 섹션이 아닌 경우에만 진행률 계산 (원본 항목 기준)
+  // 여행팁 섹션이 아닌 경우에만 진행률 계산 (원본 항목 기준, 흡연 항목 제외)
   const completedCount = isTravelTips ? 0 : originalValidItems.filter(item => checkedItems.has(item.item_id)).length;
   const totalCount = isTravelTips ? 0 : originalValidItems.length;
   const progress = !isTravelTips && totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
