@@ -95,13 +95,6 @@ export const checklistData: ChecklistData = {
           cta_label: "",
           image_url: "/image/towel.png",
           link_url: "https://link.coupang.com/a/drYLaK"
-        },
-        {
-          item_id: "smoking",
-          title: "흡연 여부",
-          description: "흡연자를 위한 여행 가이드를 확인해 보세요.",
-          cta_type: "none",
-          cta_label: "",
         }
       ]
     },
